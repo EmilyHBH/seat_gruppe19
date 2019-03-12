@@ -4,9 +4,7 @@ import java.util.Scanner;
 
 public class Seat {
     public static void main(String[] args){
-
         identifyUser();
-
     }
 
     private static void identifyUser() {
