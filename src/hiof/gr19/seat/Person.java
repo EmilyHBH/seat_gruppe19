@@ -4,13 +4,13 @@ public class Person {
     private String firstName;
     private String lastName;
     private int age;
-    private String emailAdress;
+    private String emailAddress;
 
-    public Person(String firstName, String lastName, int age, String emailAdress) {
+    public Person(String firstName, String lastName, int age, String emailAddress) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
-        this.emailAdress = emailAdress;
+        this.emailAddress = emailAddress;
     }
 
     public String getFirstName() {
@@ -37,12 +37,12 @@ public class Person {
         this.age = age;
     }
 
-    public String getEmailAdress() {
-        return emailAdress;
+    public String getEmailAddress() {
+        return emailAddress;
     }
 
-    public void setEmailAdress(String emailAdress) {
-        this.emailAdress = emailAdress;
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
     }
 
 }
