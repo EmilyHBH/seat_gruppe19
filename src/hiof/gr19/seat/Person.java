@@ -44,5 +44,5 @@ public class Person {
     public void setEmailAdress(String emailAdress) {
         this.emailAdress = emailAdress;
     }
-    
+
 }
