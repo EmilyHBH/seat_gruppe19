@@ -1,10 +1,15 @@
 package hiof.gr19.seat;
 
+import java.sql.*;
 import java.util.Scanner;
 
 public class Seat {
+
+    private static Database test = new Database();
+
     public static void main(String[] args){
         identifyUser();
+        tempFunctionToTestDatabaseConnectionWorks();
     }
 
     private static void identifyUser() {
@@ -30,6 +35,21 @@ public class Seat {
                 System.out.println("Please choose 1 or 2 :)");
                 main(null);
                 break;
+        }
+    }
+
+    // Denne skal slettes, er der bare for å vise om db connection funker
+    private static void tempFunctionToTestDatabaseConnectionWorks(){
+        try {
+            ResultSet resultSet = test.displayUsers();
+
+            System.out.println("Users in our system:");
+
+            while(resultSet.next())
+                System.out.println(resultSet.getString("forNavn") + " " + resultSet.getString("etterNavn"));
+
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
 }
