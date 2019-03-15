@@ -38,15 +38,25 @@ public class Seat {
         }
     }
 
-    // Denne skal slettes, er der bare for å vise om db connection funker
+    // Disse skal slettes, er der bare for å vise om db funksjonalitet
     private static void tempFunctionToTestDatabaseConnectionWorks(){
         try {
             ResultSet resultSet = test.displayUsers();
-
             System.out.println("Users in our system:");
 
             while(resultSet.next())
-                System.out.println(resultSet.getString("forNavn") + " " + resultSet.getString("etterNavn"));
+                System.out.println("-\t" + resultSet.getString("forNavn") + " " + resultSet.getString("etterNavn"));
+
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            ResultSet resultSet = test.displayEvents();
+            System.out.println("\nEvents in our system:");
+
+            while(resultSet.next())
+                System.out.println("-\t" + resultSet.getString("navn") + " " + resultSet.getString("beskrivelse") + " " + resultSet.getString("dato") + " " + resultSet.getInt("arrangor_fk"));
 
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
