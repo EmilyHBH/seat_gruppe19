@@ -1,5 +1,8 @@
 package hiof.gr19.seat;
 
+import java.time.*;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
 
 public class Seat {
@@ -14,12 +17,12 @@ public class Seat {
         System.out.println("1 = Organizer");
         System.out.println("2 = Not Organizer");
         System.out.print(">");
-        int systemMode = input.nextInt();
+        int systemMode = Integer.parseInt(input.nextLine());
 
         switch (systemMode){
             case 1:
-                System.out.println("organizer");
-                //organizerMode()
+                OrganizerMode organizerMode = new OrganizerMode(input);
+                organizerMode.start();
                 break;
 
             case 2:
