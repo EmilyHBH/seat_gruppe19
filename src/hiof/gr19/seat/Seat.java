@@ -1,5 +1,9 @@
 package hiof.gr19.seat;
 
+import java.io.Console;
+import java.time.*;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
 
 public class Seat {
@@ -8,28 +12,19 @@ public class Seat {
     }
 
     private static void identifyUser() {
-        Scanner input = new Scanner(System.in);
+        Console console = System.console();
+        if (console == null){
+            throw new NullPointerException("No console found");
+        }
+
 
         System.out.println("OP mode?");
         System.out.println("1 = Organizer");
         System.out.println("2 = Not Organizer");
-        System.out.print(">");
-        int systemMode = input.nextInt();
+        String input = console.readLine(">");
 
-        switch (systemMode){
-            case 1:
-                System.out.println("organizer");
-                //organizerMode()
-                break;
 
-            case 2:
-                System.out.println("Customer");
-                break;
 
-            default:
-                System.out.println("Please choose 1 or 2 :)");
-                main(null);
-                break;
-        }
+
     }
 }
