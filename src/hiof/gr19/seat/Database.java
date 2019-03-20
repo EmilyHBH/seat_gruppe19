@@ -86,6 +86,24 @@ public class Database {
     }
 
     // Update data
+    public void changeEmailOfOrganizer(Organizer organizer, String newEmail) throws SQLException, ClassNotFoundException {
+        if(dbCon == null)
+            getConnection();
+
+        PreparedStatement prep = dbCon.prepareStatement("UPDATE arrangor SET email = ? WHERE id = " + organizer.getOrganizerID());
+        prep.setString(1,newEmail);
+        prep.execute();
+    }
+    public void changeEventInfo(int id, String name, String description, String newDate) throws SQLException, ClassNotFoundException {
+        if(dbCon == null)
+            getConnection();
+
+        PreparedStatement prep = dbCon.prepareStatement("UPDATE arrangement SET dato = ?, navn = ?, beskrivelse = ? WHERE id = " + id);
+        prep.setString(1,newDate);
+        prep.setString(2,name);
+        prep.setString(3,description);
+        prep.execute();
+    }
 
     // Delete data
     public void cancelAUsersTicket(int kundeId, int billettId) throws SQLException, ClassNotFoundException {
