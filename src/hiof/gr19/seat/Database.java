@@ -71,7 +71,7 @@ public class Database {
         prep.setString(1,arrangement.getArrangmentTitle());
         prep.setString(2, arrangement.getArrangmentDescription());
         prep.setString(3, String.valueOf(arrangement.getArragmentDate()));
-        prep.setInt(4, arrangement.getOrganizer().getOrganizerID());
+        prep.setInt(4, Integer.parseInt(arrangement.getOrganizer().getOrganizerID()));
         prep.execute();
     }
     public void userPurchasedTickets(int kundeId, int billettId, int antall) throws SQLException, ClassNotFoundException {
