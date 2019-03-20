@@ -1,19 +1,19 @@
 package hiof.gr19.seat;
 
 public class Organizer {
-    private int organizerID;
+    private String organizerID;
     private String organizerName;
 
-    public Organizer(int organizerID, String organizerName) {
+    public Organizer(String organizerID, String organizerName) {
         this.organizerID = organizerID;
         this.organizerName = organizerName;
     }
 
-    public int getOrganizerID() {
+    public String getOrganizerID() {
         return organizerID;
     }
 
-    public void setOrganizerID(int organizerID) {
+    public void setOrganizerID(String organizerID) {
         this.organizerID = organizerID;
     }
 
