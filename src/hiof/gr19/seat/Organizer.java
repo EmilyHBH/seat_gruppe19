@@ -25,5 +25,8 @@ public class Organizer {
         this.organizerName = organizerName;
     }
 
-
+    @Override
+    public String toString() {
+        return organizerID + " " + organizerName;
+    }
 }

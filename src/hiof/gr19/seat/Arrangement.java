@@ -19,6 +19,29 @@ public class Arrangement {
         this.peopleAmount = peopleAmount;
     }
 
+    public String getTotalInformation() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("ID: " + arrangementID);
+        stringBuilder.append(System.lineSeparator());
+
+        stringBuilder.append("Title: " + arrangmentTitle);
+        stringBuilder.append(System.lineSeparator());
+
+        stringBuilder.append("Description: " + arrangmentDescription);
+        stringBuilder.append(System.lineSeparator());
+
+        stringBuilder.append("Date: " + arragmentDate);
+        stringBuilder.append(System.lineSeparator());
+
+        stringBuilder.append("Organizer: " + organizer);
+        stringBuilder.append(System.lineSeparator());
+
+        stringBuilder.append("People amount: " + peopleAmount);
+        stringBuilder.append(System.lineSeparator());
+
+        return stringBuilder.toString();
+    }
+
     public String getArrangementID() {
         return arrangementID;
     }
@@ -65,5 +88,10 @@ public class Arrangement {
 
     public void setPeopleAmount(int peopleAmount) {
         this.peopleAmount = peopleAmount;
+    }
+
+    @Override
+    public String toString() {
+        return arrangmentTitle + arragmentDate.toString();
     }
 }
