@@ -8,6 +8,28 @@ import java.util.Date;
 public class Seat {
     public static void main(String[] args){
 
+        ArrayList<Arrangement> arrangements = placeholderArrangementDB() ;
+
+        ConsoleInterface x = new ConsoleInterface();
+        x.printArrangements(arrangements);
+
+
+    }
+
+
+    private static ArrayList<Arrangement> placeholderArrangementDB (){
+
+        // SKAL BORT
+        Date date = new Date();
+        Organizer organizer = new Organizer("testOrgId", "Test org inc");
+        ArrayList<Arrangement> arrayList =  new ArrayList<>();
+        Arrangement arrangement1 = new Arrangement("TestArrangID1", "TestArrangNavn1", "TestArrangBeskrivelse1", date, organizer, 20);
+        Arrangement arrangement2 = new Arrangement("TestArrangID2", "TestArrangNavn2", "TestArrangBeskrivelse2", date, organizer, 20);
+        Arrangement arrangement3 = new Arrangement("TestArrangID3", "TestArrangNavn3", "TestArrangBeskrivelse3", date, organizer, 20);
+        arrayList.add(arrangement1);
+        arrayList.add(arrangement2);
+        arrayList.add(arrangement3);
+        return arrayList;
 
     }
 

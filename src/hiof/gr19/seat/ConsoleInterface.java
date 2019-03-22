@@ -35,16 +35,49 @@ public class ConsoleInterface {
         return null;
     }
 
+    private void customerMenu(){
+
+        Console console = System.console();
+        if (console == null){
+            throw new NullPointerException("No console found");
+        }
+
+        System.out.println("Choose arrangement based on ID");
+        //TODO print all arrangments
+
+        String arrangmentID = console.readLine(">");
+        //TODO metode for å hente arrangement basert på id
+
+
+        //TODO sjekk at det er nok billeter og at dato passer
+        System.out.println("How many tickets?");
+        String ticketAmount = console.readLine(">");
+
+
+
+    }
+
+
+    void getByIDarrangment(){
+
+
+
+    }
+
+    void checkTicket(){
+
+    }
+
     void printArrangements(ArrayList<Arrangement> arrangementList){
 
         AsciiTable arragmentTable = new AsciiTable();
 
         arragmentTable.addRule();
-        arragmentTable.addRow("Arrangment","Date","Ticketavaliable");
+        arragmentTable.addRow("ID","Arrangment","Date","Ticketavaliable");
 
         for (Arrangement x: arrangementList) {
             arragmentTable.addRule();
-            arragmentTable.addRow(x.getArrangmentTitle(),x.getArragmentDate(),x.getPeopleAmount());
+            arragmentTable.addRow(x.getArrangementID(),x.getArrangmentTitle(),x.getArragmentDate(),x.getPeopleAmount());
             arragmentTable.addRule();
 
         }
@@ -53,5 +86,7 @@ public class ConsoleInterface {
         System.out.println(table);
 
     }
+
+
 
 }
