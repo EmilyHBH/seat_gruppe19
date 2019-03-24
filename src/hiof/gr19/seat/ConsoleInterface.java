@@ -54,13 +54,10 @@ public class ConsoleInterface {
         String ticketAmount = console.readLine(">");
 
 
-
     }
 
 
-    void getByIDarrangment(){
-
-
+    void getArrangementById(){
 
     }
 
