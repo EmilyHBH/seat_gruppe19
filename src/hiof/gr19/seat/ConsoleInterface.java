@@ -140,4 +140,14 @@ public class ConsoleInterface {
 
     }
 
+    public static void selectFromList(ArrayList arrayList){
+        for (int i = 0; i < arrayList.size(); i++){
+            System.out.println(i + " = " + arrayList.get(i));
+        }
+
+        Console console = System.console();
+        String input = console.readLine(">");
+
+    }
+
 }
