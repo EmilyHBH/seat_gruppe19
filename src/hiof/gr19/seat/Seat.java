@@ -5,13 +5,18 @@ import java.io.Console;
 import java.util.ArrayList;
 import java.util.Date;
 
+import static hiof.gr19.seat.ConsoleInterface.identifyUser;
+import static hiof.gr19.seat.ConsoleInterface.organizerMenu;
+
 public class Seat {
     public static void main(String[] args){
 
         ArrayList<Arrangement> arrangements = placeholderArrangementDB() ;
+        User.Type user = identifyUser();
 
         ConsoleInterface x = new ConsoleInterface();
-        x.printArrangements(arrangements);
+        organizerMenu();
+        //x.printArrangements(arrangements);
 
 
     }

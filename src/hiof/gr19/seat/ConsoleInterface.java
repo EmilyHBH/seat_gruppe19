@@ -3,12 +3,17 @@ package hiof.gr19.seat;
 import de.vandermeer.asciitable.AsciiTable;
 
 import java.io.Console;
-import java.lang.reflect.Array;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 public class ConsoleInterface {
 
-     private static User.Type identifyUser() {
+     static User.Type identifyUser() {
 
         Console console = System.console();
         if (console == null){
@@ -22,6 +27,7 @@ public class ConsoleInterface {
 
         switch (input){
             case "1":
+
                 return User.Type.Organizer;
 
             case "2":
@@ -35,7 +41,7 @@ public class ConsoleInterface {
         return null;
     }
 
-    private void customerMenu(){
+    protected void customerMenu(){
 
         Console console = System.console();
         if (console == null){
@@ -53,6 +59,54 @@ public class ConsoleInterface {
         System.out.println("How many tickets?");
         String ticketAmount = console.readLine(">");
 
+    }
+
+    static void organizerMenu(){
+
+         Console console = System.console();
+         if (console == null){
+             throw new NullPointerException("No console found");
+         }
+
+         System.out.println("Create arrangment");
+         System.out.println();
+
+    }
+
+    void createArrangmentPrompt() {
+        Console console = System.console();
+        if (console == null) {
+            throw new NullPointerException("No console found");
+        }
+
+        String title = console.readLine("Tittle:");
+        String description = console.readLine("Description:");
+        String dateString = console.readLine("Date day-month-year:"); //TODO test
+        int ticketAmount = Integer.parseInt(console.readLine("How many tickets?:"));
+
+        Arrangement arrangement = new Arrangement(
+                null,//Blir satt av database
+                title,
+                description,
+                parseDate(dateString),
+                null, //
+                ticketAmount);
+
+
+    }
+
+
+    private Date parseDate(String inputDate){
+
+        DateFormat format = new SimpleDateFormat("d-MM-yyyy", Locale.getDefault());
+        Date date = null;
+        try {
+            date = format.parse(inputDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return date;
 
     }
 
@@ -61,7 +115,9 @@ public class ConsoleInterface {
 
     }
 
-    void checkTicket(){
+    boolean checkTicketConditions(Arrangement arrangement, int ticketAmount) {
+
+        return arrangement.getPeopleAmount() > ticketAmount;
 
     }
 
@@ -83,7 +139,5 @@ public class ConsoleInterface {
         System.out.println(table);
 
     }
-
-
 
 }
