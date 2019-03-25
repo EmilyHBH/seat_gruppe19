@@ -1,6 +1,12 @@
 package hiof.gr19.seat;
 
-import java.util.Scanner;
+import javax.xml.crypto.Data;
+import java.io.Console;
+import java.util.ArrayList;
+import java.util.Date;
+
+import static hiof.gr19.seat.ConsoleInterface.identifyUser;
+import static hiof.gr19.seat.ConsoleInterface.organizerMenu;
 
 public class Seat {
 
