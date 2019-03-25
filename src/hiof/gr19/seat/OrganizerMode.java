@@ -181,7 +181,7 @@ public class OrganizerMode {
 	}
 
 
-	private ArrayList<Arrangement> placeholderArrangementDB (){ // SKAL BORT
+	public static ArrayList<Arrangement> placeholderArrangementDB (){ // SKAL BORT
 
 		Date date = new Date();
 		Organizer organizer = new Organizer("testOrgId", "Test org inc");

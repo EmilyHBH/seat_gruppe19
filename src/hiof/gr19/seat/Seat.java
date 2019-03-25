@@ -30,7 +30,8 @@ public class Seat {
                 break;
 
             case 2:
-                System.out.println("Customer");
+                Customer_mode customerMode = new Customer_mode(input);
+                customerMode.start();
                 break;
 
             default:
