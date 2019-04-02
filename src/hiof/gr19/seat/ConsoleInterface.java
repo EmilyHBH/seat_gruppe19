@@ -3,6 +3,7 @@ package hiof.gr19.seat;
 import de.vandermeer.asciitable.AsciiTable;
 
 import java.io.Console;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -41,7 +42,7 @@ public class ConsoleInterface {
         return null;
     }
 
-    protected void customerMenu(){
+    static void customerMenu(){
 
         Console console = System.console();
         if (console == null){
@@ -55,9 +56,33 @@ public class ConsoleInterface {
         //TODO metode for å hente arrangement basert på id
 
 
-        //TODO sjekk at det er nok billeter og at dato passer
+        try {
+            purchaseTicketMenu(null);
+
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+
+
+    }
+
+    static void purchaseTicketMenu(Arrangement arrangement) throws IOException {
+        Console console = System.console();
+        if (console == null){
+            throw new NullPointerException("No console found");
+        }
+
         System.out.println("How many tickets?");
         String ticketAmount = console.readLine(">");
+
+
+        if (Integer.parseInt(ticketAmount) > arrangement.getPeopleAmount()){
+            throw new IOException("No more tickets left");
+
+        }
+
+
+
 
     }
 
@@ -73,7 +98,7 @@ public class ConsoleInterface {
 
     }
 
-    void createArrangmentPrompt() {
+    static void createArrangmentPrompt() {
         Console console = System.console();
         if (console == null) {
             throw new NullPointerException("No console found");
@@ -92,11 +117,10 @@ public class ConsoleInterface {
                 null, //
                 ticketAmount);
 
-
     }
 
 
-    private Date parseDate(String inputDate){
+    private static Date parseDate(String inputDate){
 
         DateFormat format = new SimpleDateFormat("d-MM-yyyy", Locale.getDefault());
         Date date = null;
@@ -121,7 +145,12 @@ public class ConsoleInterface {
 
     }
 
-    void printArrangements(ArrayList<Arrangement> arrangementList){
+    static void printArrangements(ArrayList<Arrangement> arrangementList){
+
+         if (arrangementList.size() == 0){
+             System.out.println("No events");
+             return;
+         }
 
         AsciiTable arragmentTable = new AsciiTable();
 
@@ -138,6 +167,21 @@ public class ConsoleInterface {
         String table = arragmentTable.render();
         System.out.println(table);
 
+    }
+
+
+     Organizer registerOrganizer(){
+        Console console = System.console();
+        if (console == null) {
+            throw new NullPointerException("No console found");
+        }
+
+        System.out.println("Name of organization");
+        String organizerName = console.readLine(">");
+
+        //TODO sjekk om navnet er tatt
+
+        return new Organizer(null,organizerName);
     }
 
     public static void selectFromList(ArrayList arrayList){

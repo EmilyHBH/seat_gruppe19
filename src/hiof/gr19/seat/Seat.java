@@ -1,13 +1,14 @@
 package hiof.gr19.seat;
 
+import sun.awt.CustomCursor;
+
 import javax.xml.crypto.Data;
 import java.io.Console;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
 
-import static hiof.gr19.seat.ConsoleInterface.identifyUser;
-import static hiof.gr19.seat.ConsoleInterface.organizerMenu;
+import static hiof.gr19.seat.ConsoleInterface.*;
 
 public class Seat {
 
@@ -20,19 +21,20 @@ public class Seat {
 
         System.out.println("OP mode?");
         System.out.println("1 = Organizer");
-        System.out.println("2 = Not Organizer");
+        System.out.println("2 = Customer");
         System.out.print(">");
         int systemMode = Integer.parseInt(input.nextLine());
 
         switch (systemMode){
             case 1:
-                OrganizerMode organizerMode = new OrganizerMode(input);
-                organizerMode.start();
+
                 break;
 
             case 2:
-                Customer_mode customerMode = new Customer_mode(input);
-                customerMode.start();
+                ArrayList<Arrangement> arrangements = new ArrayList<>();
+                printArrangements(arrangements);
+                customerMenu();
+
                 break;
 
             default:
