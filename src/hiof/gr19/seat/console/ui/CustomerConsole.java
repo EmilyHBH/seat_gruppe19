@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class CustomerConsole extends Console{
 
-    static void customerMenu(){
+    public static void customerMenu(){
 
         java.io.Console console = System.console();
         if (console == null){

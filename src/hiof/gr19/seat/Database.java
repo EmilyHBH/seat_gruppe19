@@ -19,6 +19,21 @@ public class Database {
         Statement state = dbCon.createStatement();
         return state.executeQuery("SELECT * FROM kunde;");
     }
+
+    public boolean checkForOrganizer(String organizer) throws SQLException, ClassNotFoundException{
+        if(dbCon == null){
+            getConnection();
+        }
+        String query = "SELECT COUNT(*) FROM arrangor WHERE navn = ?";
+        PreparedStatement statement = dbCon.prepareStatement(query);
+        statement.setString(1,organizer);
+        ResultSet resultSet = statement.executeQuery();
+
+        return resultSet.next();
+
+
+    }
+
     public ResultSet displayEvents() throws SQLException, ClassNotFoundException {
         if(dbCon == null)
             getConnection();
