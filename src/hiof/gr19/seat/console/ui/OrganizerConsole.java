@@ -1,9 +1,38 @@
 package hiof.gr19.seat.console.ui;
 
 import hiof.gr19.seat.Arrangement;
+import hiof.gr19.seat.Database;
 import hiof.gr19.seat.Organizer;
 
+import java.sql.SQLException;
+
 public class OrganizerConsole extends Console{
+
+    static void oranizerLogin(){
+
+        java.io.Console console = System.console();
+        if (console == null){
+            throw new NullPointerException("No console found");
+        }
+
+        String organizerName = console.readLine(">");
+
+        //TODO sjekk om den finnes i DB
+        Database database = new Database();
+        try {
+            boolean organizerStatus = database.checkForOrganizer(organizerName);
+            if (organizerStatus){
+                console.printf("Welcome " + organizerName);
+            }else {
+                console.printf(organizerName + " Is not registered");
+            }
+
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+    }
 
     static void organizerMenu(){
 
@@ -34,7 +63,7 @@ public class OrganizerConsole extends Console{
                 title,
                 description,
                 parseDate(dateString),
-                null, //
+                null, // dette blir enumen
                 ticketAmount);
 
     }

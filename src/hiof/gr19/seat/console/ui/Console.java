@@ -13,7 +13,7 @@ import java.util.Locale;
 
 public class Console {
 
-    static User.Type identifyUser() {
+    public static User.Type identifyUser() {
 
         java.io.Console console = System.console();
         if (console == null){
@@ -57,7 +57,7 @@ public class Console {
     }
 
 
-    static void printArrangements(ArrayList<Arrangement> arrangementList){
+    public static void printArrangements(ArrayList<Arrangement> arrangementList){
 
         if (arrangementList.size() == 0){
             System.out.println("No events");
