@@ -16,6 +16,7 @@ public class CustomerConsole extends Console{
         System.out.println("Choose arrangement based on ID");
         //TODO print all arrangments
 
+
         String arrangmentID = console.readLine(">");
         //TODO metode for å hente arrangement basert på id
 
