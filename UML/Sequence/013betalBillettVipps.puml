@@ -1,0 +1,14 @@
+@startuml
+
+actor user
+entity SEAT
+collections betalingsStub
+
+user --> SEAT: Etterspør billett mot betaling (015) med Vipps
+SEAT --> betalingsStub: betalMedVipps(billett.getPris())
+betalingsStub --> betalingsStub: venter på betalings bekreftelse fra vipps
+SEAT <-- betalingsStub: betalingGodkjent()
+user <-- SEAT: Her er din billett
+
+
+@enduml

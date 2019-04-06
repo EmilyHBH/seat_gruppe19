@@ -1,0 +1,16 @@
+@startuml
+
+actor user
+entity SEAT
+collections betalingsStub
+
+user --> SEAT: Etterspør billett mot betaling (015) med kontant
+SEAT --> betalingsStub: betalMedKontanter(billett.getPris())
+betalingsStub --> betalingsStub: venter til nok kontanter er motatt
+SEAT <-- betalingsStub: betalingGodkjent(veksel)
+SEAT --> SEAT: utbetaler vekslepenger
+user <-- SEAT: Her er din billett
+
+
+
+@enduml
