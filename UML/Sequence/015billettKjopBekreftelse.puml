@@ -4,9 +4,8 @@ actor user
 entity SEAT
 collections mail_server
 
-user --> SEAT: Kjoper billett (010-013)
+user --> SEAT: Kjoper billett (010-014)
 SEAT --> mail_server: confirmPaymentByMail()
 user <-- mail_server: sendsMailToUser()
 
-Alice <-- Bob: another authentication Response
 @enduml

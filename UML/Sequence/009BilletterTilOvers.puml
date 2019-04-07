@@ -1,0 +1,8 @@
+@startuml
+
+entity SEAT
+boundary Arrangements
+
+SEAT --> Arrangements: 
+
+@enduml

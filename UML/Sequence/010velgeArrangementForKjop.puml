@@ -1,0 +1,15 @@
+@startuml
+
+actor user
+entity SEAT
+database db
+
+user --> SEAT:
+SEAT --> db: displayEvents()
+SEAT <-- db: returns ResultSet containing events
+SEAT --> SEAT: for ResultSet{ new Arrangement(info) }
+user <-- SEAT: Presents user with options
+user --> SEAT: Selects option
+SEAT --> SEAT: Begins (011)
+
+@enduml

@@ -1,0 +1,10 @@
+@startuml
+
+actor user
+entity SEAT
+
+user --> SEAT: Har valgt arrangement (010)
+user <-- SEAT: Presenterer betalings metoder
+user --> SEAT: initiatePayment(method)(012-014)
+
+@enduml

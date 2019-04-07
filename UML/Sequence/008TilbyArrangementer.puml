@@ -1,0 +1,12 @@
+@startuml
+
+entity SEAT
+control Database.java as data
+database db
+
+SEAT --> data: displayEvents()
+data --> db: SELECT * FROM events
+data <-- db: all from events
+SEAT <-- data: ResultSet containing all events
+
+@enduml

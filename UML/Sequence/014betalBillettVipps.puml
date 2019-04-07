@@ -4,7 +4,7 @@ actor user
 entity SEAT
 collections betalingsStub
 
-user --> SEAT: Etterspør billett mot betaling (015) med Vipps
+user --> SEAT: Etterspør billett mot betaling (011) med Vipps
 SEAT --> betalingsStub: betalMedVipps(billett.getPris())
 betalingsStub --> betalingsStub: venter på betalings bekreftelse fra vipps
 SEAT <-- betalingsStub: betalingGodkjent()
