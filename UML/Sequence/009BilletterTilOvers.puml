@@ -1,8 +1,10 @@
 @startuml
 
 entity SEAT
+control Database.java as data
+database db
 boundary Arrangements
 
-SEAT --> Arrangements: 
+SEAT --> data: Jeg vet ikke, må spørre Emily
 
 @enduml

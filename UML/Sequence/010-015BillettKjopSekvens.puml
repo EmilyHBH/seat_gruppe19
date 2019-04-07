@@ -1,0 +1,31 @@
+@startuml
+
+actor user
+entity SEAT
+database db
+collections betalingsStub
+collections mail_server
+
+user --> SEAT:
+SEAT --> db: displayEvents()
+SEAT <-- db: returns ResultSet containing events
+SEAT --> SEAT: for ResultSet{ new Arrangement(info) }
+user <-- SEAT: Presents user with options
+user --> SEAT: Selects option
+user <-- SEAT: Presenterer betalings metoder
+user --> SEAT: initiatePayment(method)(012-014)
+note left
+	Her velger kunden betalings 
+	metode (Vipps, kort eller kontant).
+	I dette eksempelet bruker vi kort.
+end note
+SEAT --> betalingsStub: betalMedKort(billett.getPris())
+betalingsStub --> betalingsStub: venter til transaksjon er godkjent
+SEAT <-- betalingsStub: godkjentBetaling()
+user <-- SEAT: Her er din billett.
+SEAT --> mail_server: confirmPaymentByMail()
+user <-- mail_server: sendsMailToUser()
+
+
+
+@enduml
