@@ -6,10 +6,10 @@ database db
 
 user --> SEAT:
 SEAT --> db: displayEvents()
-SEAT <-- db: returns ResultSet containing events
+SEAT <-- db: returns ResultSet med arrangementer
 SEAT --> SEAT: for ResultSet{ new Arrangement(info) }
-user <-- SEAT: Presents user with options
-user --> SEAT: Selects option
-SEAT --> SEAT: Begins (011)
+user <-- SEAT: Presenterer bruker med valg
+user --> SEAT: Velger onsket arrangement
+SEAT --> SEAT: Starter (011)
 
 @enduml
