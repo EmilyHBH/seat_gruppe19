@@ -6,16 +6,22 @@ database db
 collections betalingsStub
 collections mail_server
 
-user --> SEAT:
+user --> SEAT: Starter bruk av software
+note left
+	Dette er en full gjennomgang
+	av prossessen når bruker skal
+	kjope en billett. Den går ut
+	i fra at ingenting feiler.
+end note
 SEAT --> db: displayEvents()
-SEAT <-- db: returns ResultSet containing events
+SEAT <-- db: returns ResultSet med arrangementer
 SEAT --> SEAT: for ResultSet{ new Arrangement(info) }
-user <-- SEAT: Presents user with options
-user --> SEAT: Selects option
+user <-- SEAT: Presenterer bruker med valg
+user --> SEAT: Velger onsket arrangement
 user <-- SEAT: Presenterer betalings metoder
 user --> SEAT: initiatePayment(method)(012-014)
 note left
-	Her velger kunden betalings 
+	Her velger kunden betalings
 	metode (Vipps, kort eller kontant).
 	I dette eksempelet bruker vi kort.
 end note
