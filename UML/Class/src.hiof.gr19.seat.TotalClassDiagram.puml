@@ -1,0 +1,131 @@
+@startuml
+
+ui.Console <|-- ui.OrganizerConsole
+ui.Console <|-- ui.CustomerConsole
+User.Type <-- ui.Console
+Database <-- ui.Console
+Organizer <-- ui.OrganizerConsole
+
+Ticket <.. Person
+Ticket <-- ui.CustomerConsole
+
+Arrangement <-- ui.CustomerConsole
+Arrangement <-- ui.OrganizerConsole
+
+' Model classes
+
+class Arrangement {
+	- arrangementID : String
+	- arrangementTitle : String
+	- arrangementDescription : String
+	- private arrangementDate : Date
+	- organizer : Organizer
+	- peopleAmount : int
+
+	+ toString() : String
+	+ getTotalInformation() : String
+}
+
+class Organizer {
+	- organizerID : String
+	- organizerName : String
+
+	+ toString() : String
+}
+
+class Person {
+	- firstName : String
+	- lastName : String
+	- age : int
+	- emailAddress : String
+}
+
+class Ticket {
+	- id : String
+	- owner : Person
+	- validForPerson : int
+	- arrangement : Arrangement
+}
+
+
+enum User.Type{
+	Customer
+	Organizer
+}
+
+' /Model classes
+
+class Database {
+	- dbCon : Connection
+	__
+	- getConnection() : void
+	.. Retrieve data ..
+	+ displayUsers() : ResultSet
+	+ checkForOrganizer(String) : boolean
+	+ displayEvents(String) : ResultSet
+	+ displayAnEventsTickets(int) : ResultSet
+	+ displayAllUsersTickets(int) : ResultSet
+	.. Insert data ..
+	+ addUser(Person) : void
+	+ addOrganizer(Organizer) : void
+	+ createEvent(Arrangement) : void
+	+ userPurchasedTickets(int, int, int) : void
+	.. Update data ..
+	+ changeEmailOfOrganizer(Organizer, String) : void
+	+ changeEventInfo(int, String, String, String) : void
+	.. Delete data ..
+	+ cancelAUsersTicket(int, int) : void
+	+ cancelEvent(int) : void
+}
+
+class ui.Console {
+	+ {static} identifyUser() : User.Type
+	+ {static} parseDate(String) : Date
+	+ {static} printArrangements(ArrayList<Arrangements>) : void
+	' getArrangementById()
+	' checkTicketConditions()
+	+ {static} selectFromList(ArrayList) : void
+}
+
+class ui.CustomerConsole {
+	+ {static} customerMenu() : void
+	+ {static} purchaseTicketMenu(Arrangement) : void
+}
+
+class ui.OrganizerConsole {
+	+ {static} organizerLogin() : void
+	+ {static} organizerMenu() : void
+	+ {static} createArrangementPrompt() : void
+	+ registerOrganizer() : Organizer
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@enduml
