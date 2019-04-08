@@ -1,7 +1,13 @@
 @startuml
-Alice -> Bob: Authentication Request
-Bob --> Alice: Authentication Response
 
-Alice -> Bob: Another authentication Request
-Alice <-- Bob: another authentication Response
+actor user
+entity SEAT
+
+user --> SEAT:
+note left
+	Dette kan kontrolleres i konstruktor
+	og via setMetode
+	Se 005 og 006
+end note
+
 @enduml

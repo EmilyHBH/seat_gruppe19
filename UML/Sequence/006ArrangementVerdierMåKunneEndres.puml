@@ -1,7 +1,27 @@
 @startuml
-Alice -> Bob: Authentication Request
-Bob --> Alice: Authentication Response
 
-Alice -> Bob: Another authentication Request
-Alice <-- Bob: another authentication Response
+actor user
+entity SEAT
+control Database.java as data
+database db
+
+user --> SEAT: Endre Arrangement! \n editArrangementPrompt()
+note left
+	Går ut ifra at bruker allerede
+	er logget inn i arrangor konto
+end note
+user <-- SEAT: Hvilket arrangement ønsker du å endre? \n Liste med arrangementer
+user --> SEAT: Valgt Arrangement
+user <-- SEAT: Hvilken verdi ønsker du å endre? \n Liste med verdier
+note left
+	Verdier:
+	Tittel, Beskrivelse,
+	Dato og AntallBilletter.
+end note
+user --> SEAT: Valgt verdi
+user <-- SEAT: Onsket verdi?
+user --> SEAT: Ny verdi
+SEAT --> data: changeEventInfo(id, ...)
+data --> db: UPDATE arrangement ... WHERE id
+
 @enduml
