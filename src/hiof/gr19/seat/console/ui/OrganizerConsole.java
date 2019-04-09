@@ -55,6 +55,7 @@ public class OrganizerConsole extends Console{
         String description = console.readLine("Description:");
         String dateString = console.readLine("Date day-month-year:"); //TODO test
         int ticketAmount = Integer.parseInt(console.readLine("How many tickets?:"));
+        String location = console.readLine(">Location");
 
         Arrangement arrangement = new Arrangement(
                 null,//Blir satt av database
@@ -62,7 +63,8 @@ public class OrganizerConsole extends Console{
                 description,
                 parseDate(dateString),
                 null, // dette blir enumen
-                ticketAmount);
+                ticketAmount,
+                location);
 
     }
 
