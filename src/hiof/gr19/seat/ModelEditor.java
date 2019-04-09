@@ -19,7 +19,7 @@ public class ModelEditor {
 				break;
 			case 5:
 				int peopleAmount = Integer.parseInt(changeValue);
-				arrangement.setPeopleAmount(peopleAmount);
+				arrangement.setMaxAttendees(peopleAmount);
 				break;
 			default:
 				throw new IndexOutOfBoundsException("Index " + fieldToChange + " is out of bounds!");
