@@ -2,6 +2,7 @@ package hiof.gr19.seat.console.ui;
 
 import de.vandermeer.asciitable.AsciiTable;
 import hiof.gr19.seat.Arrangement;
+import hiof.gr19.seat.Database;
 import hiof.gr19.seat.User;
 
 import java.text.DateFormat;
@@ -12,6 +13,8 @@ import java.util.Date;
 import java.util.Locale;
 
 public class Console {
+
+    static Database db = new Database();
 
     public static User.Type identifyUser() {
 
