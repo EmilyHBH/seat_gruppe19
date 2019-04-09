@@ -7,16 +7,26 @@ public class Arrangement {
     private String arrangmentTitle;
     private String arrangmentDescription;
     private Date arragmentDate;
+    private String location;
     private Organizer organizer;
     private int maxAttendees;
 
-    public Arrangement(String arrangementID, String arrangmentTitle, String arrangmentDescription, Date arragmentDate, Organizer organizer, int maxattendees) {
+    public Arrangement(String arrangementID, String arrangmentTitle, String arrangmentDescription, Date arragmentDate, Organizer organizer, int maxattendees, String location) {
         this.arrangementID = arrangementID;
         this.arrangmentTitle = arrangmentTitle;
         this.arrangmentDescription = arrangmentDescription;
         this.arragmentDate = arragmentDate;
         this.organizer = organizer;
         this.maxAttendees = maxattendees;
+        this.location = location;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public String getTotalInformation() {
