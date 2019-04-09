@@ -3,10 +3,25 @@ package hiof.gr19.seat;
 public class Organizer {
     private String organizerID;
     private String organizerName;
+    private String email;
+
+    public Organizer(String organizerID, String organizerName, String email) {
+        this.organizerID = organizerID;
+        this.organizerName = organizerName;
+        this.email = email;
+    }
 
     public Organizer(String organizerID, String organizerName) {
         this.organizerID = organizerID;
         this.organizerName = organizerName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getOrganizerID() {
