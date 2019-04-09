@@ -49,7 +49,7 @@ public class CustomerConsole extends Console{
         String ticketAmount = console.readLine(">");
 
 
-        if (Integer.parseInt(ticketAmount) > arrangement.getPeopleAmount()){
+        if (Integer.parseInt(ticketAmount) > arrangement.getMaxAttendees()){
             throw new IOException("No more tickets left");
 
         }
