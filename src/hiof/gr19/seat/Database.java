@@ -5,11 +5,106 @@ import java.sql.*;
 public class Database {
 
     private static Connection dbCon;
+    private static boolean hasData = false;
 
     private void getConnection() throws ClassNotFoundException, SQLException {
         Class.forName("org.sqlite.JDBC");
         dbCon = DriverManager.getConnection("jdbc:sqlite:tempDB.db");
+        initialise();
     }
+
+    // Creates db tables and populates them with dummy data if they don't already exist
+    private void initialise() throws SQLException {
+        if(!hasData){
+            hasData = true;
+            Statement statement = dbCon.createStatement();
+
+            ResultSet kundeTable = statement.executeQuery("SELECT name FROM sqlite_master WHERE type = 'table' AND name='kunde'");
+            if(!kundeTable.next()){
+                Statement createKundeTable = dbCon.createStatement();
+                createKundeTable.execute("CREATE TABLE kunde (" +
+                        "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                        "forNavn TEXT NOT NULL, " +
+                        "etterNavn TEXT NOT NULL, " +
+                        "kontaktinfo TEXT NOT NULL, " +
+                        "alder INTEGER NOT NULL " +
+                        ")");
+
+                // Dummy data
+                createKundeTable.execute("INSERT INTO kunde values(?, \"Mickey\", \"Mouse\", \"Heyooo\", \"20\")");
+                createKundeTable.execute("INSERT INTO kunde values(?, \"Donald\", \"Duck\", \"19283746\", \"15\")");
+                createKundeTable.execute("INSERT INTO kunde values(?, \"Goofy\", \"Goof\", \"12345678\", \"10\")");
+            }
+
+            ResultSet billettTable = statement.executeQuery("SELECT name FROM sqlite_master WHERE type = 'table' AND name='bilett'");
+            if(!billettTable.next()){
+                Statement createBillettTable = dbCon.createStatement();
+                createBillettTable.execute("CREATE TABLE bilett (" +
+                        "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                        "pris INTEGER NOT NULL " +
+                        ")");
+            }
+
+            ResultSet billettKundeTable = statement.executeQuery("SELECT name FROM sqlite_master WHERE type = 'table' AND name='kundes_billetter'");
+            if(!billettKundeTable.next()){
+                Statement createBillettKundeTable = dbCon.createStatement();
+                createBillettKundeTable.execute("CREATE TABLE kundes_billetter (" +
+                        "kundeId INTEGER NOT NULL, " +
+                        "billettId INTEGER NOT NULL, " +
+                        "antall INTEGER NOT NULL, " +
+                        "FOREIGN KEY(kundeId) REFERENCES kunde(id) on delete cascade on update cascade, " +
+                        "PRIMARY KEY(kundeId,billettId), " +
+                        "FOREIGN KEY(billettId) REFERENCES bilett(id) on delete cascade on update cascade " +
+                        ")");
+            }
+
+            ResultSet arrangorTable = statement.executeQuery("SELECT name FROM sqlite_master WHERE type = 'table' AND name='arrangor'");
+            if(!arrangorTable.next()){
+                Statement createArrangorTable = dbCon.createStatement();
+                createArrangorTable.execute("CREATE TABLE arrangor ( " +
+                        "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                        "navn TEXT NOT NULL, " +
+                        "email TEXT NOT NULL " +
+                        ")");
+
+                // Dummy data
+                createArrangorTable.execute("INSERT INTO arrangor values(?, \"OrgStarter\", \"newEmail@gmail.com\")");
+            }
+
+            ResultSet arrangementTable = statement.executeQuery("SELECT name FROM sqlite_master WHERE type = 'table' AND name='arrangement'");
+            if(!arrangementTable.next()){
+                Statement createArrangementTable = dbCon.createStatement();
+                createArrangementTable.execute("CREATE TABLE arrangement (" +
+                        "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                        "navn TEXT NOT NULL, " +
+                        "beskrivelse TEXT NOT NULL, " +
+                        "dato TEXT NOT NULL, " +
+                        "aldersgrense INTEGER, " +
+                        "addresse TEXT NOT NULL, " +
+                        "arrangor_fk INTEGER NOT NULL, " +
+                        "total_biletter INTEGER NOT NULL, " +
+                        "FOREIGN KEY(arrangor_fk) REFERENCES arrangor(id) on delete cascade on update cascade " +
+                        ")");
+
+                // Dummy data TODO:: sjekk dato
+                createArrangementTable.execute("INSERT INTO arrangement values(?, \"Fyre Festival\", \"Beskrivelse.........\", \"09-05-2019\", \"20\",\"Remmen 990\", \"1\", \"200\")");
+            }
+
+            ResultSet arrangementsBiletterTable = statement.executeQuery("SELECT name FROM sqlite_master WHERE type = 'table' AND name='arrangements_biletter'");
+            if(!arrangementsBiletterTable.next()){
+                Statement createArrangementsBiletterTable = dbCon.createStatement();
+                createArrangementsBiletterTable.execute("CREATE TABLE arrangements_biletter (" +
+                        "arrangementId INTEGER NOT NULL, " +
+                        "billettId INTEGER NOT NULL, " +
+                        "antall INTEGER NOT NULL, " +
+                        "PRIMARY KEY(arrangementId, billettId), " +
+                        "FOREIGN KEY(arrangementId) REFERENCES arrangement(id) on delete cascade on update cascade, " +
+                        "FOREIGN KEY(billettId) REFERENCES bilett(id) on delete cascade on update cascade " +
+                        ")");
+            }
+        }
+    }
+
 
     // Retrieve data
     public ResultSet displayUsers() throws SQLException, ClassNotFoundException {
