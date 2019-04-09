@@ -8,15 +8,15 @@ public class Arrangement {
     private String arrangmentDescription;
     private Date arragmentDate;
     private Organizer organizer;
-    private int peopleAmount;
+    private int maxAttendees;
 
-    public Arrangement(String arrangementID, String arrangmentTitle, String arrangmentDescription, Date arragmentDate, Organizer organizer, int peopleAmount) {
+    public Arrangement(String arrangementID, String arrangmentTitle, String arrangmentDescription, Date arragmentDate, Organizer organizer, int maxattendees) {
         this.arrangementID = arrangementID;
         this.arrangmentTitle = arrangmentTitle;
         this.arrangmentDescription = arrangmentDescription;
         this.arragmentDate = arragmentDate;
         this.organizer = organizer;
-        this.peopleAmount = peopleAmount;
+        this.maxAttendees = maxattendees;
     }
 
     public String getTotalInformation() {
@@ -36,7 +36,7 @@ public class Arrangement {
         stringBuilder.append("Organizer: " + organizer);
         stringBuilder.append(System.lineSeparator());
 
-        stringBuilder.append("People amount: " + peopleAmount);
+        stringBuilder.append("People amount: " + maxAttendees);
         stringBuilder.append(System.lineSeparator());
 
         return stringBuilder.toString();
@@ -82,12 +82,12 @@ public class Arrangement {
         this.organizer = organizer;
     }
 
-    public int getPeopleAmount() {
-        return peopleAmount;
+    public int getMaxAttendees() {
+        return maxAttendees;
     }
 
-    public void setPeopleAmount(int peopleAmount) {
-        this.peopleAmount = peopleAmount;
+    public void setMaxAttendees(int maxAttendees) {
+        this.maxAttendees = maxAttendees;
     }
 
     @Override

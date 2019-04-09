@@ -30,8 +30,6 @@ public class OrganizerConsole extends Console{
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-
-
     }
 
     static void organizerMenu(){

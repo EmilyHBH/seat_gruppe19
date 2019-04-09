@@ -71,7 +71,7 @@ public class Console {
 
         for (Arrangement x: arrangementList) {
             arragmentTable.addRule();
-            arragmentTable.addRow(x.getArrangementID(),x.getArrangmentTitle(),x.getArragmentDate(),x.getPeopleAmount());
+            arragmentTable.addRow(x.getArrangementID(),x.getArrangmentTitle(),x.getArragmentDate(),x.getMaxAttendees());
             arragmentTable.addRule();
 
         }
@@ -87,7 +87,7 @@ public class Console {
 
     boolean checkTicketConditions(Arrangement arrangement, int ticketAmount) {
 
-        return arrangement.getPeopleAmount() > ticketAmount;
+        return arrangement.getMaxAttendees() > ticketAmount;
 
     }
 
