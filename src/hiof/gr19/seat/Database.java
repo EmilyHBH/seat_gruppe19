@@ -119,8 +119,8 @@ public class Database {
         ResultSet result = statement.executeQuery();
 
         if(result.next()){
-            // TODO:: i organizer ha kontakt/email variabel
-            return new Organizer(result.getString("id"), result.getString("navn"));
+            // TODO:: sjekk funker
+            return new Organizer(result.getString("id"), result.getString("navn"), result.getString("email"));
         }
 
         return null;
@@ -137,8 +137,8 @@ public class Database {
             Organizer eventHolder = getOrganizerById(result.getInt("arrangor_fk"));
             java.util.Date date = parseDate(result.getString("dato"));
 
-            // TODO:: add aldersgrense til arrangement, og peopleamount løsning i db. (tell arrangementets antall billetter)
-            return new Arrangement(result.getString("id"), result.getString("navn"), result.getString("beskrivelse"), date, eventHolder, 200);
+            // TODO:: sjekk funker
+            return new Arrangement(result.getString("id"), result.getString("navn"), result.getString("beskrivelse"), date, eventHolder, result.getInt("total_biletter"), result.getString("addresse"));
         }
 
         return null;
@@ -160,16 +160,16 @@ public class Database {
             getConnection();
 
         Statement state = dbCon.createStatement();
-        ResultSet results = state.executeQuery("SELECT * FROM arrangement;");
+        ResultSet result = state.executeQuery("SELECT * FROM arrangement;");
 
         ArrayList<Arrangement> events = new ArrayList<>();
 
-        while(results.next()){
-            Organizer eventHolder = getOrganizerById(results.getInt("arrangor_fk"));
-            java.util.Date date = parseDate(results.getString("dato"));
+        while(result.next()){
+            Organizer eventHolder = getOrganizerById(result.getInt("arrangor_fk"));
+            java.util.Date date = parseDate(result.getString("dato"));
 
-            // TODO:: add aldersgrense til arrangement, og peopleamount løsning i db. (tell arrangementets antall billetter)
-            events.add(new Arrangement(results.getString("id"), results.getString("navn"), results.getString("beskrivelse"), date, eventHolder, 200));
+            // TODO:: sjekk funker
+            events.add(new Arrangement(result.getString("id"), result.getString("navn"), result.getString("beskrivelse"), date, eventHolder, result.getInt("total_biletter"), result.getString("addresse")));
         }
 
         return events;
@@ -205,22 +205,24 @@ public class Database {
         if(dbCon == null)
             getConnection();
 
-        // TODO:: email i organizer get(), først implementeres i organizer klassen
+        // TODO:: sjekk funker
         PreparedStatement prep = dbCon.prepareStatement("INSERT INTO arrangor(navn,email) values(?,?)");
         prep.setString(1,organizer.getOrganizerName());
-        prep.setString(2, "temp email dummy");
+        prep.setString(2, organizer.getEmail());
         prep.execute();
     }
     public void createEvent(Arrangement arrangement) throws SQLException, ClassNotFoundException {
         if(dbCon == null)
             getConnection();
 
-        // TODO:: sett aldersgrense, må først implementeres i Arrangement klassen
-        PreparedStatement prep = dbCon.prepareStatement("INSERT INTO arrangement(navn,beskrivelse,dato,arrangor_fk) values(?,?,?,?)");
+        // TODO:: sjekk funker
+        PreparedStatement prep = dbCon.prepareStatement("INSERT INTO arrangement(navn,beskrivelse,dato,arrangor_fk, addresse, total_biletter) values(?,?,?,?,?,?)");
         prep.setString(1,arrangement.getArrangmentTitle());
         prep.setString(2, arrangement.getArrangmentDescription());
         prep.setString(3, String.valueOf(arrangement.getArragmentDate()));
         prep.setInt(4, Integer.parseInt(arrangement.getOrganizer().getOrganizerID()));
+        prep.setString(5, arrangement.getLocation());
+        prep.setInt(6, arrangement.getMaxAttendees());
         prep.execute();
     }
     public void userPurchasedTickets(int kundeId, int billettId, int antall) throws SQLException, ClassNotFoundException {
