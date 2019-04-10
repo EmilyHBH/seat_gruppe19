@@ -1,24 +1,33 @@
 package hiof.gr19.seat;
 
-import sun.awt.CustomCursor;
+import hiof.gr19.seat.console.ui.Console;
+import hiof.gr19.seat.console.ui.CustomerConsole;
+import hiof.gr19.seat.console.ui.OrganizerConsole;
 
-import javax.xml.crypto.Data;
-import java.io.Console;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Scanner;
-
-import static hiof.gr19.seat.ConsoleInterface.*;
 import static hiof.gr19.seat.console.ui.Console.identifyUser;
-import static hiof.gr19.seat.console.ui.Console.printArrangements;
-import static hiof.gr19.seat.console.ui.CustomerConsole.customerMenu;
 
 public class Seat {
 
     public static void main(String[] args){
-        identifyUser();
+
+        User.Type userType = null;
+        Console c;
+
+        // This loop forces the identifyUser() method to rerun until it gets a valid User.Type
+        while(userType == null)
+            userType = identifyUser();
+
+        switch (userType) {
+            case Customer:
+                c = new CustomerConsole();
+                c.start();
+                break;
+            case Organizer:
+                c = new OrganizerConsole();
+                c.start();
+                break;
+            default:
+                break;
+        }
     }
-
-
-
 }

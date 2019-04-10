@@ -1,9 +1,10 @@
 package hiof.gr19.seat;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Arrangement {
-    private String arrangementID;
+    private int arrangementID;
     private String arrangmentTitle;
     private String arrangmentDescription;
     private Date arragmentDate;
@@ -11,7 +12,7 @@ public class Arrangement {
     private Organizer organizer;
     private int maxAttendees;
 
-    public Arrangement(String arrangementID, String arrangmentTitle, String arrangmentDescription, Date arragmentDate, Organizer organizer, int maxattendees, String location) {
+    public Arrangement(int arrangementID, String arrangmentTitle, String arrangmentDescription, Date arragmentDate, Organizer organizer, int maxattendees, String location) {
         this.arrangementID = arrangementID;
         this.arrangmentTitle = arrangmentTitle;
         this.arrangmentDescription = arrangmentDescription;
@@ -21,15 +22,7 @@ public class Arrangement {
         this.location = location;
     }
 
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public String getTotalInformation() {
+    private String getTotalInformation() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("ID: " + arrangementID);
         stringBuilder.append(System.lineSeparator());
@@ -52,11 +45,19 @@ public class Arrangement {
         return stringBuilder.toString();
     }
 
-    public String getArrangementID() {
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public int getArrangementID() {
         return arrangementID;
     }
 
-    public void setArrangementID(String arrangementID) {
+    public void setArrangementID(int arrangementID) {
         this.arrangementID = arrangementID;
     }
 
@@ -78,6 +79,11 @@ public class Arrangement {
 
     public Date getArragmentDate() {
         return arragmentDate;
+    }
+
+    public String getArragmentDateInStringFormat() {
+        SimpleDateFormat formatter = new SimpleDateFormat("d-MM-yyyy");
+        return formatter.format(arragmentDate);
     }
 
     public void setArragmentDate(Date arragmentDate) {
