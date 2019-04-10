@@ -14,11 +14,11 @@ import java.util.Locale;
 
 public class Console {
 
+    static java.io.Console console = System.console();
     static Database db = new Database();
 
     public static User.Type identifyUser() {
 
-        java.io.Console console = System.console();
         if (console == null){
             throw new NullPointerException("No console found");
         }
@@ -44,6 +44,12 @@ public class Console {
         return null;
     }
 
+    // This method is meant to be overridden
+    public void start(){
+        if (console == null){
+            throw new NullPointerException("No console found");
+        }
+    }
 
     public static Date parseDate(String inputDate){
 
@@ -59,6 +65,55 @@ public class Console {
 
     }
 
+    static boolean askBooleanQuestionAndReturnAnswer(String question){
+        System.out.println(questionFormat(question + " (y/n)"));
+
+        String answer;
+        while(true){
+             answer = console.readLine();
+
+            if(answer.equals("y"))
+                return true;
+            else if(answer.equals("n"))
+                return false;
+
+            System.out.println("Answer by typing 'y' or 'n'");
+        }
+    }
+    static int validateIntInput(String question){
+
+        System.out.println(questionFormat(question));
+
+        int result;
+
+        while(true){
+            try{
+                result = Integer.parseInt(console.readLine());
+                return result;
+            }
+            catch(NumberFormatException e){
+                System.out.println("Only numeric whole numbers are valid. Try again:");
+            }
+        }
+    }
+    static String validateStringInput(String question){
+        System.out.println(questionFormat(question));
+
+        String result;
+
+        while(true){
+            try{
+                result = console.readLine();
+                return result;
+            }
+            catch(Exception e){
+                System.out.println("Something went wrong, try again:");
+            }
+        }
+    }
+    private static String questionFormat(String question){
+        return question == null ? null : "\n" + question + ":\n";
+    }
 
     public static void printArrangements(ArrayList<Arrangement> arrangementList){
 

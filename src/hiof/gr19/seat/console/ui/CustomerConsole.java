@@ -8,14 +8,32 @@ import java.util.ArrayList;
 
 public class CustomerConsole extends Console{
 
-    public static void customerMenu(){
+    @Override
+    public void start() {
 
-        java.io.Console console = System.console();
-        if (console == null){
-            throw new NullPointerException("No console found");
-        }
+        super.start();
 
-        System.out.println("Choose arrangement based on ID");
+        /*Person user;
+
+        if(askBooleanQuestionAndReturnAnswer("Do you already have an account"))
+            user = customerLogin();
+        else {
+            if(askBooleanQuestionAndReturnAnswer("Do you want to create an account")){
+                user = registerCustomer();
+
+                // input new organizer to db
+                try {
+                    db.addOrganizer(user);
+                } catch (SQLException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }*/
+
+        customerMenu();
+    }
+
+    private static void customerMenu(){
 
         // Prints all events
         try {
@@ -40,10 +58,6 @@ public class CustomerConsole extends Console{
 
 
     private static void purchaseTicketMenu(Arrangement arrangement) throws IOException {
-        java.io.Console console = System.console();
-        if (console == null){
-            throw new NullPointerException("No console found");
-        }
 
         System.out.println("How many tickets?");
         String ticketAmount = console.readLine(">");

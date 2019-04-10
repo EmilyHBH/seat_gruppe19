@@ -138,7 +138,7 @@ public class Database {
             java.util.Date date = parseDate(result.getString("dato"));
 
             // TODO:: sjekk funker
-            return new Arrangement(result.getString("id"), result.getString("navn"), result.getString("beskrivelse"), date, eventHolder, result.getInt("total_biletter"), result.getString("addresse"));
+            return new Arrangement(result.getInt("id"), result.getString("navn"), result.getString("beskrivelse"), date, eventHolder, result.getInt("total_biletter"), result.getString("addresse"));
         }
 
         return null;
@@ -168,8 +168,7 @@ public class Database {
             Organizer eventHolder = getOrganizerById(result.getInt("arrangor_fk"));
             java.util.Date date = parseDate(result.getString("dato"));
 
-            // TODO:: sjekk funker
-            events.add(new Arrangement(result.getString("id"), result.getString("navn"), result.getString("beskrivelse"), date, eventHolder, result.getInt("total_biletter"), result.getString("addresse")));
+            events.add(new Arrangement(result.getInt("id"), result.getString("navn"), result.getString("beskrivelse"), date, eventHolder, result.getInt("total_biletter"), result.getString("addresse")));
         }
 
         return events;
@@ -215,17 +214,27 @@ public class Database {
         if(dbCon == null)
             getConnection();
 
-        // TODO:: sjekk funker
         PreparedStatement prep = dbCon.prepareStatement("INSERT INTO arrangement(navn,beskrivelse,dato,arrangor_fk, addresse, total_biletter) values(?,?,?,?,?,?)");
         prep.setString(1,arrangement.getArrangmentTitle());
         prep.setString(2, arrangement.getArrangmentDescription());
-        prep.setString(3, String.valueOf(arrangement.getArragmentDate()));
-        prep.setInt(4, Integer.parseInt(arrangement.getOrganizer().getOrganizerID()));
+        prep.setString(3, arrangement.getArragmentDateInStringFormat()); // TODO:: implement getArragmentDateInStringFormat() method
+
+        // TODO:: remove this temp solution, all arrangements must have organizer so if/else brace should not exist. Only here for now for easier testing
+        if(arrangement.getOrganizer() != null)
+            prep.setInt(4, Integer.parseInt(arrangement.getOrganizer().getOrganizerID()));
+        else
+            prep.setInt(4, 1);
+
         prep.setString(5, arrangement.getLocation());
         prep.setInt(6, arrangement.getMaxAttendees());
         prep.execute();
+
+        try (ResultSet gkeys = prep.getGeneratedKeys()) {
+            if (gkeys.next())
+                arrangement.setArrangementID(gkeys.getInt(1));
+        }
     }
-    public void userPurchasedTickets(int kundeId, int billettId, int antall) throws SQLException, ClassNotFoundException {
+    public void registeredUserPurchasedTickets(int kundeId, int billettId, int antall) throws SQLException, ClassNotFoundException {
         if(dbCon == null)
             getConnection();
 
@@ -234,6 +243,30 @@ public class Database {
         prep.setInt(2, billettId);
         prep.setInt(3, antall);
         prep.execute();
+    }
+    public void defineArrangementTickets(int arrangementId, int antall, int pris) throws SQLException, ClassNotFoundException {
+        if(dbCon == null)
+            getConnection();
+
+        // insert ticket into tickets table
+        PreparedStatement prep1 = dbCon.prepareStatement("INSERT INTO bilett(pris) values(?)");
+        prep1.setInt(1,pris);
+        prep1.execute();
+
+        try (ResultSet gkeys = prep1.getGeneratedKeys()) {
+            if (gkeys.next()) {
+                int billettId = gkeys.getInt(1);
+
+                // link the ticket with the arrangement
+                PreparedStatement prep2 = dbCon.prepareStatement("INSERT INTO arrangements_biletter values(?,?,?)");
+                prep2.setInt(1, arrangementId);
+                prep2.setInt(2, billettId);
+                prep2.setInt(3, antall);
+                prep2.execute();
+            }
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
     }
 
     // Update data

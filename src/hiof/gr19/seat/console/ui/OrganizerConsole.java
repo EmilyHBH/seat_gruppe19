@@ -8,13 +8,34 @@ import java.sql.SQLException;
 
 public class OrganizerConsole extends Console{
 
-    static void oranizerLogin(){
+    private Organizer user;
 
-        java.io.Console console = System.console();
-        if (console == null){
-            throw new NullPointerException("No console found");
+    @Override
+    public void start() {
+        super.start();
+        loginOrRegister();
+        organizerMenu();
+    }
+
+    private void loginOrRegister(){
+
+        if(askBooleanQuestionAndReturnAnswer("Do you already have an account"))
+            organizerLogin();
+        else {
+            user = registerOrganizer();
+
+            // input new organizer to db
+            try {
+                db.addOrganizer(user);
+            } catch (SQLException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         }
+    }
 
+    private void organizerLogin(){
+
+        System.out.println("Organizer Name:");
         String organizerName = console.readLine(">");
 
         //TODO sjekk om den finnes i DB
@@ -30,26 +51,30 @@ public class OrganizerConsole extends Console{
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
+
+        // TODO:: return Organizer?
     }
 
-    static void organizerMenu(){
+    private void organizerMenu(){
 
-        java.io.Console console = System.console();
-        if (console == null){
-            throw new NullPointerException("No console found");
+        // Instantiate an event based on user input
+        Arrangement createdArrangement = createArrangmentPrompt();
+
+        // Add the event into the database
+        try {
+            db.createEvent(createdArrangement);
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
+
+        // Define tickets, but only if the event is supposed to have a ticket system
+        if(askBooleanQuestionAndReturnAnswer("Shall this event have tickets"))
+            defineTickets(createdArrangement.getArrangementID());
+    }
+
+    private Arrangement createArrangmentPrompt() {
 
         System.out.println("Create arrangment");
-        System.out.println();
-
-    }
-
-
-    static void createArrangmentPrompt() {
-        java.io.Console console = System.console();
-        if (console == null) {
-            throw new NullPointerException("No console found");
-        }
 
         String title = console.readLine("Tittle:");
         String description = console.readLine("Description:");
@@ -57,30 +82,41 @@ public class OrganizerConsole extends Console{
         int ticketAmount = Integer.parseInt(console.readLine("How many tickets?:"));
         String location = console.readLine(">Location");
 
-        Arrangement arrangement = new Arrangement(
-                null,//Blir satt av database
+        return new Arrangement(
+                -1,//Blir satt av database
                 title,
                 description,
                 parseDate(dateString),
-                null, // dette blir enumen
+                user,
                 ticketAmount,
                 location);
 
     }
 
+    private void defineTickets(int arrangementId){
+
+        System.out.println("\nDefine tickets: \n");
+
+        int antall = validateIntInput("Antall billetter:");
+        int pris = validateIntInput("Pris:");
+
+        try {
+            db.defineArrangementTickets(arrangementId,antall,pris);
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
     Organizer registerOrganizer(){
-        java.io.Console console = System.console();
-        if (console == null) {
-            throw new NullPointerException("No console found");
-        }
 
         System.out.println("Name of organization");
         String organizerName = console.readLine(">");
 
+        String email = validateStringInput("Email");
+
         //TODO sjekk om navnet er tatt
 
-        return new Organizer(null,organizerName);
+        return new Organizer(null,organizerName, email);
     }
 
 }
