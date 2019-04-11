@@ -89,7 +89,8 @@ public class OrganizerConsole extends Console{
                 parseDate(dateString),
                 user,
                 ticketAmount,
-                location);
+                location,
+                null);  // Blir satt etterpå
 
     }
 
@@ -99,9 +100,10 @@ public class OrganizerConsole extends Console{
 
         int antall = validateIntInput("Antall billetter:");
         int pris = validateIntInput("Pris:");
+        String bilettBeskrivelse = validateStringInput("Bilett beskrivelse");
 
         try {
-            db.defineArrangementTickets(arrangementId,antall,pris);
+            db.defineArrangementTickets(arrangementId,antall,pris, bilettBeskrivelse);
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }

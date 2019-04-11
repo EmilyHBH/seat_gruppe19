@@ -37,7 +37,7 @@ public class CustomerConsole extends Console{
 
         // Prints all events
         try {
-            ArrayList<Arrangement> allEvents = db.displayEvents();
+            ArrayList<Arrangement> allEvents = db.getEvents();
             printArrangements(allEvents);
 
         } catch (SQLException | ClassNotFoundException e) {
@@ -59,13 +59,24 @@ public class CustomerConsole extends Console{
 
     private static void purchaseTicketMenu(Arrangement arrangement) throws IOException {
 
-        System.out.println("How many tickets?");
-        String ticketAmount = console.readLine(">");
+        // TODO:: print all types of arrangements tickets
+        selectFromList(arrangement.getAvailableTickets());
+
+        int ticketAmount = validateIntInput("How many tickets");
 
 
-        if (Integer.parseInt(ticketAmount) > arrangement.getMaxAttendees()){
+        if (ticketAmount > arrangement.getMaxAttendees()){
             throw new IOException("No more tickets left");
 
+        }
+
+        // TODO:: Update the arrangement class instance
+
+        // TODO:: if user is logged in call db.registeredUserPurchasedTickets() else call db.ticketsHaveBeenPurchasedFromEvent()
+        try {
+            db.ticketsHaveBeenPurchasedFromEvent(1, ticketAmount);
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
 
     }
