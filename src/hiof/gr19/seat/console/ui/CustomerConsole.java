@@ -1,6 +1,7 @@
 package hiof.gr19.seat.console.ui;
 
 import hiof.gr19.seat.Arrangement;
+import hiof.gr19.seat.Ticket;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -37,7 +38,7 @@ public class CustomerConsole extends Console{
 
         // Prints all events
         try {
-            ArrayList<Arrangement> allEvents = db.displayEvents();
+            ArrayList<Arrangement> allEvents = db.getEvents();
             printArrangements(allEvents);
 
         } catch (SQLException | ClassNotFoundException e) {
@@ -59,14 +60,22 @@ public class CustomerConsole extends Console{
 
     private static void purchaseTicketMenu(Arrangement arrangement) throws IOException {
 
-        System.out.println("How many tickets?");
-        String ticketAmount = console.readLine(">");
+        // Print all the arrangements different types of tickets
+        for(Ticket ticket : arrangement.getAvailableTickets())
+            System.out.println(ticket.getId() + "\t" + ticket.getBeskrivelse() + "\t" + ticket.getAntall());
+
+        int ticketId = validateIntInput("id of ticket you want to buy");
+        int ticketAmount = validateIntInput("How many tickets");
 
 
-        if (Integer.parseInt(ticketAmount) > arrangement.getMaxAttendees()){
+        if (ticketAmount > arrangement.getMaxAttendees()){
             throw new IOException("No more tickets left");
 
         }
+
+        // TODO:: Update the arrangement class instance
+
+        // TODO:: db registration of purchased tickets
 
     }
 

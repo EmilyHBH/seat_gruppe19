@@ -1,47 +1,45 @@
 package hiof.gr19.seat;
 
 public class Ticket {
-    private String id;
-    private Person owner;
-    private int validForPerson;
-    private Arrangement arrangement;
+    private int id, pris, antall;
+    private String beskrivelse;
 
-    public Ticket(String id, Person owner, int validForPerson, Arrangement arrangement) {
+    public Ticket(int id, int pris, int antall, String beskrivelse) {
         this.id = id;
-        this.owner = owner;
-        this.validForPerson = validForPerson;
-        this.arrangement = arrangement;
+        this.pris = pris;
+        this.antall = antall;
+        this.beskrivelse = beskrivelse;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public Person getOwner() {
-        return owner;
+    public int getPris() {
+        return pris;
     }
 
-    public void setOwner(Person owner) {
-        this.owner = owner;
+    public void setPris(int pris) {
+        this.pris = pris;
     }
 
-    public int getValidForPerson() {
-        return validForPerson;
+    public int getAntall() {
+        return antall;
     }
 
-    public void setValidForPerson(int validForPerson) {
-        this.validForPerson = validForPerson;
+    public void setAntall(int antall) {
+        this.antall = antall;
     }
 
-    public Arrangement getArrangement() {
-        return arrangement;
+    public String getBeskrivelse() {
+        return beskrivelse;
     }
 
-    public void setArrangement(Arrangement arrangement) {
-        this.arrangement = arrangement;
+    public void setBeskrivelse(String beskrivelse) {
+        this.beskrivelse = beskrivelse;
     }
 }
