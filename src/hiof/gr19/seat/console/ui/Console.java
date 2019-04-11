@@ -158,6 +158,10 @@ public class Console {
         String input = console.readLine(">");
 
     }
+    static char getAscii(int code){
+
+        return (char) code;
+    }
 
 
 }

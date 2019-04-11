@@ -1,6 +1,8 @@
 package hiof.gr19.seat.console.ui;
 
 import hiof.gr19.seat.Arrangement;
+import hiof.gr19.seat.BetalingsStub;
+import hiof.gr19.seat.Database;
 import hiof.gr19.seat.Ticket;
 
 import java.io.IOException;
@@ -71,12 +73,75 @@ public class CustomerConsole extends Console{
         if (ticketAmount > arrangement.getMaxAttendees()){
             throw new IOException("No more tickets left");
 
+        }else {
+            purchaseTicket(ticketId, ticketAmount);
         }
 
         // TODO:: Update the arrangement class instance
 
         // TODO:: db registration of purchased tickets
 
+    }
+
+    public static void purchaseTicket(int ticketID, int ticketAmount) {
+
+        System.out.println("Type name: ");
+        String name = console.readLine(">");
+
+        System.out.println("and confirmation method:");
+        System.out.println("1 = Epost");
+        System.out.println("2 = Print");
+        int alternativ2 = Integer.parseInt(console.readLine(">"));
+
+        switch (alternativ2) {
+            case 1:
+                System.out.println("Epost");
+                String epost = console.readLine(">");
+                break;
+            case 2:
+                System.out.println("Print");
+                break;
+        }
+
+        System.out.println("Velg betalingsmåte: ");
+        System.out.println("1 = Bankkort");
+        System.out.println("2 = Kontanter");
+        System.out.println("3 = Vipps" );
+        int alternativ3 = Integer.parseInt(console.readLine(">"));
+
+        BetalingsStub betaling;
+        betaling = null;
+
+        switch (alternativ3) {
+            case 1:
+                System.out.println("Bankkort");
+                betaling = new BetalingsStub(name);
+                break;
+
+            case 2:
+                System.out.println("Kontanter");
+                betaling = new BetalingsStub(name);
+                break;
+            case 3:
+                System.out.println("Vipps");
+                System.out.println("Ditt telefonnummer: ");
+                int telefonnummer = Integer.parseInt(console.readLine(">"));
+                betaling = new BetalingsStub(telefonnummer, name);
+                break;
+            default:
+                break;
+        }
+
+        boolean betalingGodkent = betaling.godkjentBetaling();
+
+        if (betalingGodkent) {
+            try {
+                db.ticketsHaveBeenPurchasedFromEvent(ticketID, ticketAmount);
+            }catch (SQLException | ClassNotFoundException ex){
+                ex.printStackTrace();
+            }
+        }
+        System.out.println("Betalingen var: " + betalingGodkent);
     }
 
 }

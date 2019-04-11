@@ -4,17 +4,15 @@ public class BetalingsStub {
     int telefonnummer;
     String navn;
 
-    public BetalingsStub(int telefonnummer) {
-        this.telefonnummer = telefonnummer;
-    }
+    public BetalingsStub(String navn) { this.navn = navn; }
 
     public BetalingsStub(int telefonnummer, String navn) {
         this.telefonnummer = telefonnummer;
         this.navn = navn;
     }
 
+    //Denne koden brukes bare for å vise at resten av programmet skal fungere som det skal
     public boolean godkjentBetaling(){
-        //Dette er tullekode
 
         boolean returnVerdi = false;
 
