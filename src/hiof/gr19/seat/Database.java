@@ -67,11 +67,12 @@ public class Database {
                 createArrangorTable.execute("CREATE TABLE arrangor ( " +
                         "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
                         "navn TEXT NOT NULL, " +
-                        "email TEXT NOT NULL " +
+                        "email TEXT NOT NULL, " +
+                        "passordHashet TEXT NOT NULL" +
                         ")");
 
                 // Dummy data
-                createArrangorTable.execute("INSERT INTO arrangor values(?, \"OrgStarter\", \"newEmail@gmail.com\")");
+                createArrangorTable.execute("INSERT INTO arrangor values(?, \"OrgStarter\", \"newEmail@gmail.com\", \"srljthgdsfnvd\")");
             }
 
             ResultSet arrangementTable = statement.executeQuery("SELECT name FROM sqlite_master WHERE type = 'table' AND name='arrangement'");
@@ -119,8 +120,8 @@ public class Database {
         ResultSet result = statement.executeQuery();
 
         if(result.next()){
-            // TODO:: sjekk funker
-            return new Organizer(result.getString("id"), result.getString("navn"), result.getString("email"));
+            // TODO:: denne funker ikke i denne branchen, på merging accept theirs!!
+            //return new Organizer(result.getString("id"), result.getString("navn"), result.getString("email"));
         }
 
         return null;
@@ -143,13 +144,14 @@ public class Database {
 
         return null;
     }
-    public boolean checkForOrganizer(String organizer) throws SQLException, ClassNotFoundException{
+    public boolean checkForOrganizer(String organizer, String shaPassord) throws SQLException, ClassNotFoundException{
         if(dbCon == null){
             getConnection();
         }
-        String query = "SELECT COUNT(*) FROM arrangor WHERE navn = ?";
+        String query = "SELECT COUNT(*) FROM arrangor WHERE navn = ? AND passordHashet = ?";
         PreparedStatement statement = dbCon.prepareStatement(query);
         statement.setString(1,organizer);
+        statement.setString(2,shaPassord);
         ResultSet resultSet = statement.executeQuery();
 
         return resultSet.next();
@@ -205,9 +207,10 @@ public class Database {
             getConnection();
 
         // TODO:: sjekk funker
-        PreparedStatement prep = dbCon.prepareStatement("INSERT INTO arrangor(navn,email) values(?,?)");
+        PreparedStatement prep = dbCon.prepareStatement("INSERT INTO arrangor(navn,email, passordHashet) values(?,?,?)");
         prep.setString(1,organizer.getOrganizerName());
         prep.setString(2, organizer.getEmail());
+        prep.setString(3, organizer.getSha1Password());
         prep.execute();
     }
     public void createEvent(Arrangement arrangement) throws SQLException, ClassNotFoundException {
