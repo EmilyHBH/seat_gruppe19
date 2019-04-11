@@ -121,7 +121,7 @@ public class Database {
 
         if(result.next()){
             // TODO:: sjekk funker
-            return new Organizer(result.getString("id"), result.getString("navn"), result.getString("email"));
+            return new Organizer(result.getInt("id"), result.getString("navn"), result.getString("email"));
         }
 
         return null;
@@ -239,7 +239,7 @@ public class Database {
 
         // TODO:: remove this temp solution, all arrangements must have organizer so if/else brace should not exist. Only here for now for easier testing
         if(arrangement.getOrganizer() != null)
-            prep.setInt(4, Integer.parseInt(arrangement.getOrganizer().getOrganizerID()));
+            prep.setInt(4, arrangement.getOrganizer().getOrganizerID());
         else
             prep.setInt(4, 1);
 
@@ -262,13 +262,14 @@ public class Database {
         prep.setInt(3, antall);
         prep.execute();
     }
-    public void defineArrangementTickets(int arrangementId, int antall, int pris) throws SQLException, ClassNotFoundException {
+    public void defineArrangementTickets(int arrangementId, int antall, int pris, String beskrivelse) throws SQLException, ClassNotFoundException {
         if(dbCon == null)
             getConnection();
 
         // insert ticket into tickets table
-        PreparedStatement prep1 = dbCon.prepareStatement("INSERT INTO bilett(pris) values(?)");
+        PreparedStatement prep1 = dbCon.prepareStatement("INSERT INTO bilett(pris, beskrivelse) values(?,?)");
         prep1.setInt(1,pris);
+        prep1.setString(2,beskrivelse);
         prep1.execute();
 
         try (ResultSet gkeys = prep1.getGeneratedKeys()) {

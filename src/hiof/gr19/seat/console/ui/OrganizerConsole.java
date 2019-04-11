@@ -118,7 +118,7 @@ public class OrganizerConsole extends Console{
 
         //TODO sjekk om navnet er tatt
 
-        return new Organizer(null,organizerName, email);
+        return new Organizer(-1,organizerName, email);
     }
 
 }
