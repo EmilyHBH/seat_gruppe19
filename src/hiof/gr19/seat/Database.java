@@ -120,8 +120,8 @@ public class Database {
         ResultSet result = statement.executeQuery();
 
         if(result.next()){
-            // TODO:: denne funker ikke i denne branchen, på merging accept theirs!!
-            //return new Organizer(result.getString("id"), result.getString("navn"), result.getString("email"));
+            // TODO:: sjekk funker
+            return new Organizer(result.getString("id"), result.getString("navn"), result.getString("email"));
         }
 
         return null;
@@ -144,19 +144,36 @@ public class Database {
 
         return null;
     }
-    public boolean checkForOrganizer(String organizer, String shaPassord) throws SQLException, ClassNotFoundException{
+    public boolean checkForOrganizer(String organizer) throws SQLException, ClassNotFoundException{
         if(dbCon == null){
             getConnection();
         }
-        String query = "SELECT COUNT(*) FROM arrangor WHERE navn = ? AND passordHashet = ?";
+        String query = "SELECT COUNT(*) FROM arrangor WHERE navn = ? ";
         PreparedStatement statement = dbCon.prepareStatement(query);
         statement.setString(1,organizer);
-        statement.setString(2,shaPassord);
         ResultSet resultSet = statement.executeQuery();
 
         return resultSet.next();
 
     }
+
+    public boolean compareHash(String hash1,String organizerID) throws SQLException, ClassNotFoundException{
+        if(dbCon == null){
+            getConnection();
+        }
+
+        String query = "SELECT passordHashet FROM arangor WHERE id = ?";
+        PreparedStatement statement = dbCon.prepareStatement(query);
+        statement.setString(1,organizerID);
+        ResultSet resultSet = statement.executeQuery();
+
+        if(resultSet.getString("passordHashet").equals(hash1)){
+            return true;
+        }
+
+        return false;
+    }
+
     public ArrayList<Arrangement> displayEvents() throws SQLException, ClassNotFoundException {
         if(dbCon == null)
             getConnection();

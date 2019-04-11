@@ -6,6 +6,12 @@ public class Organizer {
     private String email;
     private String sha1Password;
 
+    public Organizer(String organizerID, String organizerName, String email) {
+        this.organizerID = organizerID;
+        this.organizerName = organizerName;
+        this.email = email;
+    }
+
     public Organizer(String organizerID, String organizerName, String email, String sha1Password) {
         this.organizerID = organizerID;
         this.organizerName = organizerName;

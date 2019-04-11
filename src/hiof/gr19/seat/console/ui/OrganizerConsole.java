@@ -37,11 +37,21 @@ public class OrganizerConsole extends Console{
 
     private void organizerLogin(){
 
+        Database database = new Database();
+
         System.out.println("Organizer Name:");
         String organizerName = console.readLine(">");
 
-        //TODO sjekk om den finnes i DB
-        Database database = new Database();
+        System.out.println("Enter password");
+        String password = String.valueOf(console.readPassword(">"));
+        try {
+            password = stringToSha1(password);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+        //TODO metode for å sammenligne passord hash mot DB
+
         try {
             boolean organizerStatus = database.checkForOrganizer(organizerName);
             if (organizerStatus){
