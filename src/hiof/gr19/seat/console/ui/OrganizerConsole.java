@@ -5,6 +5,7 @@ import hiof.gr19.seat.Database;
 import hiof.gr19.seat.Organizer;
 
 import javax.xml.crypto.Data;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 
 public class OrganizerConsole extends Console{
@@ -114,6 +115,32 @@ public class OrganizerConsole extends Console{
         String organizerName = console.readLine(">");
 
         String email = validateStringInput("Email");
+        System.out.println("Password");
+        String passwordFirstEntry = String.valueOf(console.readPassword(">"));
+
+        try {
+            passwordFirstEntry = stringToSha1(passwordFirstEntry);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Repeat password");
+        String passwordSecondEntry = String.valueOf(console.readPassword(">"));
+        try {
+            passwordSecondEntry = stringToSha1(passwordSecondEntry);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(passwordFirstEntry);
+        System.out.println(passwordSecondEntry);
+        if (!passwordFirstEntry.equals(passwordSecondEntry)){
+            System.out.println("Passwords do not match");
+            return null;
+        }
+
+
+
 
         //TODO sjekk om navnet er tatt
         Database database = new Database();
@@ -124,7 +151,7 @@ public class OrganizerConsole extends Console{
         }
 
 
-        return new Organizer(null,organizerName, email);
+        return new Organizer(null,organizerName, email, passwordFirstEntry);
     }
 
 }

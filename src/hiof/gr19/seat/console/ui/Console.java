@@ -5,6 +5,8 @@ import hiof.gr19.seat.Arrangement;
 import hiof.gr19.seat.Database;
 import hiof.gr19.seat.User;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -157,6 +159,17 @@ public class Console {
         java.io.Console console = System.console();
         String input = console.readLine(">");
 
+    }
+
+    static String stringToSha1(String input) throws NoSuchAlgorithmException {
+        MessageDigest mDigest = MessageDigest.getInstance("SHA1");
+        byte[] result = mDigest.digest(input.getBytes());
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < result.length; i++) {
+            sb.append(Integer.toString((result[i] & 0xff) + 0x100, 16).substring(1));
+        }
+
+        return sb.toString();
     }
 
 
