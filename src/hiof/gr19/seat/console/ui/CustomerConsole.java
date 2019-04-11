@@ -1,6 +1,7 @@
 package hiof.gr19.seat.console.ui;
 
 import hiof.gr19.seat.Arrangement;
+import hiof.gr19.seat.Person;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -12,26 +13,9 @@ public class CustomerConsole extends Console{
     public void start() {
 
         super.start();
-
-        /*Person user;
-
-        if(askBooleanQuestionAndReturnAnswer("Do you already have an account"))
-            user = customerLogin();
-        else {
-            if(askBooleanQuestionAndReturnAnswer("Do you want to create an account")){
-                user = registerCustomer();
-
-                // input new organizer to db
-                try {
-                    db.addOrganizer(user);
-                } catch (SQLException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-        }*/
-
         customerMenu();
     }
+
 
     private static void customerMenu(){
 

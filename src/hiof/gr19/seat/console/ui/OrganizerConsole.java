@@ -4,6 +4,7 @@ import hiof.gr19.seat.Arrangement;
 import hiof.gr19.seat.Database;
 import hiof.gr19.seat.Organizer;
 
+import javax.xml.crypto.Data;
 import java.sql.SQLException;
 
 public class OrganizerConsole extends Console{
@@ -115,6 +116,13 @@ public class OrganizerConsole extends Console{
         String email = validateStringInput("Email");
 
         //TODO sjekk om navnet er tatt
+        Database database = new Database();
+        try {
+            boolean registred = database.checkForOrganizer(organizerName);
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
 
         return new Organizer(null,organizerName, email);
     }

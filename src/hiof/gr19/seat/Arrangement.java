@@ -106,6 +106,10 @@ public class Arrangement {
         this.maxAttendees = maxAttendees;
     }
 
+    public void updateAvaliableTicket(int ticketAmount){
+
+    }
+
     @Override
     public String toString() {
         return arrangmentTitle + arragmentDate.toString();
