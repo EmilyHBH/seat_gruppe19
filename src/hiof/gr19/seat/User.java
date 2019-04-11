@@ -1,7 +1,7 @@
 package hiof.gr19.seat;
 
 public class User {
-    protected enum Type{
+    public enum Type{
         Customer,
         Organizer
     }

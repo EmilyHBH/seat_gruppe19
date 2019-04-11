@@ -1,6 +1,9 @@
 package hiof.gr19.seat;
 
 import java.sql.*;
+import java.util.ArrayList;
+
+import static hiof.gr19.seat.console.ui.Console.parseDate;
 
 public class Database {
 
@@ -107,19 +110,68 @@ public class Database {
 
 
     // Retrieve data
-    public ResultSet displayUsers() throws SQLException, ClassNotFoundException {
+    private Organizer getOrganizerById(int id) throws SQLException, ClassNotFoundException {
         if(dbCon == null)
             getConnection();
 
-        Statement state = dbCon.createStatement();
-        return state.executeQuery("SELECT * FROM kunde;");
+        PreparedStatement statement = dbCon.prepareStatement("SELECT * FROM arrangor WHERE id = ?");
+        statement.setInt(1, id);
+        ResultSet result = statement.executeQuery();
+
+        if(result.next()){
+            // TODO:: sjekk funker
+            return new Organizer(result.getString("id"), result.getString("navn"), result.getString("email"));
+        }
+
+        return null;
     }
-    public ResultSet displayEvents() throws SQLException, ClassNotFoundException {
+    public Arrangement getEventById(int id) throws SQLException, ClassNotFoundException {
+        if(dbCon == null)
+            getConnection();
+
+        PreparedStatement statement = dbCon.prepareStatement("SELECT * FROM arrangement WHERE id = ?");
+        statement.setInt(1, id);
+        ResultSet result = statement.executeQuery();
+
+        if(result.next()) {
+            Organizer eventHolder = getOrganizerById(result.getInt("arrangor_fk"));
+            java.util.Date date = parseDate(result.getString("dato"));
+
+            // TODO:: sjekk funker
+            return new Arrangement(result.getInt("id"), result.getString("navn"), result.getString("beskrivelse"), date, eventHolder, result.getInt("total_biletter"), result.getString("addresse"));
+        }
+
+        return null;
+    }
+    public boolean checkForOrganizer(String organizer) throws SQLException, ClassNotFoundException{
+        if(dbCon == null){
+            getConnection();
+        }
+        String query = "SELECT COUNT(*) FROM arrangor WHERE navn = ?";
+        PreparedStatement statement = dbCon.prepareStatement(query);
+        statement.setString(1,organizer);
+        ResultSet resultSet = statement.executeQuery();
+
+        return resultSet.next();
+
+    }
+    public ArrayList<Arrangement> displayEvents() throws SQLException, ClassNotFoundException {
         if(dbCon == null)
             getConnection();
 
         Statement state = dbCon.createStatement();
-        return state.executeQuery("SELECT * FROM arrangement;");
+        ResultSet result = state.executeQuery("SELECT * FROM arrangement;");
+
+        ArrayList<Arrangement> events = new ArrayList<>();
+
+        while(result.next()){
+            Organizer eventHolder = getOrganizerById(result.getInt("arrangor_fk"));
+            java.util.Date date = parseDate(result.getString("dato"));
+
+            events.add(new Arrangement(result.getInt("id"), result.getString("navn"), result.getString("beskrivelse"), date, eventHolder, result.getInt("total_biletter"), result.getString("addresse")));
+        }
+
+        return events;
     }
     public ResultSet displayAnEventsTickets(int arrangementId) throws SQLException, ClassNotFoundException {
         if(dbCon == null)
@@ -136,7 +188,6 @@ public class Database {
         return state.executeQuery("SELECT * FROM kundes_billetter WHERE kundeId = " + kundeId + ";");
     }
 
-
     // Insert data
     public void addUser(Person person) throws SQLException, ClassNotFoundException {
         if(dbCon == null)
@@ -149,27 +200,41 @@ public class Database {
         prep.setInt(4, person.getAge());
         prep.execute();
     }
-    public void addOrganizer(String navn, String email) throws SQLException, ClassNotFoundException {
+    public void addOrganizer(Organizer organizer) throws SQLException, ClassNotFoundException {
         if(dbCon == null)
             getConnection();
 
+        // TODO:: sjekk funker
         PreparedStatement prep = dbCon.prepareStatement("INSERT INTO arrangor(navn,email) values(?,?)");
-        prep.setString(1,navn);
-        prep.setString(2, email);
+        prep.setString(1,organizer.getOrganizerName());
+        prep.setString(2, organizer.getEmail());
         prep.execute();
     }
-    public void createEvent(Arrangement arrangement/*String navn, String beskrivelse, String dato, int arrangor_fk*/) throws SQLException, ClassNotFoundException {
+    public void createEvent(Arrangement arrangement) throws SQLException, ClassNotFoundException {
         if(dbCon == null)
             getConnection();
 
-        PreparedStatement prep = dbCon.prepareStatement("INSERT INTO arrangement(navn,beskrivelse,dato,arrangor_fk) values(?,?,?,?)");
+        PreparedStatement prep = dbCon.prepareStatement("INSERT INTO arrangement(navn,beskrivelse,dato,arrangor_fk, addresse, total_biletter) values(?,?,?,?,?,?)");
         prep.setString(1,arrangement.getArrangmentTitle());
         prep.setString(2, arrangement.getArrangmentDescription());
-        prep.setString(3, String.valueOf(arrangement.getArragmentDate()));
-        prep.setInt(4, Integer.parseInt(arrangement.getOrganizer().getOrganizerID()));
+        prep.setString(3, arrangement.getArragmentDateInStringFormat()); // TODO:: implement getArragmentDateInStringFormat() method
+
+        // TODO:: remove this temp solution, all arrangements must have organizer so if/else brace should not exist. Only here for now for easier testing
+        if(arrangement.getOrganizer() != null)
+            prep.setInt(4, Integer.parseInt(arrangement.getOrganizer().getOrganizerID()));
+        else
+            prep.setInt(4, 1);
+
+        prep.setString(5, arrangement.getLocation());
+        prep.setInt(6, arrangement.getMaxAttendees());
         prep.execute();
+
+        try (ResultSet gkeys = prep.getGeneratedKeys()) {
+            if (gkeys.next())
+                arrangement.setArrangementID(gkeys.getInt(1));
+        }
     }
-    public void userPurchasedTickets(int kundeId, int billettId, int antall) throws SQLException, ClassNotFoundException {
+    public void registeredUserPurchasedTickets(int kundeId, int billettId, int antall) throws SQLException, ClassNotFoundException {
         if(dbCon == null)
             getConnection();
 
@@ -178,6 +243,30 @@ public class Database {
         prep.setInt(2, billettId);
         prep.setInt(3, antall);
         prep.execute();
+    }
+    public void defineArrangementTickets(int arrangementId, int antall, int pris) throws SQLException, ClassNotFoundException {
+        if(dbCon == null)
+            getConnection();
+
+        // insert ticket into tickets table
+        PreparedStatement prep1 = dbCon.prepareStatement("INSERT INTO bilett(pris) values(?)");
+        prep1.setInt(1,pris);
+        prep1.execute();
+
+        try (ResultSet gkeys = prep1.getGeneratedKeys()) {
+            if (gkeys.next()) {
+                int billettId = gkeys.getInt(1);
+
+                // link the ticket with the arrangement
+                PreparedStatement prep2 = dbCon.prepareStatement("INSERT INTO arrangements_biletter values(?,?,?)");
+                prep2.setInt(1, arrangementId);
+                prep2.setInt(2, billettId);
+                prep2.setInt(3, antall);
+                prep2.execute();
+            }
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
     }
 
     // Update data

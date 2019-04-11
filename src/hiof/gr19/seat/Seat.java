@@ -1,43 +1,32 @@
 package hiof.gr19.seat;
 
-import javax.xml.crypto.Data;
-import java.io.Console;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Scanner;
+import hiof.gr19.seat.console.ui.Console;
+import hiof.gr19.seat.console.ui.CustomerConsole;
+import hiof.gr19.seat.console.ui.OrganizerConsole;
 
-import static hiof.gr19.seat.ConsoleInterface.identifyUser;
-import static hiof.gr19.seat.ConsoleInterface.organizerMenu;
+import static hiof.gr19.seat.console.ui.Console.identifyUser;
 
 public class Seat {
 
     public static void main(String[] args){
-        identifyUser();
-    }
 
-    private static void identifyUser() {
-        Scanner input = new Scanner(System.in);
+        User.Type userType = null;
+        Console c;
 
-        System.out.println("OP mode?");
-        System.out.println("1 = Organizer");
-        System.out.println("2 = Not Organizer");
-        System.out.print(">");
-        int systemMode = Integer.parseInt(input.nextLine());
+        // This loop forces the identifyUser() method to rerun until it gets a valid User.Type
+        while(userType == null)
+            userType = identifyUser();
 
-        switch (systemMode){
-            case 1:
-                OrganizerMode organizerMode = new OrganizerMode(input);
-                organizerMode.start();
+        switch (userType) {
+            case Customer:
+                c = new CustomerConsole();
+                c.start();
                 break;
-
-            case 2:
-                Customer_mode customerMode = new Customer_mode(input);
-                customerMode.start();
+            case Organizer:
+                c = new OrganizerConsole();
+                c.start();
                 break;
-
             default:
-                System.out.println("Please choose 1 or 2 :)");
-                main(null);
                 break;
         }
     }
