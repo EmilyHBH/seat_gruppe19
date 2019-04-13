@@ -36,67 +36,91 @@ public class CustomerConsole extends Console{
         customerMenu();
     }
 
-    private static void customerMenu(){
+    private void customerMenu(){
+
+        ArrayList<String> menuListOfFunctions = new ArrayList<>(){{
+            add("View events");
+            add("Exit");
+        }};
+
+        int menuOptionChosen = selectFromList(menuListOfFunctions);
+
+        switch(menuOptionChosen){
+            case 1:                                 // View events
+                showEvents();
+                break;
+            case 2:
+                finish();                           // Exits the program
+                break;
+            default:
+                System.out.println("That was not a valid option");
+                break;
+        }
+
+        // Recursive call so that the program will return to main menu instead of shut down
+        customerMenu();
+
+    }
+
+    private void showEvents(){
 
         // Prints all events
         try {
-            ArrayList<Arrangement> allEvents = db.getEvents();
-            printArrangements(allEvents);
+            ArrayList<Arrangement> events = db.getEvents();
+            printArrangements(events);
 
-        } catch (SQLException | ClassNotFoundException e) {
+            // Start purchaseticketmenu on seleted event
+            int arrangmentID = -1;
+
+            while(arrangmentID < 0 || arrangmentID > events.size() -1)
+                arrangmentID = validateIntInput("Which event do you want to buy ticket for? answer by using the id");
+
+            purchaseTicketMenu(db.getEventById(events.get(arrangmentID).getArrangementID()));
+
+        } catch (SQLException | ClassNotFoundException | IOException e) {
             e.printStackTrace();
         }
-
-        // Start purchaseticketmenu on seleted event
-        String arrangmentID = console.readLine(">");
-        try {
-            purchaseTicketMenu(db.getEventById(Integer.parseInt(arrangmentID)));
-        } catch (IOException e) {
-            System.out.println(e);
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
     }
 
+    private void purchaseTicketMenu(Arrangement arrangement) throws IOException {
 
-    private static void purchaseTicketMenu(Arrangement arrangement) throws IOException {
+        System.out.println("\nThe tickets this event offers:\n");
 
-        // Print all the arrangements different types of tickets
-        for(Ticket ticket : arrangement.getAvailableTickets())
-            System.out.println(ticket.getId() + "\t" + ticket.getBeskrivelse() + "\t" + ticket.getAntall());
+        ArrayList<Ticket> tickets = arrangement.getAvailableTickets();
 
-        int ticketId = validateIntInput("id of ticket you want to buy");
-        int ticketAmount = validateIntInput("How many tickets");
+        if(tickets.size() > 0) {
+
+            // Print all the arrangements different types of tickets
+            for (Ticket ticket : tickets)
+                System.out.println(ticket.getId() + "\t" + ticket.getBeskrivelse() + "\t" + ticket.getAntall());
+
+            int ticketId = validateIntInput("id of ticket you want to buy");
+            int ticketAmount = validateIntInput("How many tickets");
 
 
-        if (ticketAmount > arrangement.getMaxAttendees()){
-            throw new IOException("No more tickets left");
+            if (ticketAmount > arrangement.getMaxAttendees()) {
+                throw new IOException("No more tickets left");
 
-        }else {
-            purchaseTicket(ticketId, ticketAmount);
-        }
-
-        // TODO:: Update the arrangement class instance
-
-        // TODO:: db registration of purchased tickets
-
+            } else {
+                purchaseTicket(ticketId, ticketAmount);
+            }
+        } else
+            System.out.println("This event doesn't have any available tickets");
     }
 
-    public static void purchaseTicket(int ticketID, int ticketAmount) {
+    private void purchaseTicket(int ticketID, int ticketAmount) {
 
-        System.out.println("Type name: ");
-        String name = console.readLine(">");
+        String name = validateStringInput("Type name");
 
         System.out.println("and confirmation method:");
-        System.out.println("1 = Epost");
-        System.out.println("2 = Print");
-        int alternativ2 = Integer.parseInt(console.readLine(">"));
-
+        ArrayList<String> confirmationMethods = new ArrayList<>(){{
+            add("Epost");
+            add("Print");
+        }};
+        int alternativ2 = selectFromList(confirmationMethods);
         switch (alternativ2) {
             case 1:
-                System.out.println("Epost");
-                String epost = console.readLine(">");
+                String epost = validateStringInput("Epost");
                 break;
             case 2:
                 System.out.println("Print");
@@ -104,10 +128,12 @@ public class CustomerConsole extends Console{
         }
 
         System.out.println("Velg betalingsmåte: ");
-        System.out.println("1 = Bankkort");
-        System.out.println("2 = Kontanter");
-        System.out.println("3 = Vipps" );
-        int alternativ3 = Integer.parseInt(console.readLine(">"));
+        ArrayList<String> paymentMethods = new ArrayList<>(){{
+            add("Bankkort");
+            add("Kontanter");
+            add("Vipps");
+        }};
+        int alternativ3 = selectFromList(paymentMethods);
 
         BetalingsStub betaling;
         betaling = null;

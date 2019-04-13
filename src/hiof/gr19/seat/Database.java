@@ -90,7 +90,6 @@ public class Database {
                         "FOREIGN KEY(arrangor_fk) REFERENCES arrangor(id) on delete cascade on update cascade " +
                         ")");
 
-                // Dummy data TODO:: sjekk dato
                 createArrangementTable.execute("INSERT INTO arrangement values(?, \"Fyre Festival\", \"Beskrivelse.........\", \"09-05-2019\", \"20\",\"Remmen 990\", \"1\", \"200\")");
             }
 
@@ -111,18 +110,16 @@ public class Database {
 
 
     // Retrieve data
-    private Organizer getOrganizerById(int id) throws SQLException, ClassNotFoundException {
+    public Organizer getOrganizerByName(String navn) throws SQLException, ClassNotFoundException {
         if(dbCon == null)
             getConnection();
 
-        PreparedStatement statement = dbCon.prepareStatement("SELECT * FROM arrangor WHERE id = ?");
-        statement.setInt(1, id);
+        PreparedStatement statement = dbCon.prepareStatement("SELECT * FROM arrangor WHERE navn = ?");
+        statement.setString(1, navn);
         ResultSet result = statement.executeQuery();
 
-        if(result.next()){
-            // TODO:: sjekk funker
+        if(result.next())
             return new Organizer(result.getInt("id"), result.getString("navn"), result.getString("email"));
-        }
 
         return null;
     }
@@ -130,16 +127,15 @@ public class Database {
         if(dbCon == null)
             getConnection();
 
-        PreparedStatement statement = dbCon.prepareStatement("SELECT * FROM arrangement WHERE id = ?");
+        PreparedStatement statement = dbCon.prepareStatement("SELECT arrangement.*, arrangor.navn as arnavn FROM arrangement INNER JOIN arrangor ON arrangement.arrangor_fk = arrangor.id WHERE arrangement.id = ?");
         statement.setInt(1, id);
         ResultSet result = statement.executeQuery();
 
         if(result.next()) {
-            Organizer eventHolder = getOrganizerById(result.getInt("arrangor_fk"));
+            Organizer eventHolder = getOrganizerByName(result.getString("arnavn"));
             java.util.Date date = parseDate(result.getString("dato"));
             ArrayList<Ticket> tickets = getAnEventsTickets(result.getInt("id"));
 
-            // TODO:: sjekk funker
             return new Arrangement(result.getInt("id"), result.getString("navn"), result.getString("beskrivelse"), date, eventHolder, result.getInt("total_biletter"), result.getString("addresse"), tickets);
         }
 
@@ -149,25 +145,47 @@ public class Database {
         if(dbCon == null){
             getConnection();
         }
-        String query = "SELECT COUNT(*) FROM arrangor WHERE navn = ?";
+        String query = "SELECT COUNT(*) as occurencesOfName FROM arrangor WHERE navn = ?";
         PreparedStatement statement = dbCon.prepareStatement(query);
         statement.setString(1,organizer);
         ResultSet resultSet = statement.executeQuery();
 
-        return resultSet.next();
-
+        if(resultSet.next())
+            return resultSet.getInt("occurencesOfName") >= 1;
+        else
+            return false;
     }
     public ArrayList<Arrangement> getEvents() throws SQLException, ClassNotFoundException {
         if(dbCon == null)
             getConnection();
 
         Statement state = dbCon.createStatement();
-        ResultSet result = state.executeQuery("SELECT * FROM arrangement;");
+        ResultSet result = state.executeQuery("SELECT arrangement.*, arrangor.navn as arnavn FROM arrangement INNER JOIN arrangor ON arrangement.arrangor_fk = arrangor.id;");
 
         ArrayList<Arrangement> events = new ArrayList<>();
 
         while(result.next()){
-            Organizer eventHolder = getOrganizerById(result.getInt("arrangor_fk"));
+            Organizer eventHolder = getOrganizerByName(result.getString("arnavn"));
+            java.util.Date date = parseDate(result.getString("dato"));
+            ArrayList<Ticket> tickets = getAnEventsTickets(result.getInt("id"));
+
+            events.add(new Arrangement(result.getInt("id"), result.getString("navn"), result.getString("beskrivelse"), date, eventHolder, result.getInt("total_biletter"), result.getString("addresse"), tickets));
+        }
+
+        return events;
+    }
+    public ArrayList<Arrangement> getEventsByOrganizer(int organizerId) throws SQLException, ClassNotFoundException {
+        if(dbCon == null)
+            getConnection();
+
+        PreparedStatement state = dbCon.prepareStatement("SELECT arrangement.*, arrangor.navn as arnavn  FROM arrangement INNER JOIN arrangor ON arrangement.arrangor_fk = arrangor.id WHERE arrangor_fk = ?;");
+        state.setInt(1, organizerId);
+        ResultSet result = state.executeQuery();
+
+        ArrayList<Arrangement> events = new ArrayList<>();
+
+        while(result.next()){
+            Organizer eventHolder = getOrganizerByName(result.getString("arnavn"));
             java.util.Date date = parseDate(result.getString("dato"));
             ArrayList<Ticket> tickets = getAnEventsTickets(result.getInt("id"));
 
@@ -218,15 +236,21 @@ public class Database {
         prep.setInt(4, person.getAge());
         prep.execute();
     }
-    public void addOrganizer(Organizer organizer) throws SQLException, ClassNotFoundException {
+    public Organizer addOrganizer(String name, String email) throws SQLException, ClassNotFoundException {
         if(dbCon == null)
             getConnection();
 
-        // TODO:: sjekk funker
         PreparedStatement prep = dbCon.prepareStatement("INSERT INTO arrangor(navn,email) values(?,?)");
-        prep.setString(1,organizer.getOrganizerName());
-        prep.setString(2, organizer.getEmail());
+        prep.setString(1,name);
+        prep.setString(2, email);
         prep.execute();
+
+        try (ResultSet gkeys = prep.getGeneratedKeys()) {
+            if (gkeys.next())
+                return new Organizer(gkeys.getInt(1), name, email);
+        }
+
+        return null;
     }
     public void createEvent(Arrangement arrangement) throws SQLException, ClassNotFoundException {
         if(dbCon == null)
@@ -235,13 +259,8 @@ public class Database {
         PreparedStatement prep = dbCon.prepareStatement("INSERT INTO arrangement(navn,beskrivelse,dato,arrangor_fk, addresse, total_biletter) values(?,?,?,?,?,?)");
         prep.setString(1,arrangement.getArrangmentTitle());
         prep.setString(2, arrangement.getArrangmentDescription());
-        prep.setString(3, arrangement.getArragmentDateInStringFormat()); // TODO:: implement getArragmentDateInStringFormat() method
-
-        // TODO:: remove this temp solution, all arrangements must have organizer so if/else brace should not exist. Only here for now for easier testing
-        if(arrangement.getOrganizer() != null)
-            prep.setInt(4, arrangement.getOrganizer().getOrganizerID());
-        else
-            prep.setInt(4, 1);
+        prep.setString(3, arrangement.getArragmentDateInStringFormat());
+        prep.setInt(4, arrangement.getOrganizer().getOrganizerID());
 
         prep.setString(5, arrangement.getLocation());
         prep.setInt(6, arrangement.getMaxAttendees());
@@ -296,6 +315,8 @@ public class Database {
         PreparedStatement prep = dbCon.prepareStatement("UPDATE arrangor SET email = ? WHERE id = " + organizer.getOrganizerID());
         prep.setString(1,newEmail);
         prep.execute();
+
+        organizer.setEmail(newEmail);
     }
     public void changeEventInfo(int id, String name, String description, String newDate) throws SQLException, ClassNotFoundException {
         if(dbCon == null)
@@ -314,7 +335,7 @@ public class Database {
         PreparedStatement prep = dbCon.prepareStatement("UPDATE arrangements_biletter SET antall = antall - ? WHERE billettId = " + ticketId);
         prep.setInt(1,amountOfTickets);
         prep.execute();
-    }   // TODO:: test
+    }
 
     // Delete data
     public void cancelAUsersTicket(int kundeId, int billettId) throws SQLException, ClassNotFoundException {

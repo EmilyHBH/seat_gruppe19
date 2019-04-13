@@ -3,6 +3,7 @@ package hiof.gr19.seat.console.ui;
 import de.vandermeer.asciitable.AsciiTable;
 import hiof.gr19.seat.Arrangement;
 import hiof.gr19.seat.Database;
+import hiof.gr19.seat.Ticket;
 import hiof.gr19.seat.User;
 
 import java.text.DateFormat;
@@ -23,10 +24,9 @@ public class Console {
             throw new NullPointerException("No console found");
         }
 
-        System.out.println("OP mode?");
         System.out.println("1 = Organizer");
         System.out.println("2 = Customer");
-        String input = console.readLine(">");
+        String input = validateStringInput("What are you");
 
         switch (input){
             case "1":
@@ -51,6 +51,11 @@ public class Console {
         }
     }
 
+    void finish(){
+        System.out.println("Closing program");
+        System.exit(0);
+    }
+
     public static Date parseDate(String inputDate){
 
         DateFormat format = new SimpleDateFormat("d-MM-yyyy", Locale.getDefault());
@@ -70,7 +75,7 @@ public class Console {
 
         String answer;
         while(true){
-             answer = console.readLine();
+             answer = console.readLine(">");
 
             if(answer.equals("y"))
                 return true;
@@ -88,7 +93,7 @@ public class Console {
 
         while(true){
             try{
-                result = Integer.parseInt(console.readLine());
+                result = Integer.parseInt(console.readLine(">"));
                 return result;
             }
             catch(NumberFormatException e){
@@ -103,7 +108,7 @@ public class Console {
 
         while(true){
             try{
-                result = console.readLine();
+                result = console.readLine(">");
                 return result;
             }
             catch(Exception e){
@@ -115,7 +120,7 @@ public class Console {
         return question == null ? null : "\n" + question + ":\n";
     }
 
-    public static void printArrangements(ArrayList<Arrangement> arrangementList){
+    static void printArrangements(ArrayList<Arrangement> arrangementList){
 
         if (arrangementList.size() == 0){
             System.out.println("No events");
@@ -127,9 +132,13 @@ public class Console {
         arragmentTable.addRule();
         arragmentTable.addRow("ID","Arrangment","Date","Ticketavaliable");
 
-        for (Arrangement x: arrangementList) {
+        for (int i = 0; i < arrangementList.size(); i++) {
             arragmentTable.addRule();
-            arragmentTable.addRow(x.getArrangementID(),x.getArrangmentTitle(),x.getArragmentDate(),x.getMaxAttendees());
+            int ledigeBiletter = 0;
+            for(Ticket ticket : arrangementList.get(i).getAvailableTickets())
+                ledigeBiletter += ticket.getAntall();
+
+            arragmentTable.addRow(i,arrangementList.get(i).getArrangmentTitle(),arrangementList.get(i).getArragmentDate(),ledigeBiletter);
             arragmentTable.addRule();
 
         }
@@ -149,19 +158,22 @@ public class Console {
 
     }
 
-    public static void selectFromList(ArrayList arrayList){
-        for (int i = 0; i < arrayList.size(); i++){
-            System.out.println(i + " = " + arrayList.get(i));
+    static int selectFromList(ArrayList arrayList){
+        for (int i = 1; i < arrayList.size() +1; i++)
+            System.out.println(i + " = " + arrayList.get(i-1));
+
+        int choice = validateIntInput("Make a choice based on the id/nr");
+
+        while(choice < 1 && choice >= arrayList.size() +1){
+            System.out.println("The number you gave is not in range, choose again");
+            choice = validateIntInput("Make a choice based on the id/nr");
         }
 
-        java.io.Console console = System.console();
-        String input = console.readLine(">");
-
+        return choice;
     }
+
     static char getAscii(int code){
 
         return (char) code;
     }
-
-
 }

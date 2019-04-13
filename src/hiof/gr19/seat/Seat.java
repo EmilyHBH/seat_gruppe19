@@ -6,7 +6,6 @@ import hiof.gr19.seat.console.ui.OrganizerConsole;
 import org.apache.commons.lang3.ObjectUtils;
 
 import static hiof.gr19.seat.console.ui.Console.identifyUser;
-import static hiof.gr19.seat.console.ui.CustomerConsole.purchaseTicket;
 
 public class Seat {
 
