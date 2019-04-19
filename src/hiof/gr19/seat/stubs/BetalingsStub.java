@@ -1,4 +1,4 @@
-package hiof.gr19.seat;
+package hiof.gr19.seat.stubs;
 
 public class BetalingsStub {
     int telefonnummer;

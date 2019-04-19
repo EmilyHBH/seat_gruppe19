@@ -148,6 +148,27 @@ public class Console {
 
     }
 
+    static void printTickets(ArrayList<Ticket> tickets){
+        if (tickets.size() == 0){
+            System.out.println("No tickets");
+            return;
+        }
+
+        AsciiTable ticketTable = new AsciiTable();
+
+        ticketTable.addRule();
+        ticketTable.addRow("ID", "Description", "Tickets avaliable", "Price");
+
+        for (Ticket ticket : tickets){
+            ticketTable.addRule();
+            ticketTable.addRow(ticket.getId(), ticket.getBeskrivelse(), ticket.getAntall(), ticket.getPris());
+            ticketTable.addRule();
+        }
+
+        String table = ticketTable.render();
+        System.out.println(table);
+    }
+
     //printEvents?? include asciiTable
 
     void getArrangementById(){

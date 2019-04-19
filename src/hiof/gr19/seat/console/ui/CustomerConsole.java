@@ -1,8 +1,7 @@
 package hiof.gr19.seat.console.ui;
 
 import hiof.gr19.seat.Arrangement;
-import hiof.gr19.seat.BetalingsStub;
-import hiof.gr19.seat.Database;
+import hiof.gr19.seat.stubs.BetalingsStub;
 import hiof.gr19.seat.Ticket;
 
 import java.io.IOException;
@@ -137,7 +136,7 @@ public class CustomerConsole extends Console{
 
             // Print all the arrangements different types of tickets
             //TheBigRefactor
-            System.out.println(buildTicketPrint(tickets));
+            printTickets(tickets);
 
             int ticketId = selectTicketID();
             int ticketAmount = selectTicketAmount();
