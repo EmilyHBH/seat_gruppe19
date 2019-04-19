@@ -148,6 +148,8 @@ public class Console {
 
     }
 
+    //printEvents?? include asciiTable
+
     void getArrangementById(){
 
     }
