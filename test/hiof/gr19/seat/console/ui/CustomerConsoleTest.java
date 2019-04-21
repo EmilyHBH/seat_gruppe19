@@ -62,7 +62,8 @@ class CustomerConsoleTest {
         int betalingsMetode = 1; //Kort = 1
 
         cc.selectPaymentMethod(navn, betalingsMetode);
-        assertEquals(getConsoleOutput(), "Bankkort");
+        //"bankkort\n" = sout("bankort")
+        assertEquals("Bankkort\n", getConsoleOutput());
     }
 
     @Test
