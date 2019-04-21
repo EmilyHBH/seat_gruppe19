@@ -1,10 +1,10 @@
 package hiof.gr19.seat.console.ui;
 
 import de.vandermeer.asciitable.AsciiTable;
-import hiof.gr19.seat.Arrangement;
+import hiof.gr19.seat.model.Arrangement;
 import hiof.gr19.seat.Database;
-import hiof.gr19.seat.Ticket;
-import hiof.gr19.seat.User;
+import hiof.gr19.seat.model.Ticket;
+import hiof.gr19.seat.model.User;
 
 import java.text.DateFormat;
 import java.text.ParseException;

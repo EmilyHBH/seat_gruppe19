@@ -1,8 +1,7 @@
 package hiof.gr19.seat.console.ui;
 
-import hiof.gr19.seat.Arrangement;
-import hiof.gr19.seat.Database;
-import hiof.gr19.seat.Organizer;
+import hiof.gr19.seat.model.Arrangement;
+import hiof.gr19.seat.model.Organizer;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -17,6 +16,9 @@ public class OrganizerConsole extends Console{
         user = loginOrRegister();
         organizerMenu();
     }
+    public void testStart(){
+        super.start();
+    }
 
     private Organizer loginOrRegister(){
         if(askBooleanQuestionAndReturnAnswer("Do you already have an account"))
@@ -25,10 +27,11 @@ public class OrganizerConsole extends Console{
             return registerOrganizer();
     }
 
-    private Organizer organizerLogin(){
+    protected Organizer organizerLogin(){
 
         String organizerName = validateStringInput("Organizer Name");
 
+        //Blir man hardstuck i denne?
         try {
             boolean organizerStatus = db.checkForOrganizer(organizerName);
             if (organizerStatus){
@@ -46,6 +49,32 @@ public class OrganizerConsole extends Console{
         return null;
     }
 
+	protected Organizer registerOrganizer(){
+
+		String organizerName = validateStringInput("Name of organization");
+
+		try {
+			boolean organizerStatus = db.checkForOrganizer(organizerName);
+			if (organizerStatus){
+				console.printf("This organization name already exists, choose another");
+				registerOrganizer();
+			} else {
+				String email = validateStringInput("Email");
+
+				// input new organizer to db
+				try {
+					return db.addOrganizer( organizerName, email);
+				} catch (SQLException | ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+			}
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
     private void organizerMenu(){
 
         ArrayList<String> menuListOfFunctions = new ArrayList<>(){{
@@ -62,36 +91,10 @@ public class OrganizerConsole extends Console{
                 organizerCreatesArrangement();
                 break;
             case 2:                                 // Add additional ticket to event
-                try {
-                    printArrangements(db.getEventsByOrganizer(user.getOrganizerID()));
-
-                    int arrangementId = validateIntInput("Select event");
-                    Arrangement arrangementToMakeTicketsFor = db.getEventById(arrangementId);
-
-                    defineMultipleTicketes(arrangementToMakeTicketsFor);
-
-                } catch (SQLException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
+                organizerAddsAdditionalTicket();
                 break;
             case 3:                                 // Change an events information
-                try {
-                    ArrayList<Arrangement> thisOrganizationsEvents = db.getEventsByOrganizer(user.getOrganizerID());
-
-                    if(thisOrganizationsEvents.size() > 0) {
-
-                        printArrangements(thisOrganizationsEvents);
-
-                        int arrangementId = validateIntInput("Select event");
-                        Arrangement arrangementToChangeinfo = db.getEventById(arrangementId);
-
-                        changeEventInfo(arrangementToChangeinfo);
-                    } else
-                        System.out.println("You have no events.");
-
-                } catch (SQLException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
+                organizerChangesEventInformation();
                 break;
             case 4:
                 finish();                           // Exits the program
@@ -104,6 +107,40 @@ public class OrganizerConsole extends Console{
         // Recursive call so that the program will return to main menu instead of shut down
         organizerMenu();
 
+    }
+
+    private void organizerChangesEventInformation() {
+        try {
+            ArrayList<Arrangement> thisOrganizationsEvents = db.getEventsByOrganizer(user.getOrganizerID());
+
+            if(thisOrganizationsEvents.size() > 0) {
+
+                printArrangements(thisOrganizationsEvents);
+
+                int arrangementId = validateIntInput("Select event");
+                Arrangement arrangementToChangeinfo = db.getEventById(arrangementId);
+
+                changeEventInfo(arrangementToChangeinfo);
+            } else
+                System.out.println("You have no events.");
+
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void organizerAddsAdditionalTicket() {
+        try {
+            printArrangements(db.getEventsByOrganizer(user.getOrganizerID()));
+
+            int arrangementId = validateIntInput("Select event");
+            Arrangement arrangementToMakeTicketsFor = db.getEventById(arrangementId);
+
+            defineMultipleTicketes(arrangementToMakeTicketsFor);
+
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     private void organizerCreatesArrangement(){
@@ -156,32 +193,6 @@ public class OrganizerConsole extends Console{
                 e.printStackTrace();
             }
         }
-    }
-
-    private Organizer registerOrganizer(){
-
-        String organizerName = validateStringInput("Name of organization");
-
-        try {
-            boolean organizerStatus = db.checkForOrganizer(organizerName);
-            if (organizerStatus){
-                console.printf("This organization name already exists, choose another");
-                registerOrganizer();
-            } else {
-                String email = validateStringInput("Email");
-
-                // input new organizer to db
-                try {
-                    return db.addOrganizer( organizerName, email);
-                } catch (SQLException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        return null;
     }
 
     private void changeEventInfo(Arrangement arrangement){

@@ -1,8 +1,8 @@
-package hiof.gr19.seat.stubs;
+package hiof.gr19.seat.stubs.payment;
 
 public class BetalingsStub {
-    int telefonnummer;
-    String navn;
+    private int telefonnummer;
+    private String navn;
 
     public BetalingsStub(String navn) { this.navn = navn; }
 

@@ -1,9 +1,7 @@
 package hiof.gr19.seat.console.ui;
 
-import hiof.gr19.seat.Arrangement;
+import hiof.gr19.seat.model.Arrangement;
 import hiof.gr19.seat.Database;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,12 +11,7 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class CustomerConsoleTest {
-    //For å simulere bruker input
-    private final InputStream systemIn = System.in;
-    private final PrintStream systemOut = System.out;
-    private ByteArrayInputStream forcedInput;
-    private ByteArrayOutputStream testOut;
+class CustomerConsoleTest extends ConsoleTest {
 
     CustomerConsole cc;
 
@@ -51,7 +44,7 @@ class CustomerConsoleTest {
 
         //params: navn på bruker, betalings metode
         cc.selectPaymentMethod(navn, betalingsMetode);
-        assertEquals(getConsoleOutput(), "Vipps");
+        assertEquals("Vipps", getConsoleOutput());
     }
 
     @Test
@@ -76,26 +69,4 @@ class CustomerConsoleTest {
         cc.selectPaymentMethod(navn, betalingsMetode);
         assertEquals(getConsoleOutput(), "Kontanter");
     }
-
-    private void provideInput(String data) {
-        forcedInput = new ByteArrayInputStream(data.getBytes());
-        System.setIn(forcedInput);
-    }
-
-    private String getConsoleOutput(){
-        return testOut.toString();
-    }
-
-    @BeforeEach
-    public void setupOutput(){
-        testOut = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(testOut));
-    }
-
-    @AfterEach
-    public void restoreSystemInput(){
-        System.setIn(systemIn);
-        System.setOut(systemOut);
-    }
-
 }

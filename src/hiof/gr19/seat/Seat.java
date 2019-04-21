@@ -3,7 +3,7 @@ package hiof.gr19.seat;
 import hiof.gr19.seat.console.ui.Console;
 import hiof.gr19.seat.console.ui.CustomerConsole;
 import hiof.gr19.seat.console.ui.OrganizerConsole;
-import org.apache.commons.lang3.ObjectUtils;
+import hiof.gr19.seat.model.User;
 
 import static hiof.gr19.seat.console.ui.Console.identifyUser;
 

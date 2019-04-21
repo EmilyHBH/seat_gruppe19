@@ -1,4 +1,4 @@
-package hiof.gr19.seat;
+package hiof.gr19.seat.model;
 
 public class Ticket {
     private int id, pris, antall;
