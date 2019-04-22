@@ -47,6 +47,7 @@ public class Database {
                         "pris INTEGER NOT NULL," +
                         "beskrivelse TEXT " +
                         ")");
+                createBillettTable.execute("INSERT INTO bilett values(?, 100,\"15+\")");
             }
 
             ResultSet billettKundeTable = statement.executeQuery("SELECT name FROM sqlite_master WHERE type = 'table' AND name='kundes_billetter'");
@@ -104,6 +105,8 @@ public class Database {
                         "FOREIGN KEY(arrangementId) REFERENCES arrangement(id) on delete cascade on update cascade, " +
                         "FOREIGN KEY(billettId) REFERENCES bilett(id) on delete cascade on update cascade " +
                         ")");
+
+                createArrangementsBiletterTable.execute("INSERT INTO arrangements_biletter values(0,0,50)");
             }
         }
     }

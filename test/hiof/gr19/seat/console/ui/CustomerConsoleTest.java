@@ -2,10 +2,10 @@ package hiof.gr19.seat.console.ui;
 
 import hiof.gr19.seat.Arrangement;
 import hiof.gr19.seat.Database;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import hiof.gr19.seat.stubs.BetalingsStub;
+import hiof.gr19.seat.stubs.emailReciept;
+import hiof.gr19.seat.stubs.printReciept;
+import org.junit.jupiter.api.*;
 
 import java.io.*;
 import java.sql.SQLException;
@@ -33,48 +33,61 @@ class CustomerConsoleTest {
         Database db = new Database();
         ArrayList<Arrangement> events = db.getEvents();
 
-        provideInput("2");
-        cc.selectEvent(events);
+        provideInput("0");
+        Arrangement chosen = cc.chooseEvent(events);
 
-    }
-
-    @Test
-    public void testVippsBetaling(){
-        //Krav 014
-
-        String navn = "Test Testesen";
-        int betalingsMetode = 3; //Vipps = 3
-
-        String telefonnummer = "12345678";
-
-        provideInput(telefonnummer);
-
-        //params: navn på bruker, betalings metode
-        cc.selectPaymentMethod(navn, betalingsMetode);
-        assertEquals(getConsoleOutput(), "Vipps");
+        // Uses the predefined dummy data to check if correct
+        assertEquals(chosen.getArrangmentTitle(), "Fyre Festival");
     }
 
     @Test
     public void testKortBetaling(){
         //Krav 012
 
-        String navn = "Test Testesen";
-        int betalingsMetode = 1; //Kort = 1
+        provideInput("Navn mcNavn\n1");
+        cc.establishPaymentMethod();
 
-        cc.selectPaymentMethod(navn, betalingsMetode);
-        //"bankkort\n" = sout("bankort")
-        assertEquals("Bankkort\n", getConsoleOutput());
+        assertTrue(cc.betalingsStub != null);
     }
 
     @Test
     public void testKontantBetaling(){
         //Krav 013
 
-        String navn = "Test Testesen";
-        int betalingsMetode = 2; //Kontant = 2
+        provideInput("Ny McNY\n2");
+        cc.establishPaymentMethod();
 
-        cc.selectPaymentMethod(navn, betalingsMetode);
-        assertEquals(getConsoleOutput(), "Kontanter");
+        assertTrue(cc.betalingsStub != null);
+    }
+
+    @Test
+    public void testVippsBetaling(){
+        //Krav 014
+
+        provideInput("Test Testesen\n3\n12345678");
+        cc.establishPaymentMethod();
+
+        assertTrue(cc.betalingsStub != null);
+    }
+
+    @Test
+    public void testEpostSomBevis(){
+        // Krav 015
+
+        provideInput("1\ne@e.e");
+        cc.establishConfirmationMethod();
+
+        assertTrue(cc.confirmationMethod instanceof emailReciept);
+    }
+
+    @Test
+    public void testPrintSomBevis(){
+        // Krav 015
+
+        provideInput("2");
+        cc.establishConfirmationMethod();
+
+        assertTrue(cc.confirmationMethod instanceof printReciept);
     }
 
     private void provideInput(String data) {

@@ -1,55 +1,40 @@
 package hiof.gr19.seat.console.ui;
 
 import hiof.gr19.seat.Arrangement;
-import hiof.gr19.seat.stubs.BetalingsStub;
 import hiof.gr19.seat.Ticket;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class CustomerConsole extends Console{
+import static hiof.gr19.seat.console.ui.InputValidator.*;
+import static hiof.gr19.seat.console.ui.PrintTables.printArrangements;
+import static hiof.gr19.seat.console.ui.PrintTables.printTickets;
+
+public class CustomerConsole extends CustomerInteractions implements StartAndFinish{
 
     @Override
     public void start() {
+        if (scanner == null)
+            throw new NullPointerException("No console found");
 
-        super.start();
-
-        /*Person user;
-
-        if(askBooleanQuestionAndReturnAnswer("Do you already have an account"))
-            user = customerLogin();
-        else {
-            if(askBooleanQuestionAndReturnAnswer("Do you want to create an account")){
-                user = registerCustomer();
-
-                // input new organizer to db
-                try {
-                    db.addOrganizer(user);
-                } catch (SQLException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-        }*/
-
-        customerMenu();
+        viewMenu();
+    }
+    @Override
+    public void finish(){
+        System.out.println("Closing program");
+        System.exit(0);
     }
 
-    private void customerMenu(){
-
-        ArrayList<String> menuListOfFunctions = new ArrayList<>(){{
-            add("View events");
-            add("Exit");
-        }};
-
-        int menuOptionChosen = selectFromList(menuListOfFunctions);
+    @Override
+    void viewMenu(){
+        int menuOptionChosen = selectFromList(menuListOfInteractions);
 
         switch(menuOptionChosen){
-            case 1:                                 // View events
+            case 1:
                 run();
                 break;
             case 2:
-                finish();                           // Exits the program
+                finish();
                 break;
             default:
                 System.out.println("That was not a valid option");
@@ -57,59 +42,17 @@ public class CustomerConsole extends Console{
         }
 
         // Recursive call so that the program will return to main menu instead of shut down
-        customerMenu();
-
+        viewMenu();
     }
 
-    //TheBigRefactor
-    //Dette er "runtime" metoden som sender brukeren igjennom hele kjøps prosessen.
-    //Dette er da istedenfor metodelenking / method chaining
-    private void run(){
-        boolean running = true;
-
-        ArrayList<Arrangement> events = new ArrayList<>();
-        try{
-            events = getArrangements();
-
-        }catch (SQLException | ClassNotFoundException ex){
-            ex.printStackTrace();
-            running = false;
-        }
-
-        while(running) {
-
-            showEvents(events);
-            Arrangement valgtArrangement = selectEvent(events);
-
-            int[] ticketidAndAmount;
-
-            try {
-                ticketidAndAmount = purchaseTicketMenu(valgtArrangement);
-            }catch(IOException ex){
-                ex.printStackTrace();
-                break;
-            }
-
-            purchaseTicket(ticketidAndAmount[0], ticketidAndAmount[1]);
-
-            running = buyMoreTicketsYN(); //Hadde en kunne hatt spørsmålstegn i metode navn hadde det vært det her.
-        }
-        super.start(); //Tilbake til start
-    }
-
-    private void showEvents(ArrayList<Arrangement> events){
-
-        // Prints all events
+    @Override
+    void showEvents(ArrayList<Arrangement> events){
         printArrangements(events);
     }
 
-    private ArrayList<Arrangement> getArrangements() throws SQLException, ClassNotFoundException {
-        return db.getEvents();
-    }
+    @Override
+    Arrangement chooseEvent(ArrayList<Arrangement> events) {
 
-    //TheBigRefactor
-    protected Arrangement selectEvent(ArrayList<Arrangement> events) {
-        // Start purchaseticketmenu on seleted event
         int arrangmentID = -1;
 
         while(arrangmentID < 0 || arrangmentID > events.size() -1)
@@ -117,53 +60,70 @@ public class CustomerConsole extends Console{
 
         try {
             return db.getEventById(events.get(arrangmentID).getArrangementID());
-
         }catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
-        return null;
 
+        return null;
     }
 
-
-    private int[] purchaseTicketMenu(Arrangement arrangement) throws IOException {
-
+    @Override
+    void showTickets(Arrangement event) {
         System.out.println("\nThe tickets this event offers:\n");
 
-        ArrayList<Ticket> tickets = arrangement.getAvailableTickets();
+        ArrayList<Ticket> tickets = event.getAvailableTickets();
 
-        if(tickets.size() > 0) {
-
-            // Print all the arrangements different types of tickets
-            //TheBigRefactor
+        if(tickets.size() > 0)
             printTickets(tickets);
 
-            int ticketId = selectTicketID();
-            int ticketAmount = selectTicketAmount();
-
-
-            if (ticketAmount > arrangement.getMaxAttendees()) {
-                throw new IOException("No more tickets left");
-
-            } else {
-                int[] idAndAmount = {ticketId, ticketAmount};
-                return idAndAmount;
-            }
-        } else
+        else
             System.out.println("This event doesn't have any available tickets");
-        return null;
     }
 
-    //TheBigRefactor
-    //Eksisterer så den kan testes
-    private int selectTicketAmount() {
-        return validateIntInput("How many tickets");
+    @Override
+    int[] chooseTicketAndAmount() {
+
+        int ticketId = validateIntInput("id of ticket you want to buy");
+        int ticketAmount = validateIntInput("How many tickets");
+
+        // TODO:: confirm ticket amount is valid
+
+        return new int[]{ticketId, ticketAmount};
     }
 
-    //TheBigRefactor
-    //Eksisterer så den kan testes
-    private int selectTicketID() {
-        return validateIntInput("id of ticket you want to buy");
+    @Override
+    int receiveConfirmationOfTicket() {
+
+        System.out.println("Confirmation method:");
+        int confirmationMethod = selectFromList(confirmationMethods);
+
+        return confirmationMethod;
+    }
+
+    @Override
+    int decidePaymentMethod(){
+        System.out.println("Velg betalingsmåte: ");
+        return selectFromList(paymentMethods);
+    }
+
+    @Override
+    String ticketOwnersName() {
+        return validateStringInput("Your name");
+    }
+
+    @Override
+    int ticketOwnersMobileNr() {
+        return validateIntInput("Your mobile number");
+    }
+
+    @Override
+    String getEmail(){
+        return validateStringInput("Email");
+    }
+
+    @Override
+    boolean continueBuyingTickets(){
+        return askBooleanQuestionAndReturnAnswer("Vil du kjøpe flere biletter?");
     }
 
     //TheBigRefactor
@@ -175,89 +135,6 @@ public class CustomerConsole extends Console{
             sb.append(ticket.getId() + "\t" + ticket.getBeskrivelse() + "\t" + ticket.getAntall());
 
         return sb.toString();
-    }
-
-    private void purchaseTicket(int ticketID, int ticketAmount) {
-
-        String name = validateStringInput("Type name");
-
-        System.out.println("and confirmation method:");
-        ArrayList<String> confirmationMethods = new ArrayList<>(){{
-            add("Epost");
-            add("Print");
-        }};
-
-        int confirmationMethod = selectFromList(confirmationMethods);
-        selectConfirmationMethod(confirmationMethod);
-
-        System.out.println("Velg betalingsmåte: ");
-        ArrayList<String> paymentMethods = new ArrayList<>(){{
-            add("Bankkort");
-            add("Kontanter");
-            add("Vipps");
-        }};
-
-        int paymentMethod = selectFromList(paymentMethods);
-
-        confirmPurchase(ticketID, ticketAmount, name, paymentMethod);
-    }
-
-    private void confirmPurchase(int ticketID, int ticketAmount, String name, int paymentMethod) {
-        BetalingsStub betaling = selectPaymentMethod(name, paymentMethod);
-
-        boolean betalingGodkent = betaling.godkjentBetaling();
-
-        if (betalingGodkent) {
-            try {
-                db.ticketsHaveBeenPurchasedFromEvent(ticketID, ticketAmount);
-            }catch (SQLException | ClassNotFoundException ex){
-                ex.printStackTrace();
-            }
-        }
-        System.out.println("Betalingen var: " + betalingGodkent);
-    }
-
-    protected BetalingsStub selectPaymentMethod(String name, int paymentMethod) {
-        BetalingsStub betaling;
-        betaling = null;
-
-        switch (paymentMethod) {
-            case 1:
-                System.out.println("Bankkort");
-                betaling = new BetalingsStub(name);
-                break;
-
-            case 2:
-                System.out.println("Kontanter");
-                betaling = new BetalingsStub(name);
-                break;
-            case 3:
-                System.out.println("Vipps");
-                int telefonnummer = validateIntInput("Ditt telefonnummer: ");
-                betaling = new BetalingsStub(telefonnummer, name);
-                break;
-            default:
-                break;
-        }
-        return betaling;
-    }
-
-    private void selectConfirmationMethod(int confirmationMethod) {
-        switch (confirmationMethod) {
-            case 1:
-                String epost = validateStringInput("Epost");
-                break;
-            case 2:
-                System.out.println("Print");
-                break;
-            default:
-                //exception of some kind
-                break;
-        }
-    }
-
-    private boolean buyMoreTicketsYN(){
-        return askBooleanQuestionAndReturnAnswer("Ønsker du å kjøpe flere billetter?");
     }
 
     //Vet ikke om denne blir nødvendig spørs test progress

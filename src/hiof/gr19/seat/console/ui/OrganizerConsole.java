@@ -7,59 +7,93 @@ import hiof.gr19.seat.Organizer;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class OrganizerConsole extends Console{
+import static hiof.gr19.seat.console.ui.Console.parseDate;
+import static hiof.gr19.seat.console.ui.InputValidator.*;
+import static hiof.gr19.seat.console.ui.PrintTables.printArrangements;
 
-    private Organizer user;
+public class OrganizerConsole extends OrganizerInteractions implements StartAndFinish {
 
     @Override
     public void start() {
-        super.start();
-        user = loginOrRegister();
-        organizerMenu();
+        if (scanner == null)
+            throw new NullPointerException("No console found");
+
+        loginOrRegister();
+        viewMenu();
+    }
+    @Override
+    public void finish() {
+        System.out.println("Closing program");
+        System.exit(0);
     }
 
-    private Organizer loginOrRegister(){
-        if(askBooleanQuestionAndReturnAnswer("Do you already have an account"))
-            return organizerLogin();
-        else
-            return registerOrganizer();
+    @Override
+    boolean returningOrganizer() {
+        return askBooleanQuestionAndReturnAnswer("Do you already have an account?");
     }
 
-    private Organizer organizerLogin(){
+    @Override
+    String getOrganizerNameOfExisting() {
+        return validateStringInput("Organization name");
+    }
 
-        String organizerName = validateStringInput("Organizer Name");
+    @Override
+    String[] getRegistrationInfo() {
+        String[] nameAndEmail = new String[2];
+        nameAndEmail[0] = validateStringInput("Name");
+        nameAndEmail[1] = validateStringInput("Email");
+        return nameAndEmail;
+    }
 
-        try {
-            boolean organizerStatus = db.checkForOrganizer(organizerName);
-            if (organizerStatus){
-                console.printf("Welcome " + organizerName +"\n");
-                return db.getOrganizerByName(organizerName);
-            }else {
-                console.printf(organizerName + " Is not registered\n");
-                organizerLogin();
+    @Override
+    void createArrangement() {
+        // Instantiate an event based on user input
+        Arrangement createdArrangement = createArrangmentPrompt();
+
+        // Add the event into the database
+        addEventToDb(createdArrangement);
+
+        defineMultipleTickets(createdArrangement);
+    }
+
+    @Override
+    void changeEventInfo(Arrangement arrangement){
+
+        System.out.println("What do you want to change?");
+
+        boolean exitLoop = false;
+
+        while(!exitLoop) {
+
+            int optionToChange = selectFromList(eventInfoCapableOfChange);
+
+            switch (optionToChange) {
+                case 1:
+                    arrangement.setArrangmentTitle(validateStringInput("New name"));
+                    break;
+                case 2:
+                    arrangement.setArrangmentDescription(validateStringInput("New description"));
+                    break;
+                case 3:
+                    arrangement.setArragmentDate(parseDate(validateStringInput("New date (d-mm-yyyy)")));
+                    break;
+                default:
+                    exitLoop = true;
+                    break;
             }
-
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
         }
 
-        return null;
+        updateDBonEventInfoChanged(arrangement);
     }
 
-    private void organizerMenu(){
-
-        ArrayList<String> menuListOfFunctions = new ArrayList<>(){{
-            add("Create event");
-            add("Add an additional type of ticket to an event");
-            add("Change an events information");
-            add("Exit");
-        }};
+    @Override
+    void viewMenu(){
 
         int menuOptionChosen = selectFromList(menuListOfFunctions);
 
         switch(menuOptionChosen){
             case 1:                                 // Create Event
-                organizerCreatesArrangement();
+                createArrangement();
                 break;
             case 2:                                 // Add additional ticket to event
                 try {
@@ -68,7 +102,7 @@ public class OrganizerConsole extends Console{
                     int arrangementId = validateIntInput("Select event");
                     Arrangement arrangementToMakeTicketsFor = db.getEventById(arrangementId);
 
-                    defineMultipleTicketes(arrangementToMakeTicketsFor);
+                    defineMultipleTickets(arrangementToMakeTicketsFor);
 
                 } catch (SQLException | ClassNotFoundException e) {
                     e.printStackTrace();
@@ -102,23 +136,19 @@ public class OrganizerConsole extends Console{
         }
 
         // Recursive call so that the program will return to main menu instead of shut down
-        organizerMenu();
-
+        viewMenu();
     }
 
-    private void organizerCreatesArrangement(){
+    @Override
+    void defineMultipleTickets(Arrangement arrangement){
+        while(askBooleanQuestionAndReturnAnswer("Add a ticket type")){
 
-        // Instantiate an event based on user input
-        Arrangement createdArrangement = createArrangmentPrompt();
+            int antall = validateIntInput("Antall billetter:");
+            int pris = validateIntInput("Pris:");
+            String bilettBeskrivelse = validateStringInput("Bilett beskrivelse");
 
-        // Add the event into the database
-        try {
-            db.createEvent(createdArrangement);
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
+            addTicketsToEvent(arrangement.getArrangementID(), antall, pris, bilettBeskrivelse);
         }
-
-        defineMultipleTicketes(createdArrangement);
     }
 
     private Arrangement createArrangmentPrompt() {
@@ -143,83 +173,4 @@ public class OrganizerConsole extends Console{
 
     }
 
-    private void defineMultipleTicketes(Arrangement arrangement){
-        while(askBooleanQuestionAndReturnAnswer("Add a ticket type")){
-
-            int antall = validateIntInput("Antall billetter:");
-            int pris = validateIntInput("Pris:");
-            String bilettBeskrivelse = validateStringInput("Bilett beskrivelse");
-
-            try {
-                db.defineArrangementTickets(arrangement.getArrangementID(),antall,pris, bilettBeskrivelse);
-            } catch (SQLException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private Organizer registerOrganizer(){
-
-        String organizerName = validateStringInput("Name of organization");
-
-        try {
-            boolean organizerStatus = db.checkForOrganizer(organizerName);
-            if (organizerStatus){
-                console.printf("This organization name already exists, choose another");
-                registerOrganizer();
-            } else {
-                String email = validateStringInput("Email");
-
-                // input new organizer to db
-                try {
-                    return db.addOrganizer( organizerName, email);
-                } catch (SQLException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    private void changeEventInfo(Arrangement arrangement){
-        ArrayList<String> thingsToChange = new ArrayList<>(){{
-            add("Name");
-            add("Description");
-            add("Date");
-            add("I'm done changing");
-        }};
-
-        System.out.println("What do you want to change?");
-
-        boolean exitLoop = false;
-
-        while(!exitLoop) {
-
-            int optionToChange = selectFromList(thingsToChange);
-
-            switch (optionToChange) {
-                case 1:
-                    arrangement.setArrangmentTitle(validateStringInput("New name"));
-                    break;
-                case 2:
-                    arrangement.setArrangmentDescription(validateStringInput("New description"));
-                    break;
-                case 3:
-                    arrangement.setArragmentDate(parseDate(validateStringInput("New date (d-mm-yyyy)")));
-                    break;
-                default:
-                    exitLoop = true;
-                    break;
-            }
-        }
-
-        try {
-            db.changeEventInfo(arrangement.getArrangementID(), arrangement.getArrangmentTitle(), arrangement.getArrangmentDescription(), arrangement.getArragmentDateInStringFormat());
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
 }
