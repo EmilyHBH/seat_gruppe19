@@ -50,7 +50,15 @@ public class OrganizerConsole extends Console{
             e.printStackTrace();
         }
 
-        //TODO metode for å sammenligne passord hash mot DB
+        try {
+            if (!database.compareHash(password,organizerName)){
+                System.out.println("Wrong password");
+                return;
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
 
         try {
             boolean organizerStatus = database.checkForOrganizer(organizerName);
@@ -64,7 +72,7 @@ public class OrganizerConsole extends Console{
             e.printStackTrace();
         }
 
-        // TODO:: return Organizer?
+
     }
 
     private void organizerMenu(){
