@@ -10,6 +10,7 @@ public class PayWithVipps extends PaymentMethod {
 
 	@Override
 	public boolean pay(String navn) {
+		System.out.println("Paying with vipps ...");
 		BetalingsStub transaksjonsService = new BetalingsStub(telefonnummer, navn);
 		return transaksjonsService.godkjentBetaling();
 	}

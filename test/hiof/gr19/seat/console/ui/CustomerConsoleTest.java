@@ -43,7 +43,7 @@ class CustomerConsoleTest extends ConsoleTest {
         provideInput(telefonnummer);
 
         //params: navn på bruker, betalings metode
-        cc.selectPaymentMethod(navn, betalingsMetode);
+        //cc.selectPaymentMethod(navn, betalingsMetode);
         assertEquals("Vipps", getConsoleOutput());
     }
 
@@ -54,7 +54,7 @@ class CustomerConsoleTest extends ConsoleTest {
         String navn = "Test Testesen";
         int betalingsMetode = 1; //Kort = 1
 
-        cc.selectPaymentMethod(navn, betalingsMetode);
+        //cc.selectPaymentMethod(navn, betalingsMetode);
         //"bankkort\n" = sout("bankort")
         assertEquals("Bankkort\n", getConsoleOutput());
     }
@@ -66,7 +66,7 @@ class CustomerConsoleTest extends ConsoleTest {
         String navn = "Test Testesen";
         int betalingsMetode = 2; //Kontant = 2
 
-        cc.selectPaymentMethod(navn, betalingsMetode);
+        //cc.selectPaymentMethod(navn, betalingsMetode);
         assertEquals(getConsoleOutput(), "Kontanter");
     }
 }

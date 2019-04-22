@@ -1,13 +1,17 @@
 package hiof.gr19.seat.stubs.confirmation;
 
-import hiof.gr19.seat.stubs.confirmation.ConfirmationMethod;
+import hiof.gr19.seat.model.Purchase;
 
-public class emailReciept extends ConfirmationMethod {
+public class EmailReciept extends ConfirmationMethod {
 
     private String email;
 
+    public EmailReciept(String email) {
+        this.email = email;
+    }
+
     @Override
-    public void sendConfirmation() {
+    public void sendConfirmation(Purchase purchase) {
         /*
         MailMessage message = new MailMessage();
         message.setFrom();

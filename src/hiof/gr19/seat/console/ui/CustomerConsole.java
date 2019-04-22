@@ -1,10 +1,13 @@
 package hiof.gr19.seat.console.ui;
 
-import hiof.gr19.seat.Arrangement;
-import hiof.gr19.seat.stubs.BetalingsStub;
-import hiof.gr19.seat.Ticket;
+import hiof.gr19.seat.model.Purchase;
+import hiof.gr19.seat.model.Arrangement;
+import hiof.gr19.seat.stubs.confirmation.ConfirmationMethod;
+import hiof.gr19.seat.stubs.confirmation.EmailReciept;
+import hiof.gr19.seat.stubs.confirmation.PrintReciept;
+import hiof.gr19.seat.stubs.payment.*;
+import hiof.gr19.seat.model.Ticket;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -14,23 +17,6 @@ public class CustomerConsole extends Console{
     public void start() {
 
         super.start();
-
-        /*Person user;
-
-        if(askBooleanQuestionAndReturnAnswer("Do you already have an account"))
-            user = customerLogin();
-        else {
-            if(askBooleanQuestionAndReturnAnswer("Do you want to create an account")){
-                user = registerCustomer();
-
-                // input new organizer to db
-                try {
-                    db.addOrganizer(user);
-                } catch (SQLException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-        }*/
 
         customerMenu();
     }
@@ -81,24 +67,35 @@ public class CustomerConsole extends Console{
             showEvents(events);
             Arrangement valgtArrangement = selectEvent(events);
 
-            int[] ticketidAndAmount;
+            Purchase thisPurchase = new Purchase(valgtArrangement);
 
-            try {
-                ticketidAndAmount = purchaseTicketMenu(valgtArrangement);
-            }catch(IOException ex){
-                ex.printStackTrace();
-                break;
-            }
+			introduceArrangementTickets(valgtArrangement);
+			int ticketId = selectTicketID();
+			int ticketAmount = selectTicketAmount();
+			//TODO: Her trenger vi sjekk om det er nok billetter
+			//Tenker det hadde vært bra som en methode i Purchase men kanskje ikke for den har ikke DB
+            thisPurchase.setTicketID(ticketId);
+            thisPurchase.setTicketAmount(ticketAmount);
 
-            purchaseTicket(ticketidAndAmount[0], ticketidAndAmount[1]);
+			thisPurchase.setOwnerName(enterNameOfTicketOwner());
+
+			thisPurchase.setConfirmationMethod(declareConfirmationMethod());
+			thisPurchase.setPaymentMethod(declarePaymentMethod());
+
+			confirmPurchase(thisPurchase);
+
+			thisPurchase.printReceipt();
 
             running = buyMoreTicketsYN(); //Hadde en kunne hatt spørsmålstegn i metode navn hadde det vært det her.
         }
         super.start(); //Tilbake til start
     }
 
-    private void showEvents(ArrayList<Arrangement> events){
+    private String enterNameOfTicketOwner() {
+        return validateStringInput("Type name");
+    }
 
+    private void showEvents(ArrayList<Arrangement> events){
         // Prints all events
         printArrangements(events);
     }
@@ -125,9 +122,7 @@ public class CustomerConsole extends Console{
 
     }
 
-
-    private int[] purchaseTicketMenu(Arrangement arrangement) throws IOException {
-
+    private void introduceArrangementTickets(Arrangement arrangement){
         System.out.println("\nThe tickets this event offers:\n");
 
         ArrayList<Ticket> tickets = arrangement.getAvailableTickets();
@@ -138,20 +133,8 @@ public class CustomerConsole extends Console{
             //TheBigRefactor
             printTickets(tickets);
 
-            int ticketId = selectTicketID();
-            int ticketAmount = selectTicketAmount();
-
-
-            if (ticketAmount > arrangement.getMaxAttendees()) {
-                throw new IOException("No more tickets left");
-
-            } else {
-                int[] idAndAmount = {ticketId, ticketAmount};
-                return idAndAmount;
-            }
         } else
             System.out.println("This event doesn't have any available tickets");
-        return null;
     }
 
     //TheBigRefactor
@@ -166,30 +149,17 @@ public class CustomerConsole extends Console{
         return validateIntInput("id of ticket you want to buy");
     }
 
-    //TheBigRefactor
-    //TODO: Mulig denne bør bli sett på.
-    private String buildTicketPrint(ArrayList<Ticket> tickets) {
-        StringBuilder sb = new StringBuilder();
+	private PaymentMethod declarePaymentMethod() {
+		int paymentMethod = introducePaymentMethods();
+		return selectPaymentMethod(paymentMethod);
+	}
 
-        for (Ticket ticket : tickets)
-            sb.append(ticket.getId() + "\t" + ticket.getBeskrivelse() + "\t" + ticket.getAntall());
+	private ConfirmationMethod declareConfirmationMethod() {
+		int confirmationMethod = introduceConfirmationMethods();
+		return selectConfirmationMethod(confirmationMethod);
+	}
 
-        return sb.toString();
-    }
-
-    private void purchaseTicket(int ticketID, int ticketAmount) {
-
-        String name = validateStringInput("Type name");
-
-        System.out.println("and confirmation method:");
-        ArrayList<String> confirmationMethods = new ArrayList<>(){{
-            add("Epost");
-            add("Print");
-        }};
-
-        int confirmationMethod = selectFromList(confirmationMethods);
-        selectConfirmationMethod(confirmationMethod);
-
+	private int introducePaymentMethods() {
         System.out.println("Velg betalingsmåte: ");
         ArrayList<String> paymentMethods = new ArrayList<>(){{
             add("Bankkort");
@@ -197,82 +167,77 @@ public class CustomerConsole extends Console{
             add("Vipps");
         }};
 
-        int paymentMethod = selectFromList(paymentMethods);
-
-        confirmPurchase(ticketID, ticketAmount, name, paymentMethod);
+        return selectFromList(paymentMethods);
     }
 
-    private void confirmPurchase(int ticketID, int ticketAmount, String name, int paymentMethod) {
-        BetalingsStub betaling = selectPaymentMethod(name, paymentMethod);
+    private int introduceConfirmationMethods() {
+        System.out.println("and confirmation method:");
+        ArrayList<String> confirmationMethods = new ArrayList<>(){{
+            add("Epost");
+            add("Print");
+        }};
 
-        boolean betalingGodkent = betaling.godkjentBetaling();
+        return selectFromList(confirmationMethods);
+    }
+
+    private void confirmPurchase(Purchase purchase) {
+
+        boolean betalingGodkent = purchase.getPaymentMethod().pay(purchase.getOwnerName());
 
         if (betalingGodkent) {
             try {
-                db.ticketsHaveBeenPurchasedFromEvent(ticketID, ticketAmount);
+                db.ticketsHaveBeenPurchasedFromEvent(purchase.getTicketID(), purchase.getTicketAmount());
             }catch (SQLException | ClassNotFoundException ex){
                 ex.printStackTrace();
             }
         }
-        System.out.println("Betalingen var: " + betalingGodkent);
+        System.out.println("Payment accepted: " + betalingGodkent);
     }
 
-    protected BetalingsStub selectPaymentMethod(String name, int paymentMethod) {
-        BetalingsStub betaling;
-        betaling = null;
-
+    protected PaymentMethod selectPaymentMethod(int paymentMethod) {
         switch (paymentMethod) {
             case 1:
-                System.out.println("Bankkort");
-                betaling = new BetalingsStub(name);
-                break;
-
+                System.out.println("Selected: Card");
+                return new PayWithCard();
             case 2:
-                System.out.println("Kontanter");
-                betaling = new BetalingsStub(name);
-                break;
+                System.out.println("Selected: Cash");
+                return new PayWithCash();
             case 3:
-                System.out.println("Vipps");
-                int telefonnummer = validateIntInput("Ditt telefonnummer: ");
-                betaling = new BetalingsStub(telefonnummer, name);
-                break;
-            default:
-                break;
-        }
-        return betaling;
-    }
-
-    private void selectConfirmationMethod(int confirmationMethod) {
-        switch (confirmationMethod) {
-            case 1:
-                String epost = validateStringInput("Epost");
-                break;
-            case 2:
-                System.out.println("Print");
-                break;
+                System.out.println("Selected: Vipps");
+                int telefonnummer = enterPhoneNumberOfTicketOwner();
+                return new PayWithVipps(telefonnummer);
             default:
                 //exception of some kind
                 break;
         }
+        return null;
+    }
+
+    private int enterPhoneNumberOfTicketOwner() {
+        return validateIntInput("Ditt telefonnummer");
+    }
+
+    private ConfirmationMethod selectConfirmationMethod(int confirmationMethod) {
+        switch (confirmationMethod) {
+            case 1:
+                System.out.println("Selected: Email");
+                String email = enterEmailOfTicketOwner();
+                return new EmailReciept(email);
+            case 2:
+                System.out.println("Selected: Print");
+            	return new PrintReciept();
+            default:
+                //exception of some kind
+                break;
+        }
+        return null;
+    }
+
+    private String enterEmailOfTicketOwner() {
+        return validateStringInput("Enter email of ticket owner");
     }
 
     private boolean buyMoreTicketsYN(){
         return askBooleanQuestionAndReturnAnswer("Ønsker du å kjøpe flere billetter?");
-    }
-
-    //Vet ikke om denne blir nødvendig spørs test progress
-    private class purchase {
-        Arrangement arrangement;
-        //evt Ticket ticket isteden for int ticketID
-        //Tror egentlig alle variablene i denne klassen burde ha vært egene klasser.
-        int ticketID;
-        int ticketAmount;
-        int confirmationMethod;
-        int paymentMethod;
-        boolean paymentStatus;
-
-        public purchase(Arrangement arrangement) {
-            this.arrangement = arrangement;
-        }
     }
 }
