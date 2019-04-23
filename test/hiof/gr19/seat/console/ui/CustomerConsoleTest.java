@@ -2,6 +2,7 @@ package hiof.gr19.seat.console.ui;
 
 import hiof.gr19.seat.model.Arrangement;
 import hiof.gr19.seat.Database;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,6 +20,8 @@ class CustomerConsoleTest extends ConsoleTest {
     public void setup(){
         cc = new CustomerConsole();
     }
+
+
 
     @Test
     public void testValgAvArrangement() throws SQLException, ClassNotFoundException, IOException {
