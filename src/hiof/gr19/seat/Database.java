@@ -15,6 +15,7 @@ public class Database {
     private static Connection dbCon;
     private static boolean hasData = false;
 
+
     private void getConnection() throws ClassNotFoundException, SQLException {
         Class.forName("org.sqlite.JDBC");
         dbCon = DriverManager.getConnection("jdbc:sqlite:tempDB.db");

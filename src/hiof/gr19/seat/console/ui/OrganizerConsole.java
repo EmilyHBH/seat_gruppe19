@@ -77,7 +77,7 @@ public class OrganizerConsole extends Console{
 
     private void organizerMenu(){
 
-        ArrayList<String> menuListOfFunctions = new ArrayList<>(){{
+        ArrayList<String> menuListOfFunctions = new ArrayList<String>(){{
             add("Create event");
             add("Add an additional type of ticket to an event");
             add("Change an events information");
@@ -196,7 +196,7 @@ public class OrganizerConsole extends Console{
     }
 
     private void changeEventInfo(Arrangement arrangement){
-        ArrayList<String> thingsToChange = new ArrayList<>(){{
+        ArrayList<String> thingsToChange = new ArrayList<String>(){{
             add("Name");
             add("Description");
             add("Date");

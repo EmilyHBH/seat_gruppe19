@@ -23,7 +23,7 @@ public class CustomerConsole extends Console{
 
     private void customerMenu(){
 
-        ArrayList<String> menuListOfFunctions = new ArrayList<>(){{
+        ArrayList<String> menuListOfFunctions = new ArrayList<String>(){{
             add("View events");
             add("Exit");
         }};
@@ -170,7 +170,7 @@ public class CustomerConsole extends Console{
 
 	private int introducePaymentMethods() {
         System.out.println("Velg betalingsmåte: ");
-        ArrayList<String> paymentMethods = new ArrayList<>(){{
+        ArrayList<String> paymentMethods = new ArrayList<String>(){{
             add("Bankkort");
             add("Kontanter");
             add("Vipps");
@@ -181,7 +181,7 @@ public class CustomerConsole extends Console{
 
     private int introduceConfirmationMethods() {
         System.out.println("and confirmation method:");
-        ArrayList<String> confirmationMethods = new ArrayList<>(){{
+        ArrayList<String> confirmationMethods = new ArrayList<String>(){{
             add("Epost");
             add("Print");
         }};
