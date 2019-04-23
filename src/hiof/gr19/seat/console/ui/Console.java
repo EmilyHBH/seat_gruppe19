@@ -79,12 +79,6 @@ public class Console {
 
     }
 
-    boolean checkTicketConditions(Arrangement arrangement, int ticketAmount) {
-
-        return arrangement.getMaxAttendees() > ticketAmount;
-
-    }
-
     static char getAscii(int code){
 
         return (char) code;

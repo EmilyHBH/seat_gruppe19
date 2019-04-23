@@ -117,6 +117,23 @@ public class Arrangement {
         this.availableTickets = availableTickets;
     }
 
+    public boolean checkTicketConditions(int ticketId, int requestedTicketAmountToPurchase) {
+
+        Ticket ticket = null;
+
+        for(Ticket singleTix : availableTickets){
+            if(singleTix.getId() == ticketId){
+                ticket = singleTix;
+                break;
+            }
+        }
+
+        if(ticket != null)
+            return ticket.getAntall() > requestedTicketAmountToPurchase;
+        else
+            return false;
+    }
+
     @Override
     public String toString() {
         return arrangmentTitle + arragmentDate.toString();

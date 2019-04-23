@@ -70,8 +70,8 @@ public class CustomerConsole extends Console{
             Purchase thisPurchase = new Purchase(valgtArrangement);
 
 			introduceArrangementTickets(valgtArrangement);
-			int ticketId = selectTicketID();
-			int ticketAmount = selectTicketAmount();
+			int ticketId = selectTicketID(valgtArrangement.getAvailableTickets());
+			int ticketAmount = selectTicketAmount(ticketId,valgtArrangement);
 			//TODO: Her trenger vi sjekk om det er nok billetter
 			//Tenker det hadde vært bra som en methode i Purchase men kanskje ikke for den har ikke DB
             thisPurchase.setTicket(selectTicket(thisPurchase.getArrangement(), ticketId));
@@ -148,14 +148,32 @@ public class CustomerConsole extends Console{
 
     //TheBigRefactor
     //Eksisterer så den kan testes
-    private int selectTicketAmount() {
-        return InputValidator.validateIntInput("How many tickets");
+    private int selectTicketAmount(int ticketId, Arrangement arrangement) {
+        int requestedAmountToBuy = InputValidator.validateIntInput("How many tickets");
+
+        while(!arrangement.checkTicketConditions(ticketId,requestedAmountToBuy)) {
+            System.out.println("Not enough tickets to buy");
+            requestedAmountToBuy = InputValidator.validateIntInput("How many tickets");
+        }
+
+
+        return requestedAmountToBuy;
     }
 
     //TheBigRefactor
     //Eksisterer så den kan testes
-    private int selectTicketID() {
-        return InputValidator.validateIntInput("id of ticket you want to buy");
+    private int selectTicketID(ArrayList<Ticket> tickets) {
+
+        int ticketId = InputValidator.validateIntInput("id of ticket you want to buy");
+
+        while(ticketId >= tickets.size() || ticketId < 0){
+            System.out.println("Input out of bounds. Try again");
+            ticketId = InputValidator.validateIntInput("id of ticket you want to buy");
+        }
+
+        int ticketIdInDB = tickets.get(ticketId).getId();
+
+        return ticketIdInDB;
     }
 
 	private PaymentMethod declarePaymentMethod() {
