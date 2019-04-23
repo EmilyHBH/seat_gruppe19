@@ -1,12 +1,20 @@
 package hiof.gr19.seat.console.ui;
 
+import hiof.gr19.seat.Database;
+import hiof.gr19.seat.model.Arrangement;
+import hiof.gr19.seat.model.Organizer;
+import hiof.gr19.seat.model.Ticket;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -40,4 +48,40 @@ class ConsoleTest {
 		System.setOut(systemOut);
 	}
 
+	@BeforeAll
+	public void lagTestData(){
+		Database db = new Database();
+
+
+		try {
+			//Organizer testorg = new Organizer("")
+			db.addOrganizer("testorg", "testorg@testmail.com");
+			db.createEvent(new Arrangement(
+					-1,
+					"test arragement",
+					"tester arrangement",
+					new Date(),
+					db.getOrganizerByName("testorg"),
+					400,
+					"Remmen",
+					new ArrayList<>(){{
+						new Ticket(
+							-1,
+							233,
+							150,
+							"test billett");
+						new Ticket(
+							-1,
+							500,
+							250,
+							"billett tester");
+					}
+				}
+			));
+
+		}catch (SQLException | ClassNotFoundException ex){
+			ex.printStackTrace();
+		}
+
+	}
 }

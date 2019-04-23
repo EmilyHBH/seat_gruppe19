@@ -35,7 +35,7 @@ class CustomerConsoleTest extends ConsoleTest {
     public void testVippsBetaling(){
         //Krav 014
 
-        String navn = "Test Testesen";
+        String navn = "Test Hansen";
         int betalingsMetode = 3; //Vipps = 3
 
         String telefonnummer = "12345678";
