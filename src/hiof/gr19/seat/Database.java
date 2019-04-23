@@ -112,7 +112,7 @@ public class Database {
                         "FOREIGN KEY(billettId) REFERENCES bilett(id) on delete cascade on update cascade " +
                         ")");
 
-                createArrangementsBiletterTable.execute("INSERT INTO arrangements_biletter values(0,0,50)");
+                createArrangementsBiletterTable.execute("INSERT INTO arrangements_biletter values(1,1,50)");
             }
         }
     }
