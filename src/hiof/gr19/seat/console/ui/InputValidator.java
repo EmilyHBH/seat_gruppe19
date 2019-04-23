@@ -12,7 +12,7 @@ class InputValidator {
 
         String answer;
         while(true){
-            answer = scanner.next();
+            answer = scanner.nextLine();
 
             if(answer.equals("y"))
                 return true;
@@ -30,7 +30,7 @@ class InputValidator {
 
         while(true){
             try{
-                result = Integer.parseInt(scanner.next());
+                result = Integer.parseInt(scanner.nextLine());
                 return result;
             }
             catch(NumberFormatException e){
@@ -43,7 +43,7 @@ class InputValidator {
 
         while(true){
             try{
-                return scanner.next();
+                return scanner.nextLine();
             }
             catch(Exception e){
                 System.out.println("Something went wrong, try again:");

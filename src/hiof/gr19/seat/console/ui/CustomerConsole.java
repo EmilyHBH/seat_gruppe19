@@ -28,7 +28,7 @@ public class CustomerConsole extends Console{
             add("Exit");
         }};
 
-        int menuOptionChosen = selectFromList(menuListOfFunctions);
+        int menuOptionChosen = InputValidator.selectFromList(menuListOfFunctions);
 
         switch(menuOptionChosen){
             case 1:                                 // View events
@@ -92,12 +92,12 @@ public class CustomerConsole extends Console{
     }
 
     private String enterNameOfTicketOwner() {
-        return validateStringInput("Type name");
+        return InputValidator.validateStringInput("Type name");
     }
 
     private void showEvents(ArrayList<Arrangement> events){
         // Prints all events
-        printArrangements(events);
+        PrintTables.printArrangements(events);
     }
 
     private ArrayList<Arrangement> getArrangements() throws SQLException, ClassNotFoundException {
@@ -110,7 +110,7 @@ public class CustomerConsole extends Console{
         int arrangmentID = -1;
 
         while(arrangmentID < 0 || arrangmentID > events.size() -1)
-            arrangmentID = validateIntInput("Which event do you want to buy ticket for? answer by using the id");
+            arrangmentID = InputValidator.validateIntInput("Which event do you want to buy ticket for? answer by using the id");
 
         try {
             return db.getEventById(events.get(arrangmentID).getArrangementID());
@@ -131,7 +131,7 @@ public class CustomerConsole extends Console{
 
             // Print all the arrangements different types of tickets
             //TheBigRefactor
-            printTickets(tickets);
+            PrintTables.printTickets(tickets);
 
         } else
             System.out.println("This event doesn't have any available tickets");
@@ -140,13 +140,13 @@ public class CustomerConsole extends Console{
     //TheBigRefactor
     //Eksisterer så den kan testes
     private int selectTicketAmount() {
-        return validateIntInput("How many tickets");
+        return InputValidator.validateIntInput("How many tickets");
     }
 
     //TheBigRefactor
     //Eksisterer så den kan testes
     private int selectTicketID() {
-        return validateIntInput("id of ticket you want to buy");
+        return InputValidator.validateIntInput("id of ticket you want to buy");
     }
 
 	private PaymentMethod declarePaymentMethod() {
@@ -167,7 +167,7 @@ public class CustomerConsole extends Console{
             add("Vipps");
         }};
 
-        return selectFromList(paymentMethods);
+        return InputValidator.selectFromList(paymentMethods);
     }
 
     private int introduceConfirmationMethods() {
@@ -177,7 +177,7 @@ public class CustomerConsole extends Console{
             add("Print");
         }};
 
-        return selectFromList(confirmationMethods);
+        return InputValidator.selectFromList(confirmationMethods);
     }
 
     private void confirmPurchase(Purchase purchase) {
@@ -214,7 +214,7 @@ public class CustomerConsole extends Console{
     }
 
     private int enterPhoneNumberOfTicketOwner() {
-        return validateIntInput("Ditt telefonnummer");
+        return InputValidator.validateIntInput("Ditt telefonnummer");
     }
 
     private ConfirmationMethod selectConfirmationMethod(int confirmationMethod) {
@@ -234,10 +234,10 @@ public class CustomerConsole extends Console{
     }
 
     private String enterEmailOfTicketOwner() {
-        return validateStringInput("Enter email of ticket owner");
+        return InputValidator.validateStringInput("Enter email of ticket owner");
     }
 
     private boolean buyMoreTicketsYN(){
-        return askBooleanQuestionAndReturnAnswer("Ønsker du å kjøpe flere billetter?");
+        return InputValidator.askBooleanQuestionAndReturnAnswer("Ønsker du å kjøpe flere billetter?");
     }
 }

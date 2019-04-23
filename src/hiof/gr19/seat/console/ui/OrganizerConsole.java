@@ -21,7 +21,7 @@ public class OrganizerConsole extends Console{
     }
 
     private Organizer loginOrRegister(){
-        if(askBooleanQuestionAndReturnAnswer("Do you already have an account"))
+        if(InputValidator.askBooleanQuestionAndReturnAnswer("Do you already have an account"))
             return organizerLogin();
         else
             return registerOrganizer();
@@ -29,16 +29,16 @@ public class OrganizerConsole extends Console{
 
     protected Organizer organizerLogin(){
 
-        String organizerName = validateStringInput("Organizer Name");
+        String organizerName = InputValidator.validateStringInput("Organizer Name");
 
         //Blir man hardstuck i denne?
         try {
             boolean organizerStatus = db.checkForOrganizer(organizerName);
             if (organizerStatus){
-                console.printf("Welcome " + organizerName +"\n");
+                System.out.println("Welcome " + organizerName);
                 return db.getOrganizerByName(organizerName);
             }else {
-                console.printf(organizerName + " Is not registered\n");
+                System.out.println(organizerName + " Is not registered");
                 organizerLogin();
             }
 
@@ -51,15 +51,15 @@ public class OrganizerConsole extends Console{
 
 	protected Organizer registerOrganizer(){
 
-		String organizerName = validateStringInput("Name of organization");
+		String organizerName = InputValidator.validateStringInput("Name of organization");
 
 		try {
 			boolean organizerStatus = db.checkForOrganizer(organizerName);
 			if (organizerStatus){
-				console.printf("This organization name already exists, choose another");
+                System.out.println("This organization name already exists, choose another");
 				registerOrganizer();
 			} else {
-				String email = validateStringInput("Email");
+				String email = InputValidator.validateStringInput("Email");
 
 				// input new organizer to db
 				try {
@@ -84,7 +84,7 @@ public class OrganizerConsole extends Console{
             add("Exit");
         }};
 
-        int menuOptionChosen = selectFromList(menuListOfFunctions);
+        int menuOptionChosen = InputValidator.selectFromList(menuListOfFunctions);
 
         switch(menuOptionChosen){
             case 1:                                 // Create Event
@@ -115,9 +115,9 @@ public class OrganizerConsole extends Console{
 
             if(thisOrganizationsEvents.size() > 0) {
 
-                printArrangements(thisOrganizationsEvents);
+                PrintTables.printArrangements(thisOrganizationsEvents);
 
-                int arrangementId = validateIntInput("Select event");
+                int arrangementId = InputValidator.validateIntInput("Select event");
                 Arrangement arrangementToChangeinfo = db.getEventById(arrangementId);
 
                 changeEventInfo(arrangementToChangeinfo);
@@ -131,9 +131,9 @@ public class OrganizerConsole extends Console{
 
     private void organizerAddsAdditionalTicket() {
         try {
-            printArrangements(db.getEventsByOrganizer(user.getOrganizerID()));
+            PrintTables.printArrangements(db.getEventsByOrganizer(user.getOrganizerID()));
 
-            int arrangementId = validateIntInput("Select event");
+            int arrangementId = InputValidator.validateIntInput("Select event");
             Arrangement arrangementToMakeTicketsFor = db.getEventById(arrangementId);
 
             defineMultipleTicketes(arrangementToMakeTicketsFor);
@@ -162,11 +162,11 @@ public class OrganizerConsole extends Console{
 
         System.out.println("Create arrangment");
 
-        String title = validateStringInput("Title:");
-        String description = validateStringInput("Description:");
-        String dateString = validateStringInput("Date day-month-year:"); // TODO:: validation method
-        int ticketAmount = validateIntInput("How many tickets?:");
-        String location = validateStringInput("Location:");
+        String title = InputValidator.validateStringInput("Title:");
+        String description = InputValidator.validateStringInput("Description:");
+        String dateString = InputValidator.validateStringInput("Date day-month-year:"); // TODO:: validation method
+        int ticketAmount = InputValidator.validateIntInput("How many tickets?:");
+        String location = InputValidator.validateStringInput("Location:");
 
         return new Arrangement(
                 -1,//Blir satt av database
@@ -181,11 +181,11 @@ public class OrganizerConsole extends Console{
     }
 
     private void defineMultipleTicketes(Arrangement arrangement){
-        while(askBooleanQuestionAndReturnAnswer("Add a ticket type")){
+        while(InputValidator.askBooleanQuestionAndReturnAnswer("Add a ticket type")){
 
-            int antall = validateIntInput("Antall billetter:");
-            int pris = validateIntInput("Pris:");
-            String bilettBeskrivelse = validateStringInput("Bilett beskrivelse");
+            int antall = InputValidator.validateIntInput("Antall billetter:");
+            int pris = InputValidator.validateIntInput("Pris:");
+            String bilettBeskrivelse = InputValidator.validateStringInput("Bilett beskrivelse");
 
             try {
                 db.defineArrangementTickets(arrangement.getArrangementID(),antall,pris, bilettBeskrivelse);
@@ -209,17 +209,17 @@ public class OrganizerConsole extends Console{
 
         while(!exitLoop) {
 
-            int optionToChange = selectFromList(thingsToChange);
+            int optionToChange = InputValidator.selectFromList(thingsToChange);
 
             switch (optionToChange) {
                 case 1:
-                    arrangement.setArrangmentTitle(validateStringInput("New name"));
+                    arrangement.setArrangmentTitle(InputValidator.validateStringInput("New name"));
                     break;
                 case 2:
-                    arrangement.setArrangmentDescription(validateStringInput("New description"));
+                    arrangement.setArrangmentDescription(InputValidator.validateStringInput("New description"));
                     break;
                 case 3:
-                    arrangement.setArragmentDate(parseDate(validateStringInput("New date (d-mm-yyyy)")));
+                    arrangement.setArragmentDate(parseDate(InputValidator.validateStringInput("New date (d-mm-yyyy)")));
                     break;
                 default:
                     exitLoop = true;

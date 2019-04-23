@@ -1,8 +1,8 @@
 package hiof.gr19.seat.console.ui;
 
 import de.vandermeer.asciitable.AsciiTable;
-import hiof.gr19.seat.Arrangement;
-import hiof.gr19.seat.Ticket;
+import hiof.gr19.seat.model.Arrangement;
+import hiof.gr19.seat.model.Ticket;
 
 import java.util.ArrayList;
 

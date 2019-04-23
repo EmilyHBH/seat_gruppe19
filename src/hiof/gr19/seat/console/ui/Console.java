@@ -54,6 +54,11 @@ public class Console {
         }
     }
 
+    public void finish(){
+        System.out.println("Exiting");
+        System.exit(0);
+    }
+
     public static Date parseDate(String inputDate){
 
         DateFormat format = new SimpleDateFormat("d-MM-yyyy", Locale.getDefault());
