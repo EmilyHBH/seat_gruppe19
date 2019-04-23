@@ -3,6 +3,7 @@ package hiof.gr19.seat;
 import hiof.gr19.seat.console.ui.Console;
 import hiof.gr19.seat.console.ui.CustomerConsole;
 import hiof.gr19.seat.console.ui.OrganizerConsole;
+import hiof.gr19.seat.model.User;
 
 import static hiof.gr19.seat.console.ui.Console.identifyUser;
 
@@ -11,7 +12,6 @@ public class Seat {
     public static void main(String[] args){
 
         User.Type userType = null;
-        Console c;
 
         // This loop forces the identifyUser() method to rerun until it gets a valid User.Type
         while(userType == null)
@@ -19,12 +19,12 @@ public class Seat {
 
         switch (userType) {
             case Customer:
-                c = new CustomerConsole();
-                c.start();
+                CustomerConsole customerConsole = new CustomerConsole();
+                customerConsole.start();
                 break;
             case Organizer:
-                c = new OrganizerConsole();
-                c.start();
+                OrganizerConsole organizerConsole = new OrganizerConsole();
+                organizerConsole.start();
                 break;
             default:
                 break;

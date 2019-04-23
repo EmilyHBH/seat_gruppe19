@@ -1,6 +1,7 @@
-package hiof.gr19.seat;
+package hiof.gr19.seat.model;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Arrangement {
@@ -11,8 +12,9 @@ public class Arrangement {
     private String location;
     private Organizer organizer;
     private int maxAttendees;
+    private ArrayList<Ticket> availableTickets = new ArrayList<Ticket>();
 
-    public Arrangement(int arrangementID, String arrangmentTitle, String arrangmentDescription, Date arragmentDate, Organizer organizer, int maxattendees, String location) {
+    public Arrangement(int arrangementID, String arrangmentTitle, String arrangmentDescription, Date arragmentDate, Organizer organizer, int maxattendees, String location, ArrayList<Ticket> tickets) {
         this.arrangementID = arrangementID;
         this.arrangmentTitle = arrangmentTitle;
         this.arrangmentDescription = arrangmentDescription;
@@ -20,6 +22,7 @@ public class Arrangement {
         this.organizer = organizer;
         this.maxAttendees = maxattendees;
         this.location = location;
+        this.availableTickets = tickets;
     }
 
     private String getTotalInformation() {
@@ -106,8 +109,12 @@ public class Arrangement {
         this.maxAttendees = maxAttendees;
     }
 
-    public void updateAvaliableTicket(int ticketAmount){
+    public ArrayList<Ticket> getAvailableTickets() {
+        return availableTickets;
+    }
 
+    public void setAvailableTickets(ArrayList<Ticket> availableTickets) {
+        this.availableTickets = availableTickets;
     }
 
     @Override

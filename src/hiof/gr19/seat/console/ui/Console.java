@@ -1,9 +1,10 @@
 package hiof.gr19.seat.console.ui;
 
 import de.vandermeer.asciitable.AsciiTable;
-import hiof.gr19.seat.Arrangement;
+import hiof.gr19.seat.model.Arrangement;
 import hiof.gr19.seat.Database;
-import hiof.gr19.seat.User;
+import hiof.gr19.seat.model.Ticket;
+import hiof.gr19.seat.model.User;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -11,22 +12,24 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Scanner;
+
+import static hiof.gr19.seat.console.ui.InputValidator.validateStringInput;
 
 public class Console {
 
-    static java.io.Console console = System.console();
+    static Scanner scanner = new Scanner(System.in);
     static Database db = new Database();
 
     public static User.Type identifyUser() {
 
-        if (console == null){
+        if (scanner == null){
             throw new NullPointerException("No console found");
         }
 
-        System.out.println("OP mode?");
         System.out.println("1 = Organizer");
         System.out.println("2 = Customer");
-        String input = console.readLine(">");
+        String input = validateStringInput("What are you");
 
         switch (input){
             case "1":
@@ -46,9 +49,14 @@ public class Console {
 
     // This method is meant to be overridden
     public void start(){
-        if (console == null){
+        if (scanner == null){
             throw new NullPointerException("No console found");
         }
+    }
+
+    public void finish(){
+        System.out.println("Exiting");
+        System.exit(0);
     }
 
     public static Date parseDate(String inputDate){
@@ -65,79 +73,7 @@ public class Console {
 
     }
 
-    static boolean askBooleanQuestionAndReturnAnswer(String question){
-        System.out.println(questionFormat(question + " (y/n)"));
-
-        String answer;
-        while(true){
-             answer = console.readLine();
-
-            if(answer.equals("y"))
-                return true;
-            else if(answer.equals("n"))
-                return false;
-
-            System.out.println("Answer by typing 'y' or 'n'");
-        }
-    }
-    static int validateIntInput(String question){
-
-        System.out.println(questionFormat(question));
-
-        int result;
-
-        while(true){
-            try{
-                result = Integer.parseInt(console.readLine());
-                return result;
-            }
-            catch(NumberFormatException e){
-                System.out.println("Only numeric whole numbers are valid. Try again:");
-            }
-        }
-    }
-    static String validateStringInput(String question){
-        System.out.println(questionFormat(question));
-
-        String result;
-
-        while(true){
-            try{
-                result = console.readLine();
-                return result;
-            }
-            catch(Exception e){
-                System.out.println("Something went wrong, try again:");
-            }
-        }
-    }
-    private static String questionFormat(String question){
-        return question == null ? null : "\n" + question + ":\n";
-    }
-
-    public static void printArrangements(ArrayList<Arrangement> arrangementList){
-
-        if (arrangementList.size() == 0){
-            System.out.println("No events");
-            return;
-        }
-
-        AsciiTable arragmentTable = new AsciiTable();
-
-        arragmentTable.addRule();
-        arragmentTable.addRow("ID","Arrangment","Date","Ticketavaliable");
-
-        for (Arrangement x: arrangementList) {
-            arragmentTable.addRule();
-            arragmentTable.addRow(x.getArrangementID(),x.getArrangmentTitle(),x.getArragmentDate(),x.getMaxAttendees());
-            arragmentTable.addRule();
-
-        }
-
-        String table = arragmentTable.render();
-        System.out.println(table);
-
-    }
+    //printEvents?? include asciiTable
 
     void getArrangementById(){
 
@@ -149,15 +85,8 @@ public class Console {
 
     }
 
-    public static void selectFromList(ArrayList arrayList){
-        for (int i = 0; i < arrayList.size(); i++){
-            System.out.println(i + " = " + arrayList.get(i));
-        }
+    static char getAscii(int code){
 
-        java.io.Console console = System.console();
-        String input = console.readLine(">");
-
+        return (char) code;
     }
-
-
 }

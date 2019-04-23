@@ -1,17 +1,17 @@
-package hiof.gr19.seat;
+package hiof.gr19.seat.model;
 
 public class Organizer {
-    private String organizerID;
+    private int organizerID;
     private String organizerName;
     private String email;
 
-    public Organizer(String organizerID, String organizerName, String email) {
+    public Organizer(int organizerID, String organizerName, String email) {
         this.organizerID = organizerID;
         this.organizerName = organizerName;
         this.email = email;
     }
 
-    public Organizer(String organizerID, String organizerName) {
+    public Organizer(int organizerID, String organizerName) {
         this.organizerID = organizerID;
         this.organizerName = organizerName;
     }
@@ -24,11 +24,11 @@ public class Organizer {
         this.email = email;
     }
 
-    public String getOrganizerID() {
+    public int getOrganizerID() {
         return organizerID;
     }
 
-    public void setOrganizerID(String organizerID) {
+    public void setOrganizerID(int organizerID) {
         this.organizerID = organizerID;
     }
 

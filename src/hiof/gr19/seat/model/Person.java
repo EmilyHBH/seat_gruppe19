@@ -1,4 +1,4 @@
-package hiof.gr19.seat;
+package hiof.gr19.seat.model;
 
 public class Person {
     private String firstName;
