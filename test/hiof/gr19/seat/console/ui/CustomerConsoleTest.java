@@ -72,4 +72,15 @@ class CustomerConsoleTest extends ConsoleTest {
         cc.selectPaymentMethod(betalingsMetode);
         assertEquals(getConsoleOutput(), "Selected: Cash\n");
     }
+
+    @Test
+    public void testVelgAntallBilletter(){
+        //Krav 021
+
+        int antallBilletter = 21;
+
+        provideInput(String.valueOf(antallBilletter));
+
+        assertEquals(antallBilletter, cc.selectTicketAmount());
+    }
 }

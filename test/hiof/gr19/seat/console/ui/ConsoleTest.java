@@ -1,6 +1,7 @@
 package hiof.gr19.seat.console.ui;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
 import java.io.ByteArrayInputStream;
@@ -19,11 +20,13 @@ class ConsoleTest {
 	private ByteArrayInputStream forcedInput;
 	private ByteArrayOutputStream testOut;
 
+	//Denne metoden simulerer consol input til scanner.
 	public void provideInput(String data) {
 		forcedInput = new ByteArrayInputStream(data.getBytes());
 		System.setIn(forcedInput);
 	}
 
+	//Denne metoden henter consol output.
 	public String getConsoleOutput(){
 		return testOut.toString();
 	}
@@ -39,5 +42,7 @@ class ConsoleTest {
 		System.setIn(systemIn);
 		System.setOut(systemOut);
 	}
+
+
 
 }

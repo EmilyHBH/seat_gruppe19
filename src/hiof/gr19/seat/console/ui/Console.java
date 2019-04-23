@@ -73,14 +73,9 @@ public class Console {
 
     }
 
-    //printEvents?? include asciiTable
+    boolean checkTicketConditions(Arrangement arrangement, int ticketAmount) {
 
-    void getArrangementById(){
+        return arrangement.getMaxAttendees() > ticketAmount;
 
-    }
-
-    static char getAscii(int code){
-
-        return (char) code;
     }
 }
