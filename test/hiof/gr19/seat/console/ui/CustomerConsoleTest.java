@@ -2,6 +2,10 @@ package hiof.gr19.seat.console.ui;
 
 import hiof.gr19.seat.model.Arrangement;
 import hiof.gr19.seat.Database;
+import hiof.gr19.seat.model.Organizer;
+import hiof.gr19.seat.model.Purchase;
+import hiof.gr19.seat.stubs.confirmation.ConfirmationMethod;
+import hiof.gr19.seat.stubs.confirmation.EmailReciept;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import java.io.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -74,5 +79,22 @@ class CustomerConsoleTest extends ConsoleTest {
 
         cc.selectPaymentMethod(betalingsMetode);
         assertEquals(getConsoleOutput(), "Selected: Cash\n");
+    }
+
+    @Test
+    public void emailConfirmationTest(){
+        //Krav 015
+        String email = "Test@Testesen.no";
+
+        //De fleste objekter er tomme fordi det vi tester
+        //Er outputen fra sendConfirmation metoden
+
+        Arrangement testArrangement = null;
+        Purchase testPurchase = new Purchase(testArrangement);
+        ConfirmationMethod confirmationMethod = new EmailReciept(email);
+        testPurchase.setConfirmationMethod(confirmationMethod);
+        confirmationMethod.sendConfirmation(testPurchase);
+        assertEquals(getConsoleOutput(),"Purchase confirmation sent to: " + email + "\n");
+
     }
 }
