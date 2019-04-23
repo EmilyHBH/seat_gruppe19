@@ -46,9 +46,9 @@ class PrintTables {
         ticketTable.addRule();
         ticketTable.addRow("ID", "Description", "Tickets avaliable", "Price");
 
-        for (Ticket ticket : tickets){
+        for(int i = 0; i < tickets.size(); i++){
             ticketTable.addRule();
-            ticketTable.addRow(ticket.getId(), ticket.getBeskrivelse(), ticket.getAntall(), ticket.getPris());
+            ticketTable.addRow(i, tickets.get(i).getBeskrivelse(), tickets.get(i).getAntall(), tickets.get(i).getPris());
             ticketTable.addRule();
         }
 
