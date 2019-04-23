@@ -10,7 +10,7 @@ public class PrintReciept extends ConfirmationMethod {
 
         receiptTable.addRule();
         receiptTable.addRow("Owner Name", "TicketID", "Valid for (#people)");
-        receiptTable.addRow(purchase.getOwnerName(), purchase.getTicketID(), purchase.getTicketAmount());
+        receiptTable.addRow(purchase.getOwnerName(), purchase.getTicket().getId(), purchase.getTicketAmount());
         receiptTable.addRule();
 
         String table = receiptTable.render();

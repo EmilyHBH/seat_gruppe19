@@ -74,7 +74,7 @@ public class CustomerConsole extends Console{
 			int ticketAmount = selectTicketAmount();
 			//TODO: Her trenger vi sjekk om det er nok billetter
 			//Tenker det hadde vært bra som en methode i Purchase men kanskje ikke for den har ikke DB
-            thisPurchase.setTicketID(ticketId);
+            thisPurchase.setTicket(selectTicket(thisPurchase.getArrangement(), ticketId));
             thisPurchase.setTicketAmount(ticketAmount);
 
 			thisPurchase.setOwnerName(enterNameOfTicketOwner());
@@ -119,7 +119,16 @@ public class CustomerConsole extends Console{
             ex.printStackTrace();
         }
         return null;
+    }
 
+    protected Ticket selectTicket(Arrangement arrangement, int ticketId){
+
+        ArrayList<Ticket> tickets = arrangement.getAvailableTickets();
+        for (Ticket billett : tickets){
+            if (ticketId == billett.getId())
+                return billett;
+        }
+        return null;
     }
 
     private void introduceArrangementTickets(Arrangement arrangement){
@@ -186,7 +195,7 @@ public class CustomerConsole extends Console{
 
         if (betalingGodkent) {
             try {
-                db.ticketsHaveBeenPurchasedFromEvent(purchase.getTicketID(), purchase.getTicketAmount());
+                db.ticketsHaveBeenPurchasedFromEvent(purchase.getTicket().getId(), purchase.getTicketAmount());
             }catch (SQLException | ClassNotFoundException ex){
                 ex.printStackTrace();
             }

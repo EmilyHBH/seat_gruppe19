@@ -10,7 +10,6 @@ public class Purchase {
 	//evt Ticket ticket isteden for int ticketID
 	//Tror egentlig alle variablene i denne klassen burde ha vært egene klasser.
 	private String ownerName;
-	private int ticketID;
 	private Ticket ticket; //Kan brukes istedenfor ticketID med database implementasjon getTicketByID();
 	private int ticketAmount;
 	private ConfirmationMethod confirmationMethod;
@@ -30,12 +29,6 @@ public class Purchase {
 	}
 	public void setOwnerName(String ownerName) {
 		this.ownerName = ownerName;
-	}
-	public int getTicketID() {
-		return ticketID;
-	}
-	public void setTicketID(int ticketID) {
-		this.ticketID = ticketID;
 	}
 	public Ticket getTicket() {
 		return ticket;
@@ -66,5 +59,11 @@ public class Purchase {
 	}
 	public void setPaymentStatus(boolean paymentStatus) {
 		this.paymentStatus = paymentStatus;
+	}
+	public Arrangement getArrangement() {
+		return arrangement;
+	}
+	public void setArrangement(Arrangement arrangement) {
+		this.arrangement = arrangement;
 	}
 }
