@@ -65,4 +65,20 @@ class OrganizerConsoleTest extends ConsoleTest{
 
 	}
 
+	@Test
+	public void endreArrangementDataIDB() throws SQLException, ClassNotFoundException {
+
+		// Krav 009
+
+		Database db = new Database();
+
+		int arrangementId = 1;	// Fyre Festival
+
+		String randomBeskrivelse = buildRandomString(15);
+
+		db.changeEventInfo(arrangementId, "Fyre Festival", randomBeskrivelse, "05-01-2019");
+
+		assertEquals(randomBeskrivelse, db.getEventById(1).getArrangmentDescription());
+
+	}
 }
