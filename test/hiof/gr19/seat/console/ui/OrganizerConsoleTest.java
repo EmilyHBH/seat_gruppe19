@@ -4,6 +4,7 @@ import hiof.gr19.seat.Database;
 import hiof.gr19.seat.Seat;
 import hiof.gr19.seat.model.Organizer;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import java.nio.charset.Charset;
@@ -40,7 +41,7 @@ class OrganizerConsoleTest extends ConsoleTest{
 	public void registrerNyArrangor(){
 		//Krav 007
 
-		String testNavn = buildRandomString(15);
+		String testNavn = "test";
 		String madeUpEmail = "email@email.email";
 
 		Database db = new Database();

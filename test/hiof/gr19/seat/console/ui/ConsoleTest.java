@@ -13,6 +13,7 @@ import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+//husk å kjøre 1 test om gangen
 class ConsoleTest {
 	public static final String ENTER = System.lineSeparator();
 
@@ -21,6 +22,14 @@ class ConsoleTest {
 	private final PrintStream systemOut = System.out;
 	private ByteArrayInputStream forcedInput;
 	private ByteArrayOutputStream testOut;
+
+	CustomerConsole cc;
+
+	@BeforeEach
+	public void setup(){
+		cc = new CustomerConsole();
+	}
+
 
 	//Denne metoden simulerer consol input til scanner.
 	public void provideInput(String data) {
@@ -50,7 +59,6 @@ class ConsoleTest {
 	public void restoreSystemInput() {
 		System.setIn(systemIn);
 		System.setOut(systemOut);
-
 	}
 
 	/*

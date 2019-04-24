@@ -20,19 +20,12 @@ import org.junit.jupiter.api.Test;
 import java.io.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class CustomerConsoleTest extends ConsoleTest {
-
-    CustomerConsole cc;
-
-    @BeforeEach
-    public void setup(){
-        cc = new CustomerConsole();
-    }
-
 
 
     @Test
@@ -73,7 +66,7 @@ class CustomerConsoleTest extends ConsoleTest {
 
         String telefonnummer = "12345678";
 
-        provideInput(telefonnummer);
+        provideInput(ENTER + telefonnummer + ENTER);
 
         //params: navn på bruker, betalings metode
         PaymentMethod paymentMethod = cc.selectPaymentMethod(betalingsMetode);
@@ -114,7 +107,7 @@ class CustomerConsoleTest extends ConsoleTest {
 
     }
 
-    /*
+
     @Test
     public void testVelgAntallBilletter(){
         //Krav 024
@@ -123,7 +116,7 @@ class CustomerConsoleTest extends ConsoleTest {
         int IDOfTicketWeWantToBuy = -1;
 
         Arrangement arrangement = new Arrangement(-1, "test arrangement", "test", new Date(), new Organizer(-1,"testorg", "testorg@testmail.org"), 200, "",
-                new ArrayList<>(){{
+                new ArrayList<Ticket>(){{
                     new Ticket(-1, 200, 50, "billett 1");
                     new Ticket(-2, 250, 150, "billett 2");
                 }});
@@ -132,7 +125,7 @@ class CustomerConsoleTest extends ConsoleTest {
 
         assertEquals(antallBilletter, cc.selectTicketAmount(IDOfTicketWeWantToBuy, arrangement));
     }
-    */
+
 
 
     @Test
@@ -160,6 +153,26 @@ class CustomerConsoleTest extends ConsoleTest {
         // Slik systemet er lagt opp vil getAvailableTickets aldri bli 0
         //
         assertNotEquals(0,testArrangement.getAvailableTickets().size());
+
+    }
+
+    @Test
+    public void kundeKanKjopeBilett(){
+        //Krav 14
+        Ticket ticket = new Ticket(1,1,5,"En test bilett");
+
+        Arrangement testArrangement = new Arrangement(
+                10,
+                "",
+                "",
+                new Date(),
+                null,
+                10,
+                "",
+                new ArrayList<Ticket>(Collections.singleton(ticket)));
+
+        Purchase testPurchase = new Purchase(testArrangement);
+
 
     }
 
