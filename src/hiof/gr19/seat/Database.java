@@ -216,20 +216,15 @@ public class Database {
         return eventsTickets;
 
     }
-    /*public ArrayList<Ticket> getAllUsersTickets(int kundeId) throws SQLException, ClassNotFoundException {
+    public boolean purchasedTicketIdValid(int ticketId, int amount, int arrangementId) throws SQLException, ClassNotFoundException {
         if(dbCon == null)
             getConnection();
 
         Statement state = dbCon.createStatement();
-        ResultSet result = state.executeQuery("SELECT bilett.*, kundes_biletter.antall FROM bilett INNER JOIN kundes_biletter ON billettId = bilett.id WHERE kundeId = " + kundeId + ";");
+        ResultSet result = state.executeQuery("SELECT id FROM kjopte_billetter kb INNER JOIN arrangements_biletter ab ON ab.billettId = kb.id WHERE ab.arrangementId = " + arrangementId + " AND kb.antall = "+ amount + " AND kb.id = " + ticketId + ";");
 
-        ArrayList<Ticket> usersTickets = new ArrayList<>();
-
-        while(result.next())
-            usersTickets.add(new Ticket(result.getInt("id"), result.getInt("pris"), result.getInt("antall"), result.getString("beskrivelse")));
-
-        return usersTickets;
-    }*/
+        return result.next();
+    }
 
     // Insert data
     public Organizer addOrganizer(String name, String email) throws SQLException, ClassNotFoundException {

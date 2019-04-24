@@ -29,6 +29,7 @@ public class Console {
 
         System.out.println("1 = Organizer");
         System.out.println("2 = Customer");
+        System.out.println("3 = Ticket Checker");
         String input = validateStringInput("What are you");
 
         switch (input){
@@ -38,6 +39,9 @@ public class Console {
 
             case "2":
                 return User.Type.Customer;
+
+            case "3":
+                return User.Type.TicketChecker;
 
             default:
                 System.out.println("Choose 1 or 2");
