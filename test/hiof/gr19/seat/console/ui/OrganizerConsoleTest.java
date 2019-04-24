@@ -43,13 +43,10 @@ class OrganizerConsoleTest extends ConsoleTest{
 		String testNavn = buildRandomString(15);
 		String madeUpEmail = "email@email.email";
 
-		provideInput(testNavn+ENTER+madeUpEmail+ENTER);
-
-		oc.registerOrganizer();
-
 		Database db = new Database();
 
 		try {
+			db.addOrganizer(testNavn,madeUpEmail);
 			assertEquals(testNavn, db.getOrganizerByName(testNavn).getOrganizerName());
 		} catch (SQLException | ClassNotFoundException e) {
 			e.printStackTrace();
