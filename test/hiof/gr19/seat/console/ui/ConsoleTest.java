@@ -3,11 +3,14 @@ package hiof.gr19.seat.console.ui;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.nio.charset.Charset;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,6 +32,13 @@ class ConsoleTest {
 	//Denne metoden henter consol output.
 	public String getConsoleOutput(){
 		return testOut.toString();
+	}
+
+	public String buildRandomString(int length){
+		byte[] array = new byte[length]; 	// length is bounded by length
+		new Random().nextBytes(array);
+
+		return new String(array, Charset.forName("UTF-8"));
 	}
 
 	@BeforeEach

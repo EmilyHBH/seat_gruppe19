@@ -1,7 +1,13 @@
 package hiof.gr19.seat.console.ui;
 
+import hiof.gr19.seat.Database;
+import hiof.gr19.seat.model.Organizer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.nio.charset.Charset;
+import java.sql.SQLException;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,10 +25,32 @@ class OrganizerConsoleTest extends ConsoleTest{
 	public void loggetInnSomArrangor(){
 		//Krav 003
 
-		//Denne testen krever at det er en arrangor i databasen med navnet "testorg"
+		//Denne testen krever at det er en arrangor i databasen med navnet "OrgStarter", den skal alltid finnes pga. db initialise populerer med dummy data
 
-		provideInput("testorg" + ENTER);
-		oc.organizerLogin();
+		provideInput("OrgStarter" + ENTER);
+		Organizer organizer = oc.organizerLogin();
+
+		assertEquals("OrgStarter",organizer.getOrganizerName());
+
+	}
+
+	@Test
+	public void registrerNyArrangor(){
+
+		String testNavn = buildRandomString(15);
+		String madeUpEmail = "email@email.email";
+
+		provideInput(testNavn+ENTER+madeUpEmail+ENTER);
+
+		oc.registerOrganizer();
+
+		Database db = new Database();
+
+		try {
+			assertEquals(testNavn, db.getOrganizerByName(testNavn).getOrganizerName());
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 
 	}
 
