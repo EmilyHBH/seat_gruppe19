@@ -28,7 +28,7 @@ class OrganizerConsoleTest extends ConsoleTest{
 
 		//Denne testen krever at det er en arrangor i databasen med navnet "OrgStarter", den skal alltid finnes pga. db initialise populerer med dummy data
 
-		provideInput("OrgStarter" + ENTER);
+		provideInput("OrgStarter"+ENTER);
 		Organizer organizer = oc.organizerLogin();
 
 		assertEquals("OrgStarter",organizer.getOrganizerName());

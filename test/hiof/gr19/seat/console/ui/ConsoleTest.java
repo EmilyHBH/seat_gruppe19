@@ -46,7 +46,7 @@ class ConsoleTest {
 		System.setOut(new PrintStream(testOut));
 	}
 
-	//@AfterEach
+	@AfterEach
 	public void restoreSystemInput() {
 		System.setIn(systemIn);
 		System.setOut(systemOut);
