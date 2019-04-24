@@ -82,9 +82,9 @@ public class CustomerConsole extends Console{
 			thisPurchase.setConfirmationMethod(declareConfirmationMethod());
 			thisPurchase.setPaymentMethod(declarePaymentMethod());
 
-			confirmPurchase(thisPurchase);
+			if(confirmPurchase(thisPurchase))
+			    thisPurchase.printReceipt();
 
-			thisPurchase.printReceipt();
 
             running = buyMoreTicketsYN(); //Hadde en kunne hatt spørsmålstegn i metode navn hadde det vært det her.
         }
@@ -207,7 +207,7 @@ public class CustomerConsole extends Console{
         return InputValidator.selectFromList(confirmationMethods);
     }
 
-    private void confirmPurchase(Purchase purchase) {
+    protected boolean confirmPurchase(Purchase purchase) {
 
         boolean betalingGodkent = purchase.getPaymentMethod().pay(purchase.getOwnerName());
 
@@ -215,11 +215,17 @@ public class CustomerConsole extends Console{
             try {
                 db.ticketsHaveBeenPurchasedFromEvent(purchase.getTicket().getId(), purchase.getTicketAmount());
                 purchase.registerPurchaseInDb();
+                System.out.println("Payment accepted: " + betalingGodkent);
+                return betalingGodkent;
             }catch (SQLException | ClassNotFoundException ex){
                 ex.printStackTrace();
             }
         }
-        System.out.println("Payment accepted: " + betalingGodkent);
+        return false;
+    }
+
+    protected void finishPurchase(){
+
     }
 
     protected PaymentMethod selectPaymentMethod(int paymentMethod) {
