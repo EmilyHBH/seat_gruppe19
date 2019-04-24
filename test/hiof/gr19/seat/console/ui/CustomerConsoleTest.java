@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CustomerConsoleTest extends ConsoleTest {
 
-
+    //NOT GOOD ENOUGH
     @Test
     public void tilbyArrangementer(){
         //Krav 011
@@ -66,7 +66,7 @@ class CustomerConsoleTest extends ConsoleTest {
 
         String telefonnummer = "12345678";
 
-        provideInput(ENTER + telefonnummer + ENTER);
+        provideInput(telefonnummer);
 
         //params: navn på bruker, betalings metode
         PaymentMethod paymentMethod = cc.selectPaymentMethod(betalingsMetode);
@@ -154,23 +154,22 @@ class CustomerConsoleTest extends ConsoleTest {
     }
 
     @Test
-    public void kundeKanKjopeBilett(){
+    public void kundeKanKjopeBilett() throws SQLException, ClassNotFoundException{
         //Krav 14
         Ticket ticket = new Ticket(1,1,5,"En test bilett");
 
-        Arrangement testArrangement = new Arrangement(
-                10,
-                "",
-                "",
-                new Date(),
-                null,
-                10,
-                "",
-                new ArrayList<Ticket>(Collections.singleton(ticket)));
+        Database db = new Database();
+
+        Arrangement testArrangement = db.getEventById(1);
 
         Purchase testPurchase = new Purchase(testArrangement);
 
+        testPurchase.setConfirmationMethod(new PrintReciept());
+        testPurchase.setPaymentMethod(new PayWithCard());
+        testPurchase.setTicket(ticket);
+        testPurchase.setOwnerName("Partall navn");
 
+        assertTrue(cc.confirmPurchase(testPurchase));
     }
 
 }

@@ -16,9 +16,6 @@ public class OrganizerConsole extends Console{
         user = loginOrRegister();
         organizerMenu();
     }
-    public void testStart(){
-        super.start();
-    }
 
     private Organizer loginOrRegister(){
         if(InputValidator.askBooleanQuestionAndReturnAnswer("Do you already have an account"))
