@@ -214,6 +214,7 @@ public class CustomerConsole extends Console{
         if (betalingGodkent) {
             try {
                 db.ticketsHaveBeenPurchasedFromEvent(purchase.getTicket().getId(), purchase.getTicketAmount());
+                purchase.registerPurchaseInDb();
             }catch (SQLException | ClassNotFoundException ex){
                 ex.printStackTrace();
             }
