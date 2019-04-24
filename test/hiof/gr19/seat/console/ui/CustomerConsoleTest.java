@@ -27,8 +27,28 @@ class CustomerConsoleTest extends ConsoleTest {
     public void setup(){
         cc = new CustomerConsole();
     }
+
+
+
+    @Test
+    public void tilbyArrangementer(){
+        //Krav 011
+        ArrayList<Arrangement> arrangs;
+
+        try {
+            arrangs = cc.getArrangements();
+            cc.showEvents(arrangs);
+        }catch (SQLException | ClassNotFoundException ex){
+            ex.printStackTrace();
+        }
+
+        //Replace with REGEX EXpression.
+        assertTrue(getConsoleOutput()!= null);
+    }
+
     @Test
     public void testValgAvArrangement() throws SQLException, ClassNotFoundException, IOException {
+        //Krav 013
 
         Database db = new Database();
         ArrayList<Arrangement> events = db.getEvents();
@@ -40,7 +60,7 @@ class CustomerConsoleTest extends ConsoleTest {
 
     @Test
     public void testVippsBetaling(){
-        //Krav 014
+        //Krav 017
 
         String navn = "Test TestTestesen";
         int betalingsMetode = 3; //Vipps = 3
@@ -59,7 +79,7 @@ class CustomerConsoleTest extends ConsoleTest {
 
     @Test
     public void testKortBetaling(){
-        //Krav 012
+        //Krav 015
 
         String navn = "Test Testesen";
         int betalingsMetode = 1; //Kort = 1
@@ -71,7 +91,7 @@ class CustomerConsoleTest extends ConsoleTest {
 
     @Test
     public void testKontantBetaling(){
-        //Krav 013
+        //Krav 016
 
         String navn = "Test Testesen";
         int betalingsMetode = 2; //Kontant = 2
@@ -82,7 +102,7 @@ class CustomerConsoleTest extends ConsoleTest {
 
     @Test
     public void emailConfirmationTest(){
-        //Krav 015
+        //Krav 018
         String email = "Test@Testesen.no";
 
         //De fleste objekter er tomme fordi det vi tester
@@ -95,6 +115,24 @@ class CustomerConsoleTest extends ConsoleTest {
         confirmationMethod.sendConfirmation(testPurchase);
         assertEquals(getConsoleOutput(),"Purchase confirmation sent to: " + email + "\n");
 
+    }
+
+    @Test
+    public void testVelgAntallBilletter(){
+        //Krav 024
+
+        String antallBilletter = "21";
+        int IDOfTicketWeWantToBuy = -1;
+
+        Arrangement arrangement = new Arrangement(-1, "test arrangement", "test", new Date(), new Organizer(-1,"testorg", "testorg@testmail.org"), 200, "",
+                new ArrayList<>(){{
+                    new Ticket(-1, 200, 50, "billett 1");
+                    new Ticket(-2, 250, 150, "billett 2");
+                }});
+
+        provideInput(antallBilletter);
+
+        assertEquals(antallBilletter, cc.selectTicketAmount(IDOfTicketWeWantToBuy, arrangement));
     }
 
 
@@ -133,7 +171,7 @@ class CustomerConsoleTest extends ConsoleTest {
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-        
+
         assertNotEquals(0,testArrangement.getAvailableTickets());
 
     }

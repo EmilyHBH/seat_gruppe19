@@ -95,12 +95,12 @@ public class CustomerConsole extends Console{
         return InputValidator.validateStringInput("Type name");
     }
 
-    private void showEvents(ArrayList<Arrangement> events){
+    protected void showEvents(ArrayList<Arrangement> events){
         // Prints all events
         PrintTables.printArrangements(events);
     }
 
-    private ArrayList<Arrangement> getArrangements() throws SQLException, ClassNotFoundException {
+    protected ArrayList<Arrangement> getArrangements() throws SQLException, ClassNotFoundException {
         return db.getEvents();
     }
 
@@ -148,7 +148,7 @@ public class CustomerConsole extends Console{
 
     //TheBigRefactor
     //Eksisterer så den kan testes
-    private int selectTicketAmount(int ticketId, Arrangement arrangement) {
+    protected int selectTicketAmount(int ticketId, Arrangement arrangement) {
         int requestedAmountToBuy = InputValidator.validateIntInput("How many tickets");
 
         while(!arrangement.checkTicketConditions(ticketId,requestedAmountToBuy)) {
@@ -214,6 +214,7 @@ public class CustomerConsole extends Console{
         if (betalingGodkent) {
             try {
                 db.ticketsHaveBeenPurchasedFromEvent(purchase.getTicket().getId(), purchase.getTicketAmount());
+                purchase.registerPurchaseInDb();
             }catch (SQLException | ClassNotFoundException ex){
                 ex.printStackTrace();
             }

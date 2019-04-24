@@ -9,7 +9,7 @@ public class InputValidatorTests extends ConsoleTest{
     @Test
     public void inputAvInt(){
 
-        // Krav 017
+        // Krav 020
 
         provideInput("123");
 
@@ -21,7 +21,7 @@ public class InputValidatorTests extends ConsoleTest{
     @Test
     public void inputAvString(){
 
-        // Krav 018
+        // Krav 021
 
         provideInput("Stringy string");
 
