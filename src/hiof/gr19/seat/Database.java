@@ -12,7 +12,7 @@ import static hiof.gr19.seat.console.ui.Console.parseDate;
 
 public class Database {
 
-    private static Connection dbCon;
+    public static Connection dbCon;
     private static boolean hasData = false;
 
 
