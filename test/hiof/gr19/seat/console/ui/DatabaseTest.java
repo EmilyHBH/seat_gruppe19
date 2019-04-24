@@ -22,7 +22,7 @@ public class DatabaseTest {
 
         // Krav 005
 
-        assertNull(db.dbCon);
+        assertNull(db.getDbCon());
     }
 
     @Test
@@ -31,7 +31,7 @@ public class DatabaseTest {
         // Krav 005
 
         db.getEvents();
-        assertNotNull(db.dbCon);
+        assertNotNull(db.getDbCon());
     }
 
 }

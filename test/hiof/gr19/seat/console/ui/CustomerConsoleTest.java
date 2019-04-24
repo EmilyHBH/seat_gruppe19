@@ -29,6 +29,25 @@ class CustomerConsoleTest extends ConsoleTest {
 
 
     @Test
+    public void bareSellbiletterHvisDetFinnesNok() throws SQLException, ClassNotFoundException {
+
+        // Krav 010
+
+        Database db = new Database();
+
+        Arrangement arrangement = db.getEventById(1);   // Fyre Festival
+
+        int ticketAmount = arrangement.getAvailableTickets().get(0).getAntall();
+
+        // billettid 1 finnes alltid i db pga Database.initialise()
+        assertEquals(false, arrangement.checkTicketConditions(1,ticketAmount+1));
+
+        if(ticketAmount > 0)
+            assertEquals(true, arrangement.checkTicketConditions(1,ticketAmount-1));
+
+    }
+
+    @Test
     public void tilbyArrangementer(){
         //Krav 011
         ArrayList<Arrangement> arrangs;
