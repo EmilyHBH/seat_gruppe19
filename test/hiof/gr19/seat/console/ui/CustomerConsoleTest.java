@@ -58,7 +58,9 @@ class CustomerConsoleTest extends ConsoleTest {
         ArrayList<Arrangement> events = db.getEvents();
 
         provideInput("0");
-        cc.selectEvent(events);
+        Arrangement valgtArrangement = cc.selectEvent(events);
+
+        assertNotNull(valgtArrangement);
 
     }
 
@@ -101,17 +103,13 @@ class CustomerConsoleTest extends ConsoleTest {
     @Test
     public void emailConfirmationTest(){
         //Krav 018
-        String email = "Test@Testesen.no";
 
-        //De fleste objekter er tomme fordi det vi tester
-        //Er outputen fra sendConfirmation metoden
+        int confirmationMethodChoice = 1;   // Email
 
-        Arrangement testArrangement = null;
-        Purchase testPurchase = new Purchase(testArrangement);
-        ConfirmationMethod confirmationMethod = new EmailReciept(email);
-        testPurchase.setConfirmationMethod(confirmationMethod);
-        confirmationMethod.sendConfirmation(testPurchase);
-        assertEquals(getConsoleOutput(),"Purchase confirmation sent to: " + email + "\n");
+        provideInput("email@email.email");
+
+        ConfirmationMethod confirmationMethod = cc.selectConfirmationMethod(confirmationMethodChoice);
+        assertTrue(confirmationMethod instanceof EmailReciept);
 
     }
 
