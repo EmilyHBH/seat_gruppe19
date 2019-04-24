@@ -7,6 +7,7 @@ import hiof.gr19.seat.model.Purchase;
 import hiof.gr19.seat.model.Ticket;
 import hiof.gr19.seat.stubs.confirmation.ConfirmationMethod;
 import hiof.gr19.seat.stubs.confirmation.EmailReciept;
+import hiof.gr19.seat.stubs.confirmation.PrintReciept;
 import hiof.gr19.seat.stubs.payment.PayWithCard;
 import hiof.gr19.seat.stubs.payment.PayWithCash;
 import hiof.gr19.seat.stubs.payment.PayWithVipps;
@@ -138,22 +139,7 @@ class CustomerConsoleTest extends ConsoleTest {
     public void printTicketTest(){
         //Krav 015
 
-        Ticket ticket = new Ticket(1,1,5,"En test bilett");
-
-        Arrangement testArrangement = new Arrangement(
-                10,
-                "",
-                "",
-                new Date(),
-                null,
-                10,
-                "",
-                null);
-        Purchase testPurchase = new Purchase(testArrangement);
-
-        testPurchase.printReceipt();
-
-        assertEquals(getConsoleOutput(),"");
+        assertTrue(cc.selectConfirmationMethod(2).getClass().isInstance(new PrintReciept()));
 
     }
 

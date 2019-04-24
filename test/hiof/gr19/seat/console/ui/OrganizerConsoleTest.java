@@ -22,21 +22,13 @@ class OrganizerConsoleTest extends ConsoleTest{
 		//oc.testStart();
 	}
 
-	@Test void applikasjonStarter(){
-		Seat.main(null);
-
-		assertEquals(getConsoleOutput(), "1 = Organizer\n" +
-				"2 = Customer\n" +
-				"What are you?");
-	}
-
 	@Test
 	public void loggetInnSomArrangor(){
 		//Krav 006
 
 		//Denne testen krever at det er en arrangor i databasen med navnet "OrgStarter", den skal alltid finnes pga. db initialise populerer med dummy data
 
-		provideInput("OrgStarter" + ENTER);
+		provideInput("OrgStarter"+ENTER);
 		Organizer organizer = oc.organizerLogin();
 
 		assertEquals("OrgStarter",organizer.getOrganizerName());
