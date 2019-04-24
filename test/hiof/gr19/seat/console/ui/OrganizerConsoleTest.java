@@ -22,14 +22,6 @@ class OrganizerConsoleTest extends ConsoleTest{
 		//oc.testStart();
 	}
 
-	@Test void applikasjonStarter(){
-		Seat.main(null);
-
-		assertEquals(getConsoleOutput(), "1 = Organizer\n" +
-				"2 = Customer\n" +
-				"What are you?");
-	}
-
 	@Test
 	public void loggetInnSomArrangor(){
 		//Krav 006
