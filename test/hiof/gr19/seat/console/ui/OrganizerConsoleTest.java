@@ -1,6 +1,7 @@
 package hiof.gr19.seat.console.ui;
 
 import hiof.gr19.seat.Database;
+import hiof.gr19.seat.Seat;
 import hiof.gr19.seat.model.Organizer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,9 +22,17 @@ class OrganizerConsoleTest extends ConsoleTest{
 		//oc.testStart();
 	}
 
+	@Test void applikasjonStarter(){
+		Seat.main(null);
+
+		assertEquals(getConsoleOutput(), "1 = Organizer\n" +
+				"2 = Customer\n" +
+				"What are you?");
+	}
+
 	@Test
 	public void loggetInnSomArrangor(){
-		//Krav 003
+		//Krav 006
 
 		//Denne testen krever at det er en arrangor i databasen med navnet "OrgStarter", den skal alltid finnes pga. db initialise populerer med dummy data
 
@@ -36,6 +45,7 @@ class OrganizerConsoleTest extends ConsoleTest{
 
 	@Test
 	public void registrerNyArrangor(){
+		//Krav 007
 
 		String testNavn = buildRandomString(15);
 		String madeUpEmail = "email@email.email";

@@ -4,6 +4,7 @@ import hiof.gr19.seat.model.Arrangement;
 import hiof.gr19.seat.Database;
 import hiof.gr19.seat.model.Organizer;
 import hiof.gr19.seat.model.Purchase;
+import hiof.gr19.seat.model.Ticket;
 import hiof.gr19.seat.stubs.confirmation.ConfirmationMethod;
 import hiof.gr19.seat.stubs.confirmation.EmailReciept;
 import org.junit.jupiter.api.BeforeAll;
@@ -29,19 +30,36 @@ class CustomerConsoleTest extends ConsoleTest {
 
 
     @Test
+    public void tilbyArrangementer(){
+        //Krav 011
+        ArrayList<Arrangement> arrangs;
+
+        try {
+            arrangs = cc.getArrangements();
+            cc.showEvents(arrangs);
+        }catch (SQLException | ClassNotFoundException ex){
+            ex.printStackTrace();
+        }
+
+        //Replace with REGEX EXpression.
+        assertTrue(getConsoleOutput()!= null);
+    }
+
+    @Test
     public void testValgAvArrangement() throws SQLException, ClassNotFoundException, IOException {
+        //Krav 013
 
         Database db = new Database();
         ArrayList<Arrangement> events = db.getEvents();
 
-        provideInput("2");
+        provideInput("0");
         cc.selectEvent(events);
 
     }
 
     @Test
     public void testVippsBetaling(){
-        //Krav 014
+        //Krav 017
 
         String navn = "Test TestTestesen";
         int betalingsMetode = 3; //Vipps = 3
@@ -60,7 +78,7 @@ class CustomerConsoleTest extends ConsoleTest {
 
     @Test
     public void testKortBetaling(){
-        //Krav 012
+        //Krav 015
 
         String navn = "Test Testesen";
         int betalingsMetode = 1; //Kort = 1
@@ -72,7 +90,7 @@ class CustomerConsoleTest extends ConsoleTest {
 
     @Test
     public void testKontantBetaling(){
-        //Krav 013
+        //Krav 016
 
         String navn = "Test Testesen";
         int betalingsMetode = 2; //Kontant = 2
@@ -83,7 +101,7 @@ class CustomerConsoleTest extends ConsoleTest {
 
     @Test
     public void emailConfirmationTest(){
-        //Krav 015
+        //Krav 018
         String email = "Test@Testesen.no";
 
         //De fleste objekter er tomme fordi det vi tester
@@ -100,12 +118,19 @@ class CustomerConsoleTest extends ConsoleTest {
 
     @Test
     public void testVelgAntallBilletter(){
-        //Krav 021
+        //Krav 024
 
-        int antallBilletter = 21;
+        String antallBilletter = "21";
+        int IDOfTicketWeWantToBuy = -1;
 
-        provideInput(String.valueOf(antallBilletter));
+        Arrangement arrangement = new Arrangement(-1, "test arrangement", "test", new Date(), new Organizer(-1,"testorg", "testorg@testmail.org"), 200, "",
+                new ArrayList<>(){{
+                    new Ticket(-1, 200, 50, "billett 1");
+                    new Ticket(-2, 250, 150, "billett 2");
+                }});
 
-        assertEquals(antallBilletter, cc.selectTicketAmount());
+        provideInput(antallBilletter);
+
+        assertEquals(antallBilletter, cc.selectTicketAmount(IDOfTicketWeWantToBuy, arrangement));
     }
 }

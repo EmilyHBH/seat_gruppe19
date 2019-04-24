@@ -1,14 +1,8 @@
 package hiof.gr19.seat.console.ui;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.PrintStream;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.Random;
 
@@ -48,7 +42,7 @@ class ConsoleTest {
 	}
 
 	@AfterEach
-	public void restoreSystemInput(){
+	public void restoreSystemInput() {
 		System.setIn(systemIn);
 		System.setOut(systemOut);
 	}
