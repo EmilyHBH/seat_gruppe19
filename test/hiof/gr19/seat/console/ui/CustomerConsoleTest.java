@@ -109,21 +109,18 @@ class CustomerConsoleTest extends ConsoleTest {
 
 
     @Test
-    public void testVelgAntallBilletter(){
+    public void testVelgAntallBilletter() throws SQLException, ClassNotFoundException {
         //Krav 024
 
-        String antallBilletter = "21";
-        int IDOfTicketWeWantToBuy = -1;
+        String antallBilletter = "1";
+        int IDOfTicketWeWantToBuy = 1;
 
-        Arrangement arrangement = new Arrangement(-1, "test arrangement", "test", new Date(), new Organizer(-1,"testorg", "testorg@testmail.org"), 200, "",
-                new ArrayList<Ticket>(){{
-                    new Ticket(-1, 200, 50, "billett 1");
-                    new Ticket(-2, 250, 150, "billett 2");
-                }});
+        Database db = new Database();
+        Arrangement arrangement = db.getEventById(1);
 
         provideInput(antallBilletter);
 
-        assertEquals(antallBilletter, cc.selectTicketAmount(IDOfTicketWeWantToBuy, arrangement));
+        assertEquals(Integer.parseInt(antallBilletter), cc.selectTicketAmount(IDOfTicketWeWantToBuy, arrangement));
     }
 
 

@@ -65,6 +65,8 @@ public class Database {
                         "antall INTEGER NOT NULL, " +
                         "FOREIGN KEY(billettId) REFERENCES bilett(id) on delete cascade on update cascade " +
                         ")");
+
+                createBillettKundeTable.execute("INSERT INTO kjopte_billetter values(?, 1, 1)");
             }
 
             ResultSet arrangorTable = statement.executeQuery("SELECT name FROM sqlite_master WHERE type = 'table' AND name='arrangor'");

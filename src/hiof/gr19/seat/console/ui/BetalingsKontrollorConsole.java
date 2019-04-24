@@ -54,17 +54,17 @@ public class BetalingsKontrollorConsole extends Console {
             int ticketID = InputValidator.validateIntInput("Ticket id");
             int amount = InputValidator.validateIntInput("Amount of people the ticket is valid for");
 
-            System.out.println(isTicketIdValid(ticketID, amount));
+            System.out.println(isTicketIdValid(ticketID, amount, arrangement.getArrangementID()));
 
             run = InputValidator.askBooleanQuestionAndReturnAnswer("Check another ticket");
         }
 
     }
 
-    private boolean isTicketIdValid(int ticketId, int amount){
+    boolean isTicketIdValid(int ticketId, int amount, int arrangementId){
 
         try {
-            boolean ticketIsValid = db.purchasedTicketIdValid(ticketId, amount, arrangement.getArrangementID());
+            boolean ticketIsValid = db.purchasedTicketIdValid(ticketId, amount, arrangementId);
             return ticketIsValid;
 
         } catch (SQLException | ClassNotFoundException e) {
