@@ -245,7 +245,7 @@ public class CustomerConsole extends Console{
         return InputValidator.validateIntInput("Ditt telefonnummer");
     }
 
-    private ConfirmationMethod selectConfirmationMethod(int confirmationMethod) {
+    ConfirmationMethod selectConfirmationMethod(int confirmationMethod) {
         switch (confirmationMethod) {
             case 1:
                 System.out.println("Selected: Email");

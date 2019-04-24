@@ -7,6 +7,10 @@ import hiof.gr19.seat.model.Purchase;
 import hiof.gr19.seat.model.Ticket;
 import hiof.gr19.seat.stubs.confirmation.ConfirmationMethod;
 import hiof.gr19.seat.stubs.confirmation.EmailReciept;
+import hiof.gr19.seat.stubs.payment.PayWithCard;
+import hiof.gr19.seat.stubs.payment.PayWithCash;
+import hiof.gr19.seat.stubs.payment.PayWithVipps;
+import hiof.gr19.seat.stubs.payment.PaymentMethod;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,7 +58,9 @@ class CustomerConsoleTest extends ConsoleTest {
         ArrayList<Arrangement> events = db.getEvents();
 
         provideInput("0");
-        cc.selectEvent(events);
+        Arrangement valgtArrangement = cc.selectEvent(events);
+
+        assertNotNull(valgtArrangement);
 
     }
 
@@ -62,7 +68,6 @@ class CustomerConsoleTest extends ConsoleTest {
     public void testVippsBetaling(){
         //Krav 017
 
-        String navn = "Test TestTestesen";
         int betalingsMetode = 3; //Vipps = 3
 
         String telefonnummer = "12345678";
@@ -70,50 +75,41 @@ class CustomerConsoleTest extends ConsoleTest {
         provideInput(telefonnummer);
 
         //params: navn på bruker, betalings metode
-        cc.selectPaymentMethod(betalingsMetode);
-        assertEquals("Selected: Vipps\n" +
-                "\n" +
-                "Ditt telefonnummer:\n" +
-                "\n", getConsoleOutput());
+        PaymentMethod paymentMethod = cc.selectPaymentMethod(betalingsMetode);
+        assertTrue(paymentMethod instanceof PayWithVipps);
     }
 
     @Test
     public void testKortBetaling(){
         //Krav 015
 
-        String navn = "Test Testesen";
         int betalingsMetode = 1; //Kort = 1
 
-        cc.selectPaymentMethod(betalingsMetode);
+        PaymentMethod paymentMethod = cc.selectPaymentMethod(betalingsMetode);
         //"bankkort\n" = sout("bankort")
-        assertEquals("Selected: Card\n", getConsoleOutput());
+        assertTrue(paymentMethod instanceof PayWithCard);
     }
 
     @Test
     public void testKontantBetaling(){
         //Krav 016
 
-        String navn = "Test Testesen";
         int betalingsMetode = 2; //Kontant = 2
 
-        cc.selectPaymentMethod(betalingsMetode);
-        assertEquals(getConsoleOutput(), "Selected: Cash\n");
+        PaymentMethod paymentMethod = cc.selectPaymentMethod(betalingsMetode);
+        assertTrue(paymentMethod instanceof PayWithCash);
     }
 
     @Test
     public void emailConfirmationTest(){
         //Krav 018
-        String email = "Test@Testesen.no";
 
-        //De fleste objekter er tomme fordi det vi tester
-        //Er outputen fra sendConfirmation metoden
+        int confirmationMethodChoice = 1;   // Email
 
-        Arrangement testArrangement = null;
-        Purchase testPurchase = new Purchase(testArrangement);
-        ConfirmationMethod confirmationMethod = new EmailReciept(email);
-        testPurchase.setConfirmationMethod(confirmationMethod);
-        confirmationMethod.sendConfirmation(testPurchase);
-        assertEquals(getConsoleOutput(),"Purchase confirmation sent to: " + email + "\n");
+        provideInput("email@email.email");
+
+        ConfirmationMethod confirmationMethod = cc.selectConfirmationMethod(confirmationMethodChoice);
+        assertTrue(confirmationMethod instanceof EmailReciept);
 
     }
 
