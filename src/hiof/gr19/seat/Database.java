@@ -28,7 +28,7 @@ public class Database {
             hasData = true;
             Statement statement = dbCon.createStatement();
 
-            ResultSet kundeTable = statement.executeQuery("SELECT name FROM sqlite_master WHERE type = 'table' AND name='kunde'");
+            /*ResultSet kundeTable = statement.executeQuery("SELECT name FROM sqlite_master WHERE type = 'table' AND name='kunde'");
             if(!kundeTable.next()){
                 Statement createKundeTable = dbCon.createStatement();
                 createKundeTable.execute("CREATE TABLE kunde (" +
@@ -43,7 +43,7 @@ public class Database {
                 createKundeTable.execute("INSERT INTO kunde values(?, \"Mickey\", \"Mouse\", \"Heyooo\", \"20\")");
                 createKundeTable.execute("INSERT INTO kunde values(?, \"Donald\", \"Duck\", \"19283746\", \"15\")");
                 createKundeTable.execute("INSERT INTO kunde values(?, \"Goofy\", \"Goof\", \"12345678\", \"10\")");
-            }
+            }*/
 
             ResultSet billettTable = statement.executeQuery("SELECT name FROM sqlite_master WHERE type = 'table' AND name='bilett'");
             if(!billettTable.next()){
@@ -56,15 +56,13 @@ public class Database {
                 createBillettTable.execute("INSERT INTO bilett values(?, 100,\"15+\")");
             }
 
-            ResultSet billettKundeTable = statement.executeQuery("SELECT name FROM sqlite_master WHERE type = 'table' AND name='kundes_billetter'");
+            ResultSet billettKundeTable = statement.executeQuery("SELECT name FROM sqlite_master WHERE type = 'table' AND name='kjopte_billetter'");
             if(!billettKundeTable.next()){
                 Statement createBillettKundeTable = dbCon.createStatement();
-                createBillettKundeTable.execute("CREATE TABLE kundes_billetter (" +
-                        "kundeId INTEGER NOT NULL, " +
+                createBillettKundeTable.execute("CREATE TABLE kjopte_billetter (" +
+                        "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
                         "billettId INTEGER NOT NULL, " +
                         "antall INTEGER NOT NULL, " +
-                        "FOREIGN KEY(kundeId) REFERENCES kunde(id) on delete cascade on update cascade, " +
-                        "PRIMARY KEY(kundeId,billettId), " +
                         "FOREIGN KEY(billettId) REFERENCES bilett(id) on delete cascade on update cascade " +
                         ")");
             }
@@ -218,33 +216,17 @@ public class Database {
         return eventsTickets;
 
     }
-    public ArrayList<Ticket> getAllUsersTickets(int kundeId) throws SQLException, ClassNotFoundException {
+    public boolean purchasedTicketIdValid(int ticketId, int amount, int arrangementId) throws SQLException, ClassNotFoundException {
         if(dbCon == null)
             getConnection();
 
         Statement state = dbCon.createStatement();
-        ResultSet result = state.executeQuery("SELECT bilett.*, kundes_biletter.antall FROM bilett INNER JOIN kundes_biletter ON billettId = bilett.id WHERE kundeId = " + kundeId + ";");
+        ResultSet result = state.executeQuery("SELECT id FROM kjopte_billetter kb INNER JOIN arrangements_biletter ab ON ab.billettId = kb.id WHERE ab.arrangementId = " + arrangementId + " AND kb.antall = "+ amount + " AND kb.id = " + ticketId + ";");
 
-        ArrayList<Ticket> usersTickets = new ArrayList<>();
-
-        while(result.next())
-            usersTickets.add(new Ticket(result.getInt("id"), result.getInt("pris"), result.getInt("antall"), result.getString("beskrivelse")));
-
-        return usersTickets;
+        return result.next();
     }
 
     // Insert data
-    public void addUser(Person person) throws SQLException, ClassNotFoundException {
-        if(dbCon == null)
-            getConnection();
-
-        PreparedStatement prep = dbCon.prepareStatement("INSERT INTO kunde(forNavn,etterNavn,kontaktinfo,alder) values(?,?,?,?)");
-        prep.setString(1,person.getFirstName());
-        prep.setString(2, person.getLastName());
-        prep.setString(3, person.getEmailAddress());
-        prep.setInt(4, person.getAge());
-        prep.execute();
-    }
     public Organizer addOrganizer(String name, String email) throws SQLException, ClassNotFoundException {
         if(dbCon == null)
             getConnection();
@@ -280,15 +262,21 @@ public class Database {
                 arrangement.setArrangementID(gkeys.getInt(1));
         }
     }
-    public void registeredUserPurchasedTickets(int kundeId, int billettId, int antall) throws SQLException, ClassNotFoundException {
+    public int purchasedTickets(int billettId, int antall) throws SQLException, ClassNotFoundException {
         if(dbCon == null)
             getConnection();
 
-        PreparedStatement prep = dbCon.prepareStatement("INSERT INTO kundes_billetter values(?,?,?)");
-        prep.setInt(1,kundeId);
-        prep.setInt(2, billettId);
-        prep.setInt(3, antall);
+        PreparedStatement prep = dbCon.prepareStatement("INSERT INTO kjopte_billetter(billettId, antall) values(?,?)");
+        prep.setInt(1, billettId);
+        prep.setInt(2, antall);
         prep.execute();
+
+        // Returns the auto-incremented value of the kjopte-billett id field
+        try (ResultSet gkeys = prep.getGeneratedKeys()) {
+            if (gkeys.next())
+                return gkeys.getInt(1);
+        }
+        return -1;
     }
     public void defineArrangementTickets(int arrangementId, int antall, int pris, String beskrivelse) throws SQLException, ClassNotFoundException {
         if(dbCon == null)

@@ -1,9 +1,12 @@
 package hiof.gr19.seat.model;
 
+import hiof.gr19.seat.Database;
 import hiof.gr19.seat.model.Arrangement;
 import hiof.gr19.seat.model.Ticket;
 import hiof.gr19.seat.stubs.confirmation.ConfirmationMethod;
 import hiof.gr19.seat.stubs.payment.PaymentMethod;
+
+import java.sql.SQLException;
 
 public class Purchase {
 	private Arrangement arrangement;
@@ -15,6 +18,7 @@ public class Purchase {
 	private ConfirmationMethod confirmationMethod;
 	private PaymentMethod paymentMethod;
 	private boolean paymentStatus;
+	private int boughtIdInDb;
 
 	public Purchase(Arrangement arrangement) {
 		this.arrangement = arrangement;
@@ -65,5 +69,28 @@ public class Purchase {
 	}
 	public void setArrangement(Arrangement arrangement) {
 		this.arrangement = arrangement;
+	}
+
+	public void registerPurchaseInDb(){
+		Database db = new Database();
+
+		try {
+
+			int purchasedId  = db.purchasedTickets(ticket.getId(), ticketAmount);
+			boughtIdInDb = purchasedId;
+
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public String toString() {
+		return "Ticket for:\n" +
+				arrangement.getArrangmentTitle() +
+				"\nowner: " + ownerName +
+				"\nvalid for " + ticketAmount + " amount of people" +
+				"\npayment method: " + paymentMethod +
+				"\nEvidence: " + boughtIdInDb;
 	}
 }
