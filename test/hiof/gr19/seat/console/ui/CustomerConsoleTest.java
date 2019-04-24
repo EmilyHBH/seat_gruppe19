@@ -4,8 +4,10 @@ import hiof.gr19.seat.model.Arrangement;
 import hiof.gr19.seat.Database;
 import hiof.gr19.seat.model.Organizer;
 import hiof.gr19.seat.model.Purchase;
+import hiof.gr19.seat.model.Ticket;
 import hiof.gr19.seat.stubs.confirmation.ConfirmationMethod;
 import hiof.gr19.seat.stubs.confirmation.EmailReciept;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,16 +27,13 @@ class CustomerConsoleTest extends ConsoleTest {
     public void setup(){
         cc = new CustomerConsole();
     }
-
-
-
     @Test
     public void testValgAvArrangement() throws SQLException, ClassNotFoundException, IOException {
 
         Database db = new Database();
         ArrayList<Arrangement> events = db.getEvents();
 
-        provideInput("2");
+        provideInput("0");
         cc.selectEvent(events);
 
     }
@@ -97,4 +96,48 @@ class CustomerConsoleTest extends ConsoleTest {
         assertEquals(getConsoleOutput(),"Purchase confirmation sent to: " + email + "\n");
 
     }
+
+
+    @Test
+    public void printTicketTest(){
+        //Krav 015
+
+        Ticket ticket = new Ticket(1,1,5,"En test bilett");
+
+        Arrangement testArrangement = new Arrangement(
+                10,
+                "",
+                "",
+                new Date(),
+                null,
+                10,
+                "",
+                null);
+        Purchase testPurchase = new Purchase(testArrangement);
+
+        testPurchase.printReceipt();
+
+        assertEquals(getConsoleOutput(),"");
+
+    }
+
+    @Test
+    public void tilgjengeligBiletter(){
+
+        //Krav 019
+
+        Arrangement testArrangement = null;
+        Database db = new Database();
+        try {
+            testArrangement = db.getEventById(1);
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        
+        assertNotEquals(0,testArrangement.getAvailableTickets());
+
+    }
+
+
+
 }

@@ -1,6 +1,7 @@
 package hiof.gr19.seat.console.ui;
 
 import hiof.gr19.seat.Database;
+import hiof.gr19.seat.Seat;
 import hiof.gr19.seat.model.Organizer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,6 +34,7 @@ class OrganizerConsoleTest extends ConsoleTest{
 		assertEquals("OrgStarter",organizer.getOrganizerName());
 
 	}
+
 
 	@Test
 	public void registrerNyArrangor(){
