@@ -215,12 +215,14 @@ public class CustomerConsole extends Console{
             try {
                 db.ticketsHaveBeenPurchasedFromEvent(purchase.getTicket().getId(), purchase.getTicketAmount());
                 purchase.registerPurchaseInDb();
-                System.out.println("Payment accepted: " + betalingGodkent);
                 return betalingGodkent;
             }catch (SQLException | ClassNotFoundException ex){
                 ex.printStackTrace();
             }
         }
+
+        System.out.println("Payment accepted: " + betalingGodkent);
+
         return false;
     }
 
