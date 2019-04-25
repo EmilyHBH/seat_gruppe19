@@ -1,0 +1,91 @@
+@startuml
+
+ui.Console <|-- ui.OrganizerConsole
+ui.Console <|-- ui.CustomerConsole
+ui.Console <|-- ui.BetalingsKontrollorConsole
+
+ui.PrintTables <-- ui.CustomerConsole
+ui.PrintTables <-- ui.OrganizerConsole
+ui.PrintTables <-- ui.BetalingsKontrollorConsole
+ui.InputValidator <-- ui.CustomerConsole
+ui.InputValidator <-- ui.OrganizerConsole
+ui.InputValidator <-- ui.BetalingsKontrollorConsole
+
+class ui.Console {
+    ~ {static} scanner : Scanner
+    ~ {static} db : Database
+
+	+ {static} identifyUser() : User.Type
+	+ start() : void
+	+ finish() : void
+	+ {static} parseDate(String) : Date
+}
+
+class ui.CustomerConsole {
+    + start() : void
+	- customerMenu() : void
+	- run() : void
+	- showEvents(ArrayList events) : void
+	- introduceArrangementTickets(Arrangement) : void
+	- declarePaymentMethod() : PaymentMethod
+	- declareConfirmationMethod() : ConfirmationMethod
+	- introducePaymentMethods() : int
+	- introduceConfirmationMethods() : int
+	# getArrangements() : ArrayList<Arrangements>
+	# confirmPurchase(Purchase) : boolean
+
+	.. Selects ..
+	- selectTicketId(ArrayList tickets) : int
+	# selectTicketAmount(int ticketId, Arrangement) : int
+	# selectEvent(ArrayList<Arrangements> events) : Arrangement
+    # selectTicket(Arrangement arrangement, int ticketId) : Ticket
+	# selectPaymentMethod(int paymentMethod) : PaymentMethod
+	# selectConfirmationMethod(int confirmationMethod) : ConfirmationMethod
+
+    .. Inputs ..
+    - enterNameOfTicketOwner() : String
+    - enterPhoneNumberOfTicketOwner() : int
+	- enterEmailOfTicketOwner() : String
+	- buyMoreTicketsYN() : boolean
+}
+
+class ui.OrganizerConsole {
+    - user : Organizer
+
+    + start() : void
+    - loginOrRegister() : Organizer
+    # organizerLogin() : Organizer
+    # registerOrganizer() : Organizer
+    - organizerMenu() : void
+    - organizerChangesEventInformation() : void
+    - organizerAddsAdditionalTicket() : void
+    - organizerCreatesArrangement() : void
+    - createArrangementPrompt() : Arrangement
+    - defineMultipleTicketes() : void
+    - changeEventInfo(Arrangement) : void
+}
+
+class ui.BetalingsKontrollorConsole {
+    - arrangement : Arrangement
+
+    + start() : void
+    - registerWhichEventYouAreControllingTicketsFor() : Arrangement
+    ~ isTicketValid(ticketId, amount, arrangementId) : boolean
+}
+
+class ui.InputValidator {
+    - {static} scanner : Scanner
+
+    - {static} questionFormat(String question) : String
+    + {static} askBooleanQuestionAndReturnAnswer(String question) : boolean
+    + {static} validateIntInput(String question) : int
+    + {static} validateStringInput(String question) : String
+    + {static} selectFromList(ArrayList options) : int
+}
+
+class ui.PrintTables {
+    + {static} printTickets(ArrayList tickets) : void
+    + {static} printArrangement(ArrayList arrangements) : void
+}
+
+@enduml

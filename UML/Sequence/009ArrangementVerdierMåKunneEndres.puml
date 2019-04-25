@@ -1,24 +1,25 @@
 @startuml
 
 actor user
-entity SEAT
+entity OrganizerConsole.java as SEAT
 control Database.java as data
 database db
 
-user --> SEAT: Endre Arrangement! \n editArrangementPrompt()
+user --> SEAT: Endre Arrangement! \n organizerChangesEventInformation()
 note left
 	Går ut ifra at bruker allerede
 	er logget inn i arrangor konto
 end note
 user <-- SEAT: Hvilket arrangement ønsker du å endre? \n Liste med arrangementer
-user --> SEAT: Valgt Arrangement
+user --> SEAT: Valgt Arrangement\nchangeEventInfo(valgtArrangement)
+
 user <-- SEAT: Hvilken verdi ønsker du å endre? \n Liste med verdier
 note left
 	Verdier:
 	Tittel, Beskrivelse,
 	Dato og AntallBilletter.
 end note
-user --> SEAT: Valgt verdi
+user --> SEAT: Valgt del for endring
 user <-- SEAT: Onsket verdi?
 user --> SEAT: Ny verdi
 SEAT --> data: changeEventInfo(id, ...)

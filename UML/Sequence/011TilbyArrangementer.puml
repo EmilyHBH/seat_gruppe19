@@ -1,6 +1,6 @@
 @startuml
 
-entity SEAT
+entity CustomerConsole.java as SEAT
 control Database.java as data
 database db
 

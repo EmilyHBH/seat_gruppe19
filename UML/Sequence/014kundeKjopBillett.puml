@@ -1,7 +1,7 @@
 @startuml
 
 actor user
-entity SEAT
+entity CustomerConsole.java as SEAT
 
 user --> SEAT: Har valgt arrangement (010)
 user <-- SEAT: Presenterer betalings metoder

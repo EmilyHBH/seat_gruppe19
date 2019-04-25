@@ -1,0 +1,30 @@
+@startuml
+
+class Database {
+	- dbCon : Connection
+	__
+	- getConnection() : void
+	- initialize() : void
+	.. Retrieve data ..
+	+ checkForOrganizer(String) : boolean
+	+ getOrganizerByName(String name) : Organizer
+	+ getEvents() : ArrayList<Arrangement>
+	+ getEventById(int Id) : Arrangement
+	+ getEventsByOrganizer(int organizerId) : ArrayList<Arrangement>
+	+ getAnEventsTickets(int) : ArrayList<Ticket>
+	+ purchasedTicketIdValid(int ticketId, int amount, int arrangementId) : boolean
+	.. Insert data ..
+	+ addOrganizer(Organizer) : Organizer
+	+ createEvent(Arrangement) : void
+	+ purchasedTickets(int ticketId, int amount) : int
+	+ defineArrangementTickets(int arrangementId, int antall, int pris, String beskrivelse) : void
+	.. Update data ..
+	+ changeEmailOfOrganizer(Organizer, String) : void
+	+ changeEventInfo(int, String, String, String) : void
+	+ ticketsHaveBeenPurchasedFromEvent(int ticketId, int amountOfTickets) : void
+	.. Delete data ..
+	+ cancelAUsersTicket(int, int) : void
+	+ cancelEvent(int) : void
+}
+
+@enduml

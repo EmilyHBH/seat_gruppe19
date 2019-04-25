@@ -1,15 +1,16 @@
 @startuml
 
 actor user
-entity SEAT
+entity OrganizerConsole.java as SEAT
 control Database.java as data
 database db
 
-user --> SEAT: Nytt Arrangement! \n createArrangementPrompt()
+user --> SEAT: Nytt Arrangement! \n organizerCreatesArrangement()
 note left
 	Går ut ifra at bruker allerede
 	er logget inn i arrangor konto
 end note
+SEAT --> SEAT: Arrangement newArrangement\n = createArrangementPrompt()
 user <-- SEAT: Skriv inn ønsket tittel
 user --> SEAT: UserParty
 user <-- SEAT: Skriv inn ønsket \n arrangement beskrivelse
@@ -18,7 +19,8 @@ user <-- SEAT: Skriv inn arrangementets dato
 user --> SEAT: day-month-year
 user <-- SEAT: Skriv inn hvor mange billetter \n som skal selges
 user --> SEAT: 200
-user <-- SEAT: new Arrangement(aboveValues)
+SEAT <-- SEAT: new Arrangement(aboveValues)
 SEAT --> data: createEvent(aboveArrangement)
 data --> db: INSERT INTO arrangement aboveArrangement
+
 @enduml

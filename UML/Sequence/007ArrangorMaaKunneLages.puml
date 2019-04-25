@@ -1,0 +1,21 @@
+@startuml
+
+actor user
+entity OrganizerConsole.java as SEAT
+control Database.java as data
+database db
+
+
+user --> SEAT: Forespør ny bruker\nregisterOrganizer()
+user <-- SEAT: Skriv inn onsket brukernavn / Arrangor navn \nvalidateStringInput()
+user --> SEAT: Fyller inn brukernavn \nString organizerName
+user <-- SEAT: Skriv inn onsket epost \nvalidateStringInput()
+user --> SEAT: Fyller inn epost\nString email
+
+' Her er evt passord om det skal bli en ting.
+SEAT --> data: addOrganizer(organizerName, organizerEmail)
+data --> db: INSERT INTO arrangor organizer
+user <-- SEAT: Din bruker er naa laget, du er logget inn
+
+
+@enduml

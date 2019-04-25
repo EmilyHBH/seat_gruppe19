@@ -1,0 +1,139 @@
+@startuml
+
+stub.confirmation.ConfirmationMethod <|-- stub.confirmation.EmailReceipt
+stub.confirmation.ConfirmationMethod <|-- stub.confirmation.PrintReceipt
+
+stub.payment.PaymentMethod <|-- stub.payment.PayWithCard
+stub.payment.PaymentMethod <|-- stub.payment.PayWithCash
+stub.payment.PaymentMethod <|-- stub.payment.PayWithVipps
+
+stub.payment.BetalingsStub <-- stub.payment.PayWithCard
+stub.payment.BetalingsStub <-- stub.payment.PayWithCash
+stub.payment.BetalingsStub <-- stub.payment.PayWithVipps
+
+model.Purchase <-- ui.CustomerConsole
+
+model.Purchase --> stub.confirmation
+model.Purchase --> stub.payment
+
+
+
+' Model classes
+
+class model.Purchase {
+    - arrangement : Arrangement
+    - ownerName : String
+    - ticket : Ticket
+    - ticketAmount : int
+    - confirmationMethod : ConfirmationMethod
+    - paymentMethod : PaymentMethod
+    - paymentStatus : Boolean
+    - boughtIdInDb : int
+
+    + printReceipt() : void
+    + registerPurchaseInDb() : void
+}
+
+' /Model classes
+
+class ui.CustomerConsole {
+    + start() : void
+	- customerMenu() : void
+	- run() : void
+	- showEvents(ArrayList events) : void
+	- introduceArrangementTickets(Arrangement) : void
+	- declarePaymentMethod() : PaymentMethod
+	- declareConfirmationMethod() : ConfirmationMethod
+	- introducePaymentMethods() : int
+	- introduceConfirmationMethods() : int
+	# getArrangements() : ArrayList<Arrangements>
+	# confirmPurchase(Purchase) : boolean
+
+	.. Selects ..
+	- selectTicketId(ArrayList tickets) : int
+	# selectTicketAmount(int ticketId, Arrangement) : int
+	# selectEvent(ArrayList<Arrangements> events) : Arrangement
+    # selectTicket(Arrangement arrangement, int ticketId) : Ticket
+	# selectPaymentMethod(int paymentMethod) : PaymentMethod
+	# selectConfirmationMethod(int confirmationMethod) : ConfirmationMethod
+
+    .. Inputs ..
+    - enterNameOfTicketOwner() : String
+    - enterPhoneNumberOfTicketOwner() : int
+	- enterEmailOfTicketOwner() : String
+	- buyMoreTicketsYN() : boolean
+}
+
+' stub classes
+
+abstract class stub.confirmation.ConfirmationMethod {
+    + {abstract} sendConfirmation(Purchase purchase) : void
+}
+class stub.confirmation.EmailReceipt {
+    - email : String
+
+    + EmailReceipt(String email)
+
+    + sendConfirmation(Purchase purchase) : void
+}
+class stub.confirmation.PrintReceipt {
+    + sendConfirmation(Purchase purchase) : void
+}
+
+class stub.payment.BetalingsStub {
+    - telefonnummer : int
+    - navn : String
+
+    + BetalingsStub(String navn)
+    + BetalingsStub(int telefonnummer, String navn)
+
+    + godkjentBetaling() : boolean
+}
+abstract class stub.payment.PaymentMethod {
+    + {abstract} pay(String navn) : boolean
+}
+class stub.payment.PayWithCard {
+    + pay(String navn) : boolean
+}
+class stub.payment.PayWithCash {
+    + pay(String navn) : boolean
+}
+class stub.payment.PayWithVipps {
+    - telefonnummer : int
+
+    + PayWithVipps(int telefonnummer)
+
+    + pay(String navn) : boolean
+}
+
+' /stub classes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@enduml

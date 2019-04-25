@@ -1,0 +1,61 @@
+@startuml
+
+model.Arrangement --> model.Organizer
+model.Arrangement --o model.Ticket
+
+model.Purchase --> model.Arrangement
+model.Purchase --> model.Ticket
+
+
+
+' Model classes
+
+class model.Arrangement {
+	- arrangementID : String
+	- arrangementTitle : String
+	- arrangementDescription : String
+	- arrangementDate : Date
+	- location : String
+	- organizer : Organizer
+	- maxAttendees : int
+	- availableTickets : ArrayList<Ticket>
+
+	+ toString() : String
+	+ checkTicketConditions() : boolean
+}
+
+class model.Organizer {
+	- organizerID : String
+	- organizerName : String
+
+	+ toString() : String
+}
+
+class model.Purchase {
+    - arrangement : Arrangement
+    - ownerName : String
+    - ticket : Ticket
+    - ticketAmount : int
+    - confirmationMethod : ConfirmationMethod
+    - paymentMethod : PaymentMethod
+    - paymentStatus : Boolean
+    - boughtIdInDb : int
+
+    + printReceipt() : void
+    + registerPurchaseInDb() : void
+}
+
+class model.Ticket {
+	- id : String
+	- owner : Person
+	- validForPerson : int
+	- arrangement : Arrangement
+}
+
+
+enum model.Type{
+	Customer
+	Organizer
+}
+
+@enduml

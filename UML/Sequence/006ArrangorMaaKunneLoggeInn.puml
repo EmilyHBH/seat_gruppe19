@@ -1,0 +1,24 @@
+@startuml
+
+actor user
+entity OrganizerConsole.java as SEAT
+control Database.java as data
+database db
+
+
+user --> SEAT: Spesifiserer at en allerede har en bruker\n organizerLogin()
+user <-- SEAT: Skriv inn brukernavn (Organizer name)\n validateStringInput()
+user --> SEAT: Skriver inn registrert brukernavn\nString organizerName
+SEAT --> data: Finnes denne brukeren?\ncheckForOrganizer(organizerName)
+SEAT <-- data: Ja\n(true/false)
+SEAT --> data: Henter bruker informasjon\ngetOrganizerByName(organizerName)
+SEAT <-- data: Returnerer instanse av Organizer klassen
+user <-- SEAT: Du er logget inn.
+
+
+'user <-- SEAT: Skriv passord
+'user --> SEAT: Passord (drossap)
+'SEAT --> db: Stemmer dette passordet?
+'SEAT <-- db: Ja
+
+@enduml
