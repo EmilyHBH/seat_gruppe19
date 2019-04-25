@@ -115,7 +115,7 @@ public class OrganizerConsole extends Console{
                 PrintTables.printArrangements(thisOrganizationsEvents);
 
                 int arrangementId = InputValidator.validateIntInput("Select event");
-                Arrangement arrangementToChangeinfo = db.getEventById(arrangementId);
+                Arrangement arrangementToChangeinfo = db.getEventById(thisOrganizationsEvents.get(arrangementId).getArrangementID());
 
                 changeEventInfo(arrangementToChangeinfo);
             } else

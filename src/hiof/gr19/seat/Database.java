@@ -2,7 +2,6 @@ package hiof.gr19.seat;
 
 import hiof.gr19.seat.model.Arrangement;
 import hiof.gr19.seat.model.Organizer;
-import hiof.gr19.seat.model.Person;
 import hiof.gr19.seat.model.Ticket;
 
 import java.sql.*;
