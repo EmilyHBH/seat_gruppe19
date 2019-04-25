@@ -3,36 +3,25 @@ package hiof.gr19.seat.system;
 import hiof.gr19.seat.Seat;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class SystemKravTester {
-    public static final String ENTER = System.lineSeparator();
+public class SystemKravTester extends Thread{
 
-    @Test
-    public void applikasjonStarter(){
-        //Krav 004
+    class PrimeThread extends Thread {
 
-        //Går uendelig, må fikses.
-        new Thread()
-        {
-            @Override
-            public void run() {
-                Seat.main(null);
-            }
-
-        }.start();
-
-        try {
-            Thread.sleep(1000);
-        }catch(InterruptedException ex){
-            ex.printStackTrace();
+        public void run() {
+            Seat.main(null);
         }
 
-        /*assertTrue(
-                ("1 = Organizer"+ENTER +
-                        "2 = Customer"+ENTER +
-                        "3 = Ticket Checker"+ENTER+ENTER +
-                        "What are you:"+ENTER+ENTER).equals(
-                        getConsoleOutput()));*/
     }
+
+    @Test
+    public void test(){
+        PrimeThread p = new PrimeThread();
+        p.start();
+        assertTrue(p.isAlive());
+
+    }
+
 }

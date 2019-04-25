@@ -61,7 +61,7 @@ class ConsoleTest {
 		System.setOut(systemOut);
 	}
 
-	/*
+
 	@Test
 	public void applikasjonStarter(){
 		//Krav 004
@@ -94,6 +94,6 @@ class ConsoleTest {
 						"3 = Ticket Checker"+ENTER+ENTER +
 						"What are you:"+ENTER+ENTER).equals(
 						getConsoleOutput()));
-	}*/
+	}
 
 }
