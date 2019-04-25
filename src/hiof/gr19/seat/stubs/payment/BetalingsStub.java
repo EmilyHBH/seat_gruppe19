@@ -20,7 +20,6 @@ public class BetalingsStub {
         // 50/50 om betalingen blir godkjent
         Random rand = new Random();
         int result = rand.nextInt(2);
-        System.out.println(result);
         if (result == 0)
         {
             return true;

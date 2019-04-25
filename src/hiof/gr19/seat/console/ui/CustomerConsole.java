@@ -211,6 +211,8 @@ public class CustomerConsole extends Console{
 
         boolean betalingGodkent = purchase.getPaymentMethod().pay(purchase.getOwnerName());
 
+        System.out.println("Payment accepted: " + betalingGodkent);
+
         if (betalingGodkent) {
             try {
                 db.ticketsHaveBeenPurchasedFromEvent(purchase.getTicket().getId(), purchase.getTicketAmount());
@@ -220,8 +222,6 @@ public class CustomerConsole extends Console{
                 ex.printStackTrace();
             }
         }
-
-        System.out.println("Payment accepted: " + betalingGodkent);
 
         return false;
     }
