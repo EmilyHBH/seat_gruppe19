@@ -15,4 +15,7 @@ Får å gjøre det så velg Organizer ved oppstart av programmet. Du må ha bruk
 #### Billet Sjekker
 Som billet sjekker bruker du dette programmet for å validere biletter. Ved oppstart av programmet velg "Ticket Checker" og hvilken arrangement du validererer biletter til. Dermed kan du sette in "evidence" nr på billetene du blir vist for å sjekke om bilettern er valid.
 
-For å kjøre programmet så ..............
+### Hvordan kjør programmet
+Åpne din operativsystems terminalvindu, gå til samme mappe som jar filen ligger i. Deretter kan du skrive kommando:
+java -jar SEAT.jar
+Så skal programmet være oppe og kjørende
