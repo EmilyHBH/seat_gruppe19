@@ -129,7 +129,7 @@ public class Arrangement {
         }
 
         if(ticket != null)
-            return ticket.getAntall() > requestedTicketAmountToPurchase;
+            return ticket.getAntall() >= requestedTicketAmountToPurchase;
         else
             return false;
     }
