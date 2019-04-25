@@ -25,29 +25,6 @@ public class Arrangement {
         this.availableTickets = tickets;
     }
 
-    private String getTotalInformation() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("ID: " + arrangementID);
-        stringBuilder.append(System.lineSeparator());
-
-        stringBuilder.append("Title: " + arrangmentTitle);
-        stringBuilder.append(System.lineSeparator());
-
-        stringBuilder.append("Description: " + arrangmentDescription);
-        stringBuilder.append(System.lineSeparator());
-
-        stringBuilder.append("Date: " + arragmentDate);
-        stringBuilder.append(System.lineSeparator());
-
-        stringBuilder.append("Organizer: " + organizer);
-        stringBuilder.append(System.lineSeparator());
-
-        stringBuilder.append("People amount: " + maxAttendees);
-        stringBuilder.append(System.lineSeparator());
-
-        return stringBuilder.toString();
-    }
-
     public String getLocation() {
         return location;
     }
