@@ -6,7 +6,9 @@ import hiof.gr19.seat.model.Ticket;
 
 import java.sql.*;
 import java.util.ArrayList;
-
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import static hiof.gr19.seat.console.ui.Console.parseDate;
 
 public class Database {
@@ -16,6 +18,7 @@ public class Database {
 
 
     private void getConnection() throws ClassNotFoundException, SQLException {
+
         Class.forName("org.sqlite.JDBC");
         dbCon = DriverManager.getConnection("jdbc:sqlite:tempDB.db");
         initialise();

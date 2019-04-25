@@ -1,5 +1,7 @@
 package hiof.gr19.seat.stubs.payment;
 
+import java.util.Random;
+
 public class BetalingsStub {
     private int telefonnummer;
     private String navn;
@@ -14,12 +16,19 @@ public class BetalingsStub {
     //Denne koden brukes bare for å vise at resten av programmet skal fungere som det skal
     public boolean godkjentBetaling(){
 
-        boolean returnVerdi = false;
 
-        if(navn.length() % 2 == 0){
-            returnVerdi = true;
+        // 50/50 om betalingen blir godkjent
+        Random rand = new Random();
+        int result = rand.nextInt(2);
+        System.out.println(result);
+        if (result == 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
 
-        return returnVerdi;
     }
 }
