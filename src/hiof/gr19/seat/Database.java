@@ -12,7 +12,7 @@ import static hiof.gr19.seat.console.ui.Console.parseDate;
 
 public class Database {
 
-    public static Connection dbCon;
+    private static Connection dbCon;
     private static boolean hasData = false;
 
 
@@ -20,6 +20,10 @@ public class Database {
         Class.forName("org.sqlite.JDBC");
         dbCon = DriverManager.getConnection("jdbc:sqlite:tempDB.db");
         initialise();
+    }
+
+    public static Connection getDbCon() {
+        return dbCon;
     }
 
     // Creates db tables and populates them with dummy data if they don't already exist
