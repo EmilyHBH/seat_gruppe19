@@ -115,7 +115,7 @@ class CustomerConsoleTest extends ConsoleTest {
 
     @Test
     public void emailConfirmationTest(){
-        //Krav 018
+        //Krav 018.1
 
         int confirmationMethodChoice = 1;   // Email
 
@@ -146,7 +146,7 @@ class CustomerConsoleTest extends ConsoleTest {
 
     @Test
     public void printTicketTest(){
-        //Krav 015
+        //Krav 018.2
 
         assertTrue(cc.selectConfirmationMethod(2).getClass().isInstance(new PrintReciept()));
 
