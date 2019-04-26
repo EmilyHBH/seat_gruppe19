@@ -1,0 +1,37 @@
+@startuml
+
+stub.payment.PaymentMethod <|-- stub.payment.PayWithCard
+stub.payment.PaymentMethod <|-- stub.payment.PayWithCash
+stub.payment.PaymentMethod <|-- stub.payment.PayWithVipps
+
+stub.payment.BetalingsStub <-- stub.payment.PayWithCard
+stub.payment.BetalingsStub <-- stub.payment.PayWithCash
+stub.payment.BetalingsStub <-- stub.payment.PayWithVipps
+
+class stub.payment.BetalingsStub {
+    - telefonnummer : int
+    - navn : String
+
+    + BetalingsStub(String navn)
+    + BetalingsStub(int telefonnummer, String navn)
+
+    + godkjentBetaling() : boolean
+}
+abstract class stub.payment.PaymentMethod {
+    + {abstract} pay(String navn) : boolean
+}
+class stub.payment.PayWithCard {
+    + pay(String navn) : boolean
+}
+class stub.payment.PayWithCash {
+    + pay(String navn) : boolean
+}
+class stub.payment.PayWithVipps {
+    - telefonnummer : int
+
+    + PayWithVipps(int telefonnummer)
+
+    + pay(String navn) : boolean
+}
+
+@enduml

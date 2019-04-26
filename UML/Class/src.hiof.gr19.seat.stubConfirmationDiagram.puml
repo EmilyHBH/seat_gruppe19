@@ -1,0 +1,20 @@
+@startuml
+
+stub.confirmation.ConfirmationMethod <|-- stub.confirmation.EmailReceipt
+stub.confirmation.ConfirmationMethod <|-- stub.confirmation.PrintReceipt
+
+abstract class stub.confirmation.ConfirmationMethod {
+    + {abstract} sendConfirmation(Purchase purchase) : void
+}
+class stub.confirmation.EmailReceipt {
+    - email : String
+
+    + EmailReceipt(String email)
+
+    + sendConfirmation(Purchase purchase) : void
+}
+class stub.confirmation.PrintReceipt {
+    + sendConfirmation(Purchase purchase) : void
+}
+
+@enduml
